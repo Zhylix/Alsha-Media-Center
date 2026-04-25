@@ -27,13 +27,13 @@ class DatabaseSeeder extends Seeder
             'store_name'  => 'TechFix Pro',
             'tagline'     => 'Solusi Terpercaya untuk Semua Masalah Elektronik Anda',
             'description' => 'TechFix Pro adalah bengkel service elektronik profesional yang berpengalaman lebih dari 10 tahun dalam menangani perbaikan laptop, printer, dan handphone. Kami menggunakan spare part original dan bergaransi untuk setiap pekerjaan yang kami lakukan.',
-            'address'     => 'Jl. Asia Afrika No. 123, Bandung',
-            'city'        => 'Bandung, Jawa Barat',
+            'address'     => 'Jl. Jepara No. 123, Bangsri, Jepara, Jawa Tengah',
+            'city'        => 'Bangsri, Jawa Tengah',
             'phone'       => '+62 22 1234 5678',
             'whatsapp'    => '+6281234567890',
             'email'       => 'info@techfixpro.com',
             'instagram'   => '@techfixpro_bdg',
-            'facebook'    => 'TechFix Pro Bandung',
+            'facebook'    => 'TechFix Pro Bangsri',
             'latitude'    => -6.9147440,
             'longitude'   => 107.6098100,
             'open_hours'  => '08:00 - 20:00',
@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Shipment Options
-        ShipmentOption::create(['name' => 'Antar Jemput (Bandung)', 'provider' => 'Antar Jemput', 'description' => 'Kami antar jemput perangkat Anda khusus wilayah Bandung Kota', 'price' => 25000, 'estimated_days' => 1, 'is_active' => true]);
+        ShipmentOption::create(['name' => 'Antar Jemput (Bangsri)', 'provider' => 'Antar Jemput', 'description' => 'Kami antar jemput perangkat Anda khusus wilayah Bangsri', 'price' => 25000, 'estimated_days' => 1, 'is_active' => true]);
         ShipmentOption::create(['name' => 'JNE Reguler', 'provider' => 'JNE', 'description' => 'Pengiriman via JNE Reguler ke seluruh Indonesia', 'price' => 35000, 'estimated_days' => 3, 'is_active' => true]);
         ShipmentOption::create(['name' => 'J&T Express', 'provider' => 'J&T', 'description' => 'Pengiriman via J&T Express, cepat dan terpercaya', 'price' => 30000, 'estimated_days' => 3, 'is_active' => true]);
         ShipmentOption::create(['name' => 'SiCepat Reguler', 'provider' => 'SiCepat', 'description' => 'Pengiriman via SiCepat, harga terjangkau', 'price' => 28000, 'estimated_days' => 4, 'is_active' => true]);
@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
         PaymentMethod::create(['name' => 'GoPay', 'type' => 'e_wallet', 'provider' => 'GoPay', 'account_number' => '081234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer GoPay ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
         PaymentMethod::create(['name' => 'OVO', 'type' => 'e_wallet', 'provider' => 'OVO', 'account_number' => '081234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer OVO ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
         PaymentMethod::create(['name' => 'DANA', 'type' => 'e_wallet', 'provider' => 'DANA', 'account_number' => '081234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer DANA ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
-        PaymentMethod::create(['name' => 'Bayar di Tempat (COD)', 'type' => 'cod', 'provider' => 'COD', 'instructions' => 'Bayar langsung saat perangkat Anda diambil/diantar. Khusus area Bandung Kota.', 'is_active' => true]);
+        PaymentMethod::create(['name' => 'Bayar di Tempat (COD)', 'type' => 'cod', 'provider' => 'COD', 'instructions' => 'Bayar langsung saat perangkat Anda diambil/diantar. Khusus area Bangsri.', 'is_active' => true]);
 
         // Testimonials
         $testimonials = [

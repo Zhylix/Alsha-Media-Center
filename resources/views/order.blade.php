@@ -3,9 +3,9 @@
 @section('content')
 <section class="relative py-24 bg-hero overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <span class="text-blue-400 text-sm font-bold uppercase tracking-widest">Pemesanan</span>
-        <h1 class="text-4xl font-black text-white mt-3 mb-4">Buat <span class="text-gradient">Pesanan Service</span></h1>
-        <p class="text-slate-400">Isi form di bawah ini dengan lengkap untuk memproses pesanan Anda.</p>
+        <span class="text-red-600 text-sm font-bold uppercase tracking-widest">Pemesanan</span>
+        <h1 class="text-4xl font-black text-gray-900 mt-3 mb-4">Buat <span class="text-gradient">Pesanan Service</span></h1>
+        <p class="text-gray-600">Isi form di bawah ini dengan lengkap untuk memproses pesanan Anda.</p>
     </div>
 </section>
 
@@ -16,25 +16,25 @@
 
             <!-- Customer Info -->
             <div class="service-card p-8 rounded-2xl" data-animate>
-                <h2 class="text-xl font-black text-white mb-6 flex items-center gap-2"><i class="fas fa-user text-blue-400"></i> <span>Informasi Pelanggan</span></h2>
+                <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><i class="fas fa-user text-red-600"></i> <span>Informasi Pelanggan</span></h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-2">Nama Lengkap *</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Nama Lengkap *</label>
                         <input type="text" name="customer_name" value="{{ old('customer_name') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Nama lengkap Anda">
                         @error('customer_name')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-2">No. Telepon / WA *</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">No. Telepon / WA *</label>
                         <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="08xx-xxxx-xxxx">
                         @error('customer_phone')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-2">Email *</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Email *</label>
                         <input type="email" name="customer_email" value="{{ old('customer_email') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="email@example.com">
                         @error('customer_email')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-2">Alamat Lengkap</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Alamat Lengkap</label>
                         <input type="text" name="customer_address" value="{{ old('customer_address') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Jl. ... (untuk antar jemput)">
                     </div>
                 </div>
@@ -42,9 +42,9 @@
 
             <!-- Service Selection -->
             <div class="service-card p-8 rounded-2xl" data-animate>
-                <h2 class="text-xl font-black text-white mb-6 flex items-center gap-2"><i class="fas fa-wrench text-orange-400"></i> <span>Pilih Layanan</span></h2>
+                <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><i class="fas fa-wrench text-red-600"></i> <span>Pilih Layanan</span></h2>
                 <div>
-                    <label class="block text-sm font-medium text-slate-400 mb-2">Jenis Layanan *</label>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Jenis Layanan *</label>
                     <select name="service_id" id="serviceSelect" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
                         <option value="">-- Pilih Layanan --</option>
                         @foreach($services->groupBy('category') as $cat => $catServices)
@@ -61,17 +61,17 @@
                 </div>
                 <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-2">Nama / Tipe Perangkat *</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Nama / Tipe Perangkat *</label>
                         <input type="text" name="device_description" value="{{ old('device_description') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: Laptop Asus X415 / iPhone 13">
                         @error('device_description')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-2">Catatan Tambahan</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Catatan Tambahan</label>
                         <input type="text" name="notes" value="{{ old('notes') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Catatan lainnya (opsional)">
                     </div>
                 </div>
                 <div class="mt-5">
-                    <label class="block text-sm font-medium text-slate-400 mb-2">Deskripsi Kerusakan *</label>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Deskripsi Kerusakan *</label>
                     <textarea name="problem_description" required rows="4" class="form-input w-full px-4 py-3 rounded-xl text-sm resize-none" placeholder="Jelaskan detail kerusakan yang dialami perangkat Anda...">{{ old('problem_description') }}</textarea>
                     @error('problem_description')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
@@ -79,24 +79,24 @@
 
             <!-- Shipment -->
             <div class="service-card p-8 rounded-2xl" data-animate>
-                <h2 class="text-xl font-black text-white mb-6 flex items-center gap-2"><i class="fas fa-truck text-emerald-400"></i> <span>Metode Pengiriman</span></h2>
+                <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><i class="fas fa-truck text-red-600"></i> <span>Metode Pengiriman</span></h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @foreach($shipmentOptions as $opt)
-                    <label class="service-card p-4 rounded-xl cursor-pointer hover:border-blue-500/40 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/10">
+                    <label class="service-card p-4 rounded-xl cursor-pointer hover:border-red-600/40 transition-all has-[:checked]:border-red-600 has-[:checked]:bg-red-600/10">
                         <input type="radio" name="shipment_option_id" value="{{ $opt->id }}" class="hidden" {{ old('shipment_option_id') == $opt->id ? 'checked' : '' }}>
                         <div class="flex items-center gap-3">
                             <div class="text-2xl">
                                 @if($opt->provider === 'Antar Jemput') <i class="fas fa-motorcycle"></i>
                                 @elseif($opt->provider === 'Pick Up') <i class="fas fa-store"></i>
-                                @elseif($opt->provider === 'JNE') <i class="fas fa-box text-amber-500"></i>
-                                @else <i class="fas fa-truck text-emerald-400"></i>
+                                @elseif($opt->provider === 'JNE') <i class="fas fa-box text-red-600"></i>
+                                @else <i class="fas fa-truck text-red-600"></i>
                                 @endif
                             </div>
                             <div class="flex-1">
-                                <p class="font-semibold text-white text-sm">{{ $opt->name }}</p>
-                                <p class="text-slate-500 text-xs">{{ $opt->estimated_days > 0 ? 'Est. '.$opt->estimated_days.' hari' : 'Langsung' }}</p>
+                                <p class="font-semibold text-gray-900 text-sm">{{ $opt->name }}</p>
+                                <p class="text-gray-500 text-xs">{{ $opt->estimated_days > 0 ? 'Est. '.$opt->estimated_days.' hari' : 'Langsung' }}</p>
                             </div>
-                            <p class="text-blue-400 font-bold text-sm">{{ $opt->price == 0 ? 'Gratis' : 'Rp '.number_format($opt->price,0,',','.') }}</p>
+                            <p class="text-red-600 font-bold text-sm">{{ $opt->price == 0 ? 'Gratis' : 'Rp '.number_format($opt->price,0,',','.') }}</p>
                         </div>
                     </label>
                     @endforeach
@@ -105,22 +105,22 @@
 
             <!-- Payment -->
             <div class="service-card p-8 rounded-2xl" data-animate>
-                <h2 class="text-xl font-black text-white mb-6 flex items-center gap-2"><i class="fas fa-credit-card text-purple-500"></i> <span>Metode Pembayaran</span></h2>
+                <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><i class="fas fa-credit-card text-red-600"></i> <span>Metode Pembayaran</span></h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @foreach($paymentMethods->groupBy('type') as $type => $methods)
                     <div class="col-span-full">
-                        <p class="text-slate-500 text-xs uppercase font-bold tracking-widest mb-3">
-                            {!! $type === 'bank_transfer' ? '<i class="fas fa-university text-indigo-400"></i> Transfer Bank' : ($type === 'e_wallet' ? '<i class="fas fa-mobile-alt text-green-400"></i> E-Wallet' : '<i class="fas fa-money-bill-wave text-green-400"></i> COD') !!}
+                        <p class="text-gray-500 text-xs uppercase font-bold tracking-widest mb-3">
+                            {!! $type === 'bank_transfer' ? '<i class="fas fa-university text-red-600"></i> Transfer Bank' : ($type === 'e_wallet' ? '<i class="fas fa-mobile-alt text-red-600"></i> E-Wallet' : '<i class="fas fa-money-bill-wave text-red-600"></i> COD') !!}
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             @foreach($methods as $pm)
-                            <label class="service-card p-4 rounded-xl cursor-pointer hover:border-blue-500/40 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/10">
+                            <label class="service-card p-4 rounded-xl cursor-pointer hover:border-red-600/40 transition-all has-[:checked]:border-red-600 has-[:checked]:bg-red-600/10">
                                 <input type="radio" name="payment_method_id" value="{{ $pm->id }}" required class="hidden" {{ old('payment_method_id') == $pm->id ? 'checked' : '' }}>
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-xs font-black text-blue-400">{{ strtoupper(substr($pm->provider, 0, 3)) }}</div>
+                                    <div class="w-8 h-8 rounded-lg bg-red-600/10 flex items-center justify-center text-xs font-black text-red-600">{{ strtoupper(substr($pm->provider, 0, 3)) }}</div>
                                     <div>
-                                        <p class="font-semibold text-white text-sm">{{ $pm->provider }}</p>
-                                        @if($pm->account_number)<p class="text-slate-500 text-xs">{{ $pm->account_number }}</p>@endif
+                                        <p class="font-semibold text-gray-900 text-sm">{{ $pm->provider }}</p>
+                                        @if($pm->account_number)<p class="text-gray-500 text-xs">{{ $pm->account_number }}</p>@endif
                                     </div>
                                 </div>
                             </label>
@@ -133,14 +133,14 @@
             </div>
 
             <!-- Order Summary -->
-            <div class="service-card p-8 rounded-2xl bg-blue-500/5 border-blue-500/20" data-animate>
-                <h2 class="text-xl font-black text-white mb-4"><i class="fas fa-clipboard-list text-yellow-400"></i> Ringkasan Pesanan</h2>
-                <div id="orderSummary" class="text-slate-400 text-sm">Pilih layanan dan pengiriman untuk melihat estimasi total.</div>
+            <div class="service-card p-8 rounded-2xl bg-red-600/5 border-red-600/20" data-animate>
+                <h2 class="text-xl font-black text-gray-900 mb-4"><i class="fas fa-clipboard-list text-red-600"></i> Ringkasan Pesanan</h2>
+                <div id="orderSummary" class="text-gray-600 text-sm">Pilih layanan dan pengiriman untuk melihat estimasi total.</div>
             </div>
 
             <div class="flex gap-4" data-animate>
-                <a href="{{ route('services.index') }}" class="btn-outline flex-1 text-center py-4 rounded-2xl text-white font-bold">← Kembali</a>
-                <button type="submit" class="btn-primary flex-1 py-4 rounded-2xl text-white font-bold"><i class="fas fa-wrench text-orange-400"></i> Buat Pesanan →</button>
+                <a href="{{ route('services.index') }}" class="btn-outline flex-1 text-center py-4 rounded-2xl text-red-600 font-bold">← Kembali</a>
+                <button type="submit" class="btn-primary flex-1 py-4 rounded-2xl text-white font-bold"><i class="fas fa-wrench text-red-600"></i> Buat Pesanan →</button>
             </div>
         </form>
     </div>
@@ -175,10 +175,10 @@ function updateSummary() {
 
     summary.innerHTML = `
         <div class="space-y-3">
-            <div class="flex justify-between"><span>Layanan: ${svc.name}</span><span class="text-white font-semibold">Rp ${svc.price.toLocaleString('id-ID')}</span></div>
-            <div class="flex justify-between"><span>Pengiriman: ${ship ? ship.name : '-'}</span><span class="text-white font-semibold">${ship ? (ship.price === 0 ? 'Gratis' : 'Rp '+ship.price.toLocaleString('id-ID')) : '-'}</span></div>
-            <div class="border-t border-blue-500/20 pt-3 flex justify-between text-lg font-black"><span class="text-white">Total Estimasi</span><span class="text-gradient">Rp ${total.toLocaleString('id-ID')}</span></div>
-            <p class="text-xs text-slate-500">* Harga final akan dikonfirmasi setelah diagnosa perangkat</p>
+            <div class="flex justify-between"><span>Layanan: ${svc.name}</span><span class="text-gray-900 font-semibold">Rp ${svc.price.toLocaleString('id-ID')}</span></div>
+            <div class="flex justify-between"><span>Pengiriman: ${ship ? ship.name : '-'}</span><span class="text-gray-900 font-semibold">${ship ? (ship.price === 0 ? 'Gratis' : 'Rp '+ship.price.toLocaleString('id-ID')) : '-'}</span></div>
+            <div class="border-t border-red-600/20 pt-3 flex justify-between text-lg font-black"><span class="text-gray-900">Total Estimasi</span><span class="text-gradient">Rp ${total.toLocaleString('id-ID')}</span></div>
+            <p class="text-xs text-gray-500">* Harga final akan dikonfirmasi setelah diagnosa perangkat</p>
         </div>
     `;
 }

@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
 use Illuminate\Support\Facades\Route;
 
-// ===================== PUBLIC ROUTES =====================
+// PUBLIC ROUTES
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -39,7 +39,7 @@ Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
 Route::get('/order/track', [OrderController::class, 'track'])->name('order.track');
 
-// ===================== ADMIN AUTH (HIDDEN URL) =====================
+// ADMIN AUTH
 Route::prefix('alsha')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
@@ -72,5 +72,6 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         // Store profile
         Route::get('/store', [AdminStoreController::class, 'index'])->name('store.index');
         Route::put('/store', [AdminStoreController::class, 'update'])->name('store.update');
+        Route::delete('/store/logo', [AdminStoreController::class, 'deleteLogo'])->name('store.logo.delete');
     });
 });

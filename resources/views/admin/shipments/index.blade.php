@@ -12,13 +12,13 @@
         <tbody>
             @foreach($shipments as $s)
             <tr>
-                <td class="text-white font-medium text-sm">{{ $s->name }}</td>
-                <td class="text-slate-400 text-sm">{{ $s->provider }}</td>
-                <td class="text-blue-400 font-semibold text-sm">{{ $s->price == 0 ? 'Gratis' : 'Rp '.number_format($s->price,0,',','.') }}</td>
-                <td class="text-slate-300 text-sm">{{ $s->estimated_days }} hari</td>
+                <td class="text-gray-900 font-medium text-sm">{{ $s->name }}</td>
+                <td class="text-gray-600 text-sm">{{ $s->provider }}</td>
+                <td class="text-red-600 font-semibold text-sm">{{ $s->price == 0 ? 'Gratis' : 'Rp '.number_format($s->price,0,',','.') }}</td>
+                <td class="text-gray-700 text-sm">{{ $s->estimated_days }} hari</td>
                 <td><span class="badge badge-{{ $s->is_active ? 'green' : 'gray' }}">{{ $s->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                 <td class="flex gap-2">
-                    <a href="{{ route('admin.shipments.edit', $s) }}" class="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs">Edit</a>
+                    <a href="{{ route('admin.shipments.edit', $s) }}" class="px-3 py-1.5 rounded-lg bg-red-600/10 text-red-600 text-xs">Edit</a>
                     <form method="POST" action="{{ route('admin.shipments.destroy', $s) }}" onsubmit="return confirm('Hapus?')">@csrf @method('DELETE')<button class="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs">Hapus</button></form>
                 </td>
             </tr>

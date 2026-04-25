@@ -20,7 +20,7 @@
     </select>
     <button type="submit" class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-semibold">Filter</button>
     @if(request()->hasAny(['search','status','payment_status']))
-    <a href="{{ route('admin.orders.index') }}" class="btn-outline px-5 py-2.5 rounded-xl text-white text-sm font-semibold">Reset</a>
+    <a href="{{ route('admin.orders.index') }}" class="btn-outline px-5 py-2.5 rounded-xl text-red-600 text-sm font-semibold">Reset</a>
     @endif
 </form>
 
@@ -32,28 +32,28 @@
                 @foreach($orders as $order)
                 @php $sb=$order->status_badge; $pb=$order->payment_badge; @endphp
                 <tr>
-                    <td class="text-blue-400 font-mono text-xs">{{ $order->order_number }}</td>
+                    <td class="text-red-600 font-mono text-xs">{{ $order->order_number }}</td>
                     <td>
-                        <p class="text-white text-sm font-medium">{{ $order->customer_name }}</p>
-                        <p class="text-slate-500 text-xs">{{ $order->customer_phone }}</p>
+                        <p class="text-gray-900 text-sm font-medium">{{ $order->customer_name }}</p>
+                        <p class="text-gray-500 text-xs">{{ $order->customer_phone }}</p>
                     </td>
-                    <td class="text-slate-300 text-xs">{{ Str::limit($order->service->name,30) }}</td>
-                    <td class="text-white font-semibold text-sm">Rp {{ number_format($order->total_price,0,',','.') }}</td>
+                    <td class="text-gray-700 text-xs">{{ Str::limit($order->service->name,30) }}</td>
+                    <td class="text-gray-900 font-semibold text-sm">Rp {{ number_format($order->total_price,0,',','.') }}</td>
                     <td><span class="badge badge-{{ $sb['color'] }}">{{ $sb['label'] }}</span></td>
                     <td><span class="badge badge-{{ $pb['color'] }}">{{ $pb['label'] }}</span></td>
                     <td>
-                        <a href="{{ route('admin.orders.show', $order) }}" class="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 text-xs font-medium transition-colors">Detail</a>
+                        <a href="{{ route('admin.orders.show', $order) }}" class="px-3 py-1.5 rounded-lg bg-red-600/10 text-red-600 hover:bg-red-600/20 text-xs font-medium transition-colors">Detail</a>
                     </td>
                 </tr>
                 @endforeach
                 @if($orders->isEmpty())
-                <tr><td colspan="7" class="text-center text-slate-500 py-10">Belum ada pesanan</td></tr>
+                <tr><td colspan="7" class="text-center text-gray-500 py-10">Belum ada pesanan</td></tr>
                 @endif
             </tbody>
         </table>
     </div>
     @if($orders->hasPages())
-    <div class="px-6 py-4 border-t border-blue-500/10">{{ $orders->appends(request()->query())->links() }}</div>
+    <div class="px-6 py-4 border-t border-red-600/10">{{ $orders->appends(request()->query())->links() }}</div>
     @endif
 </div>
 @endsection
