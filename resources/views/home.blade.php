@@ -110,22 +110,6 @@
                     <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
                 </div>
                 @endif
-
-                <!-- Shipment Card -->
-                @if($heroShipment)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1.5s;"><i class="fas fa-truck text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroShipment->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1">{{ $heroShipment->description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroShipment->price_display }}</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1.5s;"><i class="fas fa-truck text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Antar Jemput</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
             </div>
         </div>
     </div>
@@ -350,7 +334,7 @@
                     </div>
                 </div>
                 @endif
-                <a href="https://maps.google.com/?q={{ $store->latitude ?? -6.9147 }},{{ $store->longitude ?? 107.6098 }}" target="_blank" class="btn-primary w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-white font-bold">
+                <a href="https://maps.google.com/?q={{ $store->latitude ?? -6.5936 }},{{ $store->longitude ?? 110.6759 }}" target="_blank" class="btn-primary w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-white font-bold">
                     <i class="fas fa-map text-white"></i> Buka di Google Maps
                 </a>
             </div>

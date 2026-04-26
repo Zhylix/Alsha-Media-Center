@@ -3,16 +3,12 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ShipmentController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AdminOrderController;
-use App\Http\Controllers\Admin\AdminShipmentController;
-use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
@@ -23,8 +19,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-Route::get('/shipment', [ShipmentController::class, 'index'])->name('shipment');
-Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 
 // Services
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
@@ -54,12 +48,6 @@ Route::prefix('alsha')->name('admin.')->group(function () {
 
         // Orders management
         Route::resource('orders', AdminOrderController::class)->except(['create', 'store']);
-
-        // Shipment options CRUD
-        Route::resource('shipments', AdminShipmentController::class)->except(['show']);
-
-        // Payment methods CRUD
-        Route::resource('payments', AdminPaymentController::class)->except(['show']);
 
         // Testimonials CRUD
         Route::resource('testimonials', AdminTestimonialController::class)->except(['show']);

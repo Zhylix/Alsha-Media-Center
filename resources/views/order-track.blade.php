@@ -56,10 +56,6 @@
                 <div class="flex justify-between"><span class="text-gray-600">Pelanggan</span><span class="text-gray-900">{{ $order->customer_name }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Layanan</span><span class="text-gray-900">{{ $order->service->name }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Perangkat</span><span class="text-gray-900">{{ $order->device_description }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-600">Status Pembayaran</span>
-                    @php $pb = $order->payment_badge; @endphp
-                    <span class="badge badge-{{ $pb['color'] }}">{{ $pb['label'] }}</span>
-                </div>
                 <div class="border-t border-red-600/10 pt-3 flex justify-between font-black text-base"><span class="text-gray-900">Total</span><span class="text-gradient">Rp {{ number_format($order->total_price,0,',','.') }}</span></div>
             </div>
 

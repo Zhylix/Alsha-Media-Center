@@ -18,7 +18,7 @@ class AdminDashboardController extends Controller
             'completed_orders'=> Order::where('status', 'completed')->count(),
             'total_services'  => Service::where('is_active', true)->count(),
             'unread_messages' => ContactMessage::where('is_read', false)->count(),
-            'total_revenue'   => Order::where('payment_status', 'paid')->sum('total_price'),
+            'total_revenue'   => Order::sum('total_price'),
         ];
 
         $recentOrders = Order::with(['service'])->latest()->take(5)->get();

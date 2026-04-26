@@ -21,11 +21,6 @@ class HomeController extends Controller
         $heroLaptop   = Service::where('category', 'laptop')->where('is_active', true)->first();
         $heroPrinter  = Service::where('category', 'printer')->where('is_active', true)->first();
         $heroHp       = Service::where('category', 'hp')->where('is_active', true)->first();
-        $heroShipment = \App\Models\ShipmentOption::where('is_active', true)
-            ->where(function ($q) {
-                $q->where('name', 'like', '%Antar Jemput%')
-                  ->orWhere('name', 'like', '%antar jemput%');
-            })->first();
 
         $stats = [
             'services'    => Service::where('is_active', true)->count(),
@@ -35,7 +30,7 @@ class HomeController extends Controller
         ];
 
         return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'hpServices', 'testimonials', 'stats',
-            'heroLaptop', 'heroPrinter', 'heroHp', 'heroShipment'));
+            'heroLaptop', 'heroPrinter', 'heroHp'));
 
     }
 }

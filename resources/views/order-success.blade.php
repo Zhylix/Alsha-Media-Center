@@ -16,8 +16,6 @@
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between"><span class="text-gray-600">Layanan</span><span class="text-gray-900 font-semibold">{{ $order->service->name }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Perangkat</span><span class="text-gray-900">{{ $order->device_description }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-600">Pengiriman</span><span class="text-gray-900">{{ $order->shipmentOption?->name ?? 'Tidak dipilih' }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-600">Pembayaran</span><span class="text-gray-900">{{ $order->paymentMethod?->name }}</span></div>
                 <div class="border-t border-red-600/10 pt-3 flex justify-between text-base font-black"><span class="text-gray-900">Total</span><span class="text-gradient">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span></div>
             </div>
         </div>
@@ -26,9 +24,8 @@
             <h3 class="font-bold text-gray-900 mb-4"><i class="fas fa-clipboard-list text-red-600"></i> Langkah Selanjutnya</h3>
             <div class="space-y-3">
                 @foreach([
-                    ['icon'=>'<i class="fas fa-credit-card text-red-600"></i>','text'=>'Lakukan pembayaran sesuai metode yang dipilih'],
-                    ['icon'=>'<i class="fas fa-camera text-red-600"></i>','text'=>'Kirim bukti pembayaran ke WhatsApp kami'],
-                    ['icon'=>'<i class="fas fa-box text-red-600"></i>','text'=>'Kirim perangkat ke alamat kami atau tunggu antar jemput'],
+                    ['icon'=>'<i class="fas fa-phone-alt text-red-600"></i>','text'=>'Kami akan menghubungi Anda untuk konfirmasi pesanan'],
+                    ['icon'=>'<i class="fas fa-box text-red-600"></i>','text'=>'Kirim perangkat ke alamat kami atau datang langsung'],
                     ['icon'=>'<i class="fas fa-wrench text-red-600"></i>','text'=>'Kami akan proses dan menginfokan perkembangan via WA/email'],
                 ] as $step)
                 <div class="flex items-center gap-3">

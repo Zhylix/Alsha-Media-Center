@@ -62,12 +62,6 @@
                 <span class="ml-auto badge badge-red">{{ $pendingCount }}</span>
                 @endif
             </a>
-            <a href="{{ route('admin.shipments.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.shipments.*') ? 'active' : '' }}">
-                <span class="text-lg"><i class="fas fa-truck text-red-500"></i></span> Pengiriman
-            </a>
-            <a href="{{ route('admin.payments.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
-                <span class="text-lg"><i class="fas fa-credit-card text-gray-500"></i></span> Pembayaran
-            </a>
             <a href="{{ route('admin.testimonials.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-star text-red-500"></i></span> Testimonial
             </a>

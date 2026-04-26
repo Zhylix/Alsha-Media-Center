@@ -13,8 +13,6 @@
                 <div class="flex justify-between"><span class="text-gray-600">No. Pesanan</span><span class="text-red-600 font-mono font-bold">{{ $order->order_number }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Layanan</span><span class="text-gray-900">{{ $order->service->name }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Perangkat</span><span class="text-gray-900">{{ $order->device_description }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-600">Pengiriman</span><span class="text-gray-900">{{ $order->shipmentOption?->name ?? '-' }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-600">Pembayaran</span><span class="text-gray-900">{{ $order->paymentMethod?->name ?? '-' }}</span></div>
                 <div class="border-t border-red-600/10 pt-3 flex justify-between font-black text-base"><span class="text-gray-900">Total</span><span class="text-gradient">Rp {{ number_format($order->total_price,0,',','.') }}</span></div>
             </div>
         </div>
@@ -36,12 +34,11 @@
     </div>
 
     <!-- Update Status -->
-    <div class="space-y-5">
+        <div class="space-y-5">
         <div class="service-card p-6 rounded-2xl">
-            @php $sb=$order->status_badge; $pb=$order->payment_badge; @endphp
+            @php $sb=$order->status_badge; @endphp
             <div class="mb-4 space-y-2">
                 <span class="badge badge-{{ $sb['color'] }} text-sm">{{ $sb['label'] }}</span>
-                <span class="badge badge-{{ $pb['color'] }} text-sm">{{ $pb['label'] }}</span>
             </div>
             <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="space-y-4">
                 @csrf @method('PUT')
@@ -51,14 +48,6 @@
                         @foreach(['pending'=>'Menunggu','confirmed'=>'Dikonfirmasi','in_progress'=>'Diproses','completed'=>'Selesai','cancelled'=>'Dibatalkan'] as $val=>$lbl)
                         <option value="{{ $val }}" {{ $order->status===$val?'selected':'' }}>{{ $lbl }}</option>
                         @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-2">Status Pembayaran</label>
-                    <select name="payment_status" class="form-input w-full px-3 py-2.5 rounded-xl text-sm">
-                        <option value="unpaid" {{ $order->payment_status==='unpaid'?'selected':'' }}>Belum Dibayar</option>
-                        <option value="paid" {{ $order->payment_status==='paid'?'selected':'' }}>Sudah Dibayar</option>
-                        <option value="refunded" {{ $order->payment_status==='refunded'?'selected':'' }}>Refund</option>
                     </select>
                 </div>
                 <div>

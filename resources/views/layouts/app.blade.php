@@ -55,8 +55,6 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('shipment') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('shipment') ? 'active text-red-600' : '' }}">Pengiriman</a>
-                    <a href="{{ route('payment') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('payment') ? 'active text-red-600' : '' }}">Pembayaran</a>
                     <a href="{{ route('contact') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('contact') ? 'active text-red-600' : '' }}">Kontak</a>
                 </div>
 
@@ -82,8 +80,6 @@
                 <a href="{{ route('services.laptop') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
                 <a href="{{ route('services.printer') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
                 <a href="{{ route('services.hp') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-mobile-alt text-gray-500"></i> Service HP</a>
-                <a href="{{ route('shipment') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-truck text-red-500"></i> Pengiriman</a>
-                <a href="{{ route('payment') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-credit-card text-red-500"></i> Pembayaran</a>
                 <a href="{{ route('contact') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Kontak</a>
                 <a href="{{ route('order.create') }}" class="block mt-2 btn-primary text-center px-4 py-3 rounded-xl text-white text-sm font-semibold">Pesan Sekarang</a>
             </div>
@@ -155,8 +151,6 @@
                     <h4 class="text-gray-900 font-bold mb-5 text-sm uppercase tracking-wider">Informasi</h4>
                     <ul class="space-y-3 text-sm">
                         <li><a href="{{ route('about') }}" class="text-gray-600 hover:text-red-600 transition-colors">Tentang Kami</a></li>
-                        <li><a href="{{ route('shipment') }}" class="text-gray-600 hover:text-red-600 transition-colors">Info Pengiriman</a></li>
-                        <li><a href="{{ route('payment') }}" class="text-gray-600 hover:text-red-600 transition-colors">Metode Pembayaran</a></li>
                         <li><a href="{{ route('contact') }}" class="text-gray-600 hover:text-red-600 transition-colors">Hubungi Kami</a></li>
                     </ul>
                 </div>

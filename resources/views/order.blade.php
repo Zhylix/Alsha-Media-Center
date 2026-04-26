@@ -77,61 +77,6 @@
                 </div>
             </div>
 
-            <!-- Shipment -->
-            <div class="service-card p-8 rounded-2xl" data-animate>
-                <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><i class="fas fa-truck text-red-600"></i> <span>Metode Pengiriman</span></h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @foreach($shipmentOptions as $opt)
-                    <label class="service-card p-4 rounded-xl cursor-pointer hover:border-red-600/40 transition-all has-[:checked]:border-red-600 has-[:checked]:bg-red-600/10">
-                        <input type="radio" name="shipment_option_id" value="{{ $opt->id }}" class="hidden" {{ old('shipment_option_id') == $opt->id ? 'checked' : '' }}>
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">
-                                @if($opt->provider === 'Antar Jemput') <i class="fas fa-motorcycle"></i>
-                                @elseif($opt->provider === 'Pick Up') <i class="fas fa-store"></i>
-                                @elseif($opt->provider === 'JNE') <i class="fas fa-box text-red-600"></i>
-                                @else <i class="fas fa-truck text-red-600"></i>
-                                @endif
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-semibold text-gray-900 text-sm">{{ $opt->name }}</p>
-                                <p class="text-gray-500 text-xs">{{ $opt->estimated_days > 0 ? 'Est. '.$opt->estimated_days.' hari' : 'Langsung' }}</p>
-                            </div>
-                            <p class="text-red-600 font-bold text-sm">{{ $opt->price == 0 ? 'Gratis' : 'Rp '.number_format($opt->price,0,',','.') }}</p>
-                        </div>
-                    </label>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Payment -->
-            <div class="service-card p-8 rounded-2xl" data-animate>
-                <h2 class="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><i class="fas fa-credit-card text-red-600"></i> <span>Metode Pembayaran</span></h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @foreach($paymentMethods->groupBy('type') as $type => $methods)
-                    <div class="col-span-full">
-                        <p class="text-gray-500 text-xs uppercase font-bold tracking-widest mb-3">
-                            {!! $type === 'bank_transfer' ? '<i class="fas fa-university text-red-600"></i> Transfer Bank' : ($type === 'e_wallet' ? '<i class="fas fa-mobile-alt text-red-600"></i> E-Wallet' : '<i class="fas fa-money-bill-wave text-red-600"></i> COD') !!}
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            @foreach($methods as $pm)
-                            <label class="service-card p-4 rounded-xl cursor-pointer hover:border-red-600/40 transition-all has-[:checked]:border-red-600 has-[:checked]:bg-red-600/10">
-                                <input type="radio" name="payment_method_id" value="{{ $pm->id }}" required class="hidden" {{ old('payment_method_id') == $pm->id ? 'checked' : '' }}>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg bg-red-600/10 flex items-center justify-center text-xs font-black text-red-600">{{ strtoupper(substr($pm->provider, 0, 3)) }}</div>
-                                    <div>
-                                        <p class="font-semibold text-gray-900 text-sm">{{ $pm->provider }}</p>
-                                        @if($pm->account_number)<p class="text-gray-500 text-xs">{{ $pm->account_number }}</p>@endif
-                                    </div>
-                                </div>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                @error('payment_method_id')<p class="text-red-400 text-xs mt-2">{{ $message }}</p>@enderror
-            </div>
-
             <!-- Order Summary -->
             <div class="service-card p-8 rounded-2xl bg-red-600/5 border-red-600/20" data-animate>
                 <h2 class="text-xl font-black text-gray-900 mb-4"><i class="fas fa-clipboard-list text-red-600"></i> Ringkasan Pesanan</h2>
@@ -155,35 +100,24 @@ const serviceData = {
     {{ $svc->id }}: { price: {{ $svc->price_start }}, name: '{{ addslashes($svc->name) }}' },
     @endforeach
 };
-const shipmentData = {
-    @foreach($shipmentOptions as $opt)
-    {{ $opt->id }}: { price: {{ $opt->price }}, name: '{{ addslashes($opt->name) }}' },
-    @endforeach
-};
 
 function updateSummary() {
     const serviceId = serviceSelect.value;
-    const checkedShipment = document.querySelector('input[name="shipment_option_id"]:checked');
-    const checkedPayment = document.querySelector('input[name="payment_method_id"]:checked');
     const summary = document.getElementById('orderSummary');
 
-    if (!serviceId) { summary.innerHTML = '<p>Pilih layanan dan pengiriman untuk melihat estimasi total.</p>'; return; }
+    if (!serviceId) { summary.innerHTML = '<p>Pilih layanan untuk melihat estimasi total.</p>'; return; }
 
     const svc = serviceData[serviceId];
-    const ship = checkedShipment ? shipmentData[checkedShipment.value] : null;
-    const total = svc.price + (ship ? ship.price : 0);
 
     summary.innerHTML = `
         <div class="space-y-3">
             <div class="flex justify-between"><span>Layanan: ${svc.name}</span><span class="text-gray-900 font-semibold">Rp ${svc.price.toLocaleString('id-ID')}</span></div>
-            <div class="flex justify-between"><span>Pengiriman: ${ship ? ship.name : '-'}</span><span class="text-gray-900 font-semibold">${ship ? (ship.price === 0 ? 'Gratis' : 'Rp '+ship.price.toLocaleString('id-ID')) : '-'}</span></div>
-            <div class="border-t border-red-600/20 pt-3 flex justify-between text-lg font-black"><span class="text-gray-900">Total Estimasi</span><span class="text-gradient">Rp ${total.toLocaleString('id-ID')}</span></div>
+            <div class="border-t border-red-600/20 pt-3 flex justify-between text-lg font-black"><span class="text-gray-900">Total Estimasi</span><span class="text-gradient">Rp ${svc.price.toLocaleString('id-ID')}</span></div>
             <p class="text-xs text-gray-500">* Harga final akan dikonfirmasi setelah diagnosa perangkat</p>
         </div>
     `;
 }
 
 serviceSelect.addEventListener('change', updateSummary);
-document.querySelectorAll('input[name="shipment_option_id"]').forEach(r => r.addEventListener('change', updateSummary));
 </script>
 @endpush

@@ -61,7 +61,7 @@
             @foreach([
                 ['name' => 'Budi Teknisi', 'role' => 'Lead Technician - Laptop', 'exp' => '8 Tahun', 'icon' => '<i class="fas fa-tools text-red-600"></i>'],
                 ['name' => 'Sari Handayani', 'role' => 'HP & Smartphone Specialist', 'exp' => '5 Tahun', 'icon' => '<i class="fas fa-laptop-medical text-red-600"></i>'],
-                ['name' => 'Agus Purnama', 'role' => 'Printer & Peripherals Expert', 'exp' => '6 Tahun', 'icon' => '<i class="fas fa-user-tie"></i><i class="fas fa-laptop text-red-600"></i>'],
+                ['name' => 'Agus Purnama', 'role' => 'Printer & Peripherals Expert', 'exp' => '6 Tahun', 'icon' => '<i class=""></i><i class="fas fa-laptop text-red-600"></i>'],
             ] as $member)
             <div class="service-card p-6 rounded-2xl text-center" data-animate>
                 <div class="text-6xl mb-4">{!! $member['icon'] !!}</div>

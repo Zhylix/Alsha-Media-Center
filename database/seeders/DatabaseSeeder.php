@@ -24,16 +24,16 @@ class DatabaseSeeder extends Seeder
 
         // Store Profile
         StoreProfile::create([
-            'store_name'  => 'TechFix Pro',
+            'store_name'  => 'Alsha Media Center',
             'tagline'     => 'Solusi Terpercaya untuk Semua Masalah Elektronik Anda',
-            'description' => 'TechFix Pro adalah bengkel service elektronik profesional yang berpengalaman lebih dari 10 tahun dalam menangani perbaikan laptop, printer, dan handphone. Kami menggunakan spare part original dan bergaransi untuk setiap pekerjaan yang kami lakukan.',
+            'description' => 'Alsha Media Center adalah bengkel service elektronik profesional yang berpengalaman lebih dari 10 tahun dalam menangani perbaikan laptop, printer, dan handphone. Kami menggunakan spare part original dan bergaransi untuk setiap pekerjaan yang kami lakukan.',
             'address'     => 'Jl. Jepara No. 123, Bangsri, Jepara, Jawa Tengah',
             'city'        => 'Bangsri, Jawa Tengah',
             'phone'       => '+62 22 1234 5678',
             'whatsapp'    => '+6281234567890',
-            'email'       => 'info@techfixpro.com',
-            'instagram'   => '@techfixpro_bdg',
-            'facebook'    => 'TechFix Pro Bangsri',
+            'email'       => 'info@alshamediacenter.com',
+            'instagram'   => '@alshamediacenter',
+            'facebook'    => 'Alsha Media Center',
             'latitude'    => -6.9147440,
             'longitude'   => 107.6098100,
             'open_hours'  => '08:00 - 20:00',
@@ -86,11 +86,11 @@ class DatabaseSeeder extends Seeder
         ShipmentOption::create(['name' => 'Ambil Sendiri (Pick Up)', 'provider' => 'Pick Up', 'description' => 'Ambil langsung ke toko kami', 'price' => 0, 'estimated_days' => 0, 'is_active' => true]);
 
         // Payment Methods
-        PaymentMethod::create(['name' => 'Transfer BCA', 'type' => 'bank_transfer', 'provider' => 'BCA', 'account_number' => '1234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer ke rekening BCA di atas, kemudian kirim bukti transfer ke WhatsApp kami.', 'is_active' => true]);
-        PaymentMethod::create(['name' => 'Transfer Mandiri', 'type' => 'bank_transfer', 'provider' => 'Mandiri', 'account_number' => '0987654321', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer ke rekening Mandiri di atas, kemudian kirim bukti transfer ke WhatsApp kami.', 'is_active' => true]);
-        PaymentMethod::create(['name' => 'GoPay', 'type' => 'e_wallet', 'provider' => 'GoPay', 'account_number' => '081234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer GoPay ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
-        PaymentMethod::create(['name' => 'OVO', 'type' => 'e_wallet', 'provider' => 'OVO', 'account_number' => '081234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer OVO ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
-        PaymentMethod::create(['name' => 'DANA', 'type' => 'e_wallet', 'provider' => 'DANA', 'account_number' => '081234567890', 'account_name' => 'TechFix Pro', 'instructions' => 'Transfer DANA ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
+        PaymentMethod::create(['name' => 'Transfer BCA', 'type' => 'bank_transfer', 'provider' => 'BCA', 'account_number' => '1234567890', 'account_name' => 'Alsha Media Center', 'instructions' => 'Transfer ke rekening BCA di atas, kemudian kirim bukti transfer ke WhatsApp kami.', 'is_active' => true]);
+        PaymentMethod::create(['name' => 'Transfer Mandiri', 'type' => 'bank_transfer', 'provider' => 'Mandiri', 'account_number' => '0987654321', 'account_name' => 'Alsha Media Center', 'instructions' => 'Transfer ke rekening Mandiri di atas, kemudian kirim bukti transfer ke WhatsApp kami.', 'is_active' => true]);
+        PaymentMethod::create(['name' => 'GoPay', 'type' => 'e_wallet', 'provider' => 'GoPay', 'account_number' => '081234567890', 'account_name' => 'Alsha Media Center', 'instructions' => 'Transfer GoPay ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
+        PaymentMethod::create(['name' => 'OVO', 'type' => 'e_wallet', 'provider' => 'OVO', 'account_number' => '081234567890', 'account_name' => 'Alsha Media Center', 'instructions' => 'Transfer OVO ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
+        PaymentMethod::create(['name' => 'DANA', 'type' => 'e_wallet', 'provider' => 'DANA', 'account_number' => '081234567890', 'account_name' => 'Alsha Media Center', 'instructions' => 'Transfer DANA ke nomor di atas, kemudian kirim screenshot bukti transfer.', 'is_active' => true]);
         PaymentMethod::create(['name' => 'Bayar di Tempat (COD)', 'type' => 'cod', 'provider' => 'COD', 'instructions' => 'Bayar langsung saat perangkat Anda diambil/diantar. Khusus area Bangsri.', 'is_active' => true]);
 
         // Testimonials

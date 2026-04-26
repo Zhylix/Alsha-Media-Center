@@ -10,13 +10,10 @@ class AdminOrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['service', 'shipmentOption', 'paymentMethod']);
+        $query = Order::with('service');
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
-        }
-        if ($request->filled('payment_status')) {
-            $query->where('payment_status', $request->payment_status);
         }
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
@@ -32,16 +29,15 @@ class AdminOrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['service', 'shipmentOption', 'paymentMethod']);
+        $order->load('service');
         return view('admin.orders.show', compact('order'));
     }
 
     public function update(Request $request, Order $order)
     {
         $data = $request->validate([
-            'status'         => 'required|in:pending,confirmed,in_progress,completed,cancelled',
-            'payment_status' => 'required|in:unpaid,paid,refunded',
-            'notes'          => 'nullable|string|max:1000',
+            'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled',
+            'notes'  => 'nullable|string|max:1000',
         ]);
 
         if ($data['status'] === 'confirmed' && !$order->confirmed_at) {
