@@ -11,7 +11,7 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-                <span class="badge badge-{{ $service->category === 'laptop' ? 'blue' : ($service->category === 'printer' ? 'purple' : 'green') }} mb-4 inline-block">{{ $service->category_label }}</span>
+        <span class="badge badge-{{ $service->category === 'laptop' ? 'blue' : ($service->category === 'printer' ? 'purple' : 'green') }} mb-4 inline-block">{{ $service->category_label }}</span>
                 <h1 class="text-4xl font-black text-gray-900 mb-4">{{ $service->name }}</h1>
                 <p class="text-gray-600 text-lg mb-6">{{ $service->short_description }}</p>
                 <div class="flex flex-wrap gap-4">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="service-card p-8 rounded-2xl">
-                <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-mobile-alt text-red-600"></i>') !!}</div>
+                <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}</div>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between py-3 border-b border-red-600/10">
                         <span class="text-gray-600 text-sm">Harga</span>

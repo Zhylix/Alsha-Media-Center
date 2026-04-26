@@ -35,7 +35,7 @@
                 </h1>
 
                 <p class="text-gray-600 text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
-                    Spesialis perbaikan <strong class="text-gray-900">laptop</strong>, <strong class="text-gray-900">printer</strong>, dan <strong class="text-gray-900">handphone</strong>.
+                    Spesialis perbaikan <strong class="text-gray-900">PC</strong>, <strong class="text-gray-900">laptop</strong>, dan <strong class="text-gray-900">printer</strong>.
                     Teknisi berpengalaman, spare part original, garansi 30 hari. Antar jemput tersedia!
                 </p>
 
@@ -52,9 +52,9 @@
 
                 <!-- Quick Category Buttons -->
                 <div class="flex flex-wrap gap-3 animate-fade-up" style="animation-delay: 0.4s;">
+                    <a href="{{ route('services.pc') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-desktop text-red-600"></i> PC</a>
                     <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-laptop text-red-600"></i> Laptop</a>
                     <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-print text-red-600"></i> Printer</a>
-                    <a href="{{ route('services.hp') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-mobile-alt text-red-600"></i> HP</a>
                 </div>
             </div>
 
@@ -94,19 +94,19 @@
                 </div>
                 @endif
 
-                <!-- HP Card -->
-                @if($heroHp)
+                <!-- PC Card -->
+                @if($heroPc)
                 <div class="service-card p-6 rounded-2xl text-center hover-glow group" style="margin-top: -24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-mobile-alt text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroHp->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroHp->short_description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroHp->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroHp->estimated_days }} hari</p>
+                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
+                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroPc->name }}</h3>
+                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroPc->short_description }}</p>
+                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroPc->price_range }}</p>
+                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroPc->estimated_days }} hari</p>
                 </div>
                 @else
                 <div class="service-card p-6 rounded-2xl text-center hover-glow" style="margin-top: -24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-mobile-alt text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service HP</h3>
+                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
+                    <h3 class="font-bold text-gray-900 text-sm">Service PC</h3>
                     <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
                 </div>
                 @endif
@@ -168,7 +168,7 @@
             <div class="service-card p-6 rounded-2xl" data-animate>
                 <div class="flex items-start justify-between mb-4">
                     <div class="text-3xl">
-                        {!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-mobile-alt text-red-600"></i>') !!}
+                        {!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}
                     </div>
                     <span class="badge badge-{{ $service->category === 'laptop' ? 'gray' : ($service->category === 'printer' ? 'dark' : 'red') }}">
                         {{ $service->category_label }}
@@ -279,7 +279,7 @@
                     <div>
                         <p class="text-gray-900 font-semibold text-sm">{{ $t->customer_name }}</p>
                         <p class="text-gray-500 text-xs">
-                            {!! $t->service_type === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i> Service Laptop' : ($t->service_type === 'printer' ? '<i class="fas fa-print text-red-600"></i> Service Printer' : '<i class="fas fa-mobile-alt text-red-600"></i> Service HP') !!}
+                            {!! $t->service_type === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i> Service Laptop' : ($t->service_type === 'printer' ? '<i class="fas fa-print text-red-600"></i> Service Printer' : '<i class="fas fa-desktop text-red-600"></i> Service PC') !!}
                         </p>
                     </div>
                 </div>

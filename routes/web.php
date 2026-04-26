@@ -24,7 +24,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/laptop', [ServiceController::class, 'laptop'])->name('services.laptop');
 Route::get('/services/printer', [ServiceController::class, 'printer'])->name('services.printer');
-Route::get('/services/hp', [ServiceController::class, 'hp'])->name('services.hp');
+Route::get('/services/pc', [ServiceController::class, 'pc'])->name('services.pc');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 // Orders

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ $metaDesc ?? 'Alsha Media Center – Jasa service laptop, printer, dan handphone terpercaya di Bangsri. Teknisi berpengalaman, spare part original, garansi resmi.' }}">
-    <meta name="keywords" content="service laptop bangsri, service printer bangsri, service hp bangsri, alsha media center">
-    <title>@yield('title', 'Alsha Media Center') | Jasa Service Laptop, Printer & HP</title>
+    <meta name="description" content="{{ $metaDesc ?? 'Alsha Media Center – Jasa service PC, laptop, dan printer terpercaya di Bangsri. Teknisi berpengalaman, spare part original, garansi resmi.' }}">
+    <meta name="keywords" content="service pc bangsri, service laptop bangsri, service printer bangsri, alsha media center">
+    <title>@yield('title', 'Alsha Media Center') | Jasa Service PC, Laptop & Printer</title>
     @if($store && $store->logo)
     <link rel="icon" href="{{ asset('storage/' . $store->logo) }}">
     @else
@@ -49,9 +49,9 @@
                         </button>
                         <div class="absolute top-full left-0 mt-2 w-52 glass rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl border border-red-500/20">
                             <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-tools text-red-500"></i> Semua Layanan</a>
+                            <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-desktop text-gray-500"></i> Service PC</a>
                             <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
                             <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
-                            <a href="{{ route('services.hp') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-mobile-alt text-gray-500"></i> Service HP</a>
                         </div>
                     </div>
 
@@ -73,9 +73,9 @@
                 <a href="{{ route('home') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-home text-red-500"></i> Beranda</a>
                 <a href="{{ route('about') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-building text-red-400"></i> Tentang Kami</a>
                 <a href="{{ route('services.index') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-tools text-red-500"></i> Semua Layanan</a>
+                <a href="{{ route('services.pc') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-desktop text-gray-500"></i> Service PC</a>
                 <a href="{{ route('services.laptop') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
                 <a href="{{ route('services.printer') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
-                <a href="{{ route('services.hp') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-mobile-alt text-gray-500"></i> Service HP</a>
                 <a href="{{ route('contact') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Kontak</a>
             </div>
         </div>
@@ -133,9 +133,9 @@
                 <div>
                     <h4 class="text-gray-900 font-bold mb-5 text-sm uppercase tracking-wider">Layanan</h4>
                     <ul class="space-y-3 text-sm">
+                        <li><a href="{{ route('services.pc') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-desktop text-gray-500"></i></span> Service PC</a></li>
                         <li><a href="{{ route('services.laptop') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-laptop text-gray-500"></i></span> Service Laptop</a></li>
                         <li><a href="{{ route('services.printer') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-print text-gray-500"></i></span> Service Printer</a></li>
-                        <li><a href="{{ route('services.hp') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-mobile-alt text-gray-500"></i></span> Service HP</a></li>
                         <li><a href="{{ route('order.track') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-search"></i></span> Lacak Pesanan</a></li>
                     </ul>
                 </div>

@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('category'); // laptop, printer, hp
+            $table->string('category');
             $table->text('description');
             $table->text('short_description')->nullable();
             $table->decimal('price_start', 12, 0);

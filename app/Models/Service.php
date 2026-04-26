@@ -33,7 +33,7 @@ class Service extends Model
         return match($this->category) {
             'laptop' => 'Laptop',
             'printer' => 'Printer',
-            'hp' => 'Handphone / HP',
+            'pc' => 'PC / Komputer',
             default => ucfirst($this->category),
         };
     }

@@ -19,7 +19,7 @@
                         <option value="">-- Pilih --</option>
                         <option value="laptop" {{ old('category') === 'laptop' ? 'selected' : '' }}><i class="fas fa-laptop text-red-600"></i> Laptop</option>
                         <option value="printer" {{ old('category') === 'printer' ? 'selected' : '' }}><i class="fas fa-print text-red-600"></i> Printer</option>
-                        <option value="hp" {{ old('category') === 'hp' ? 'selected' : '' }}><i class="fas fa-mobile-alt text-red-600"></i> HP</option>
+                        <option value="pc" {{ old('category') === 'pc' ? 'selected' : '' }}><i class="fas fa-desktop text-red-600"></i> PC</option>
                     </select>
                 </div>
                 <div>

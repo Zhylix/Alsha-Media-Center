@@ -20,7 +20,7 @@
                         <option value="">-- Pilih --</option>
                         <option value="laptop" {{ old('service_type') === 'laptop' ? 'selected' : '' }}>Service Laptop</option>
                         <option value="printer" {{ old('service_type') === 'printer' ? 'selected' : '' }}>Service Printer</option>
-                        <option value="hp" {{ old('service_type') === 'hp' ? 'selected' : '' }}>Service HP</option>
+                        <option value="pc" {{ old('service_type') === 'pc' ? 'selected' : '' }}>Service PC</option>
                     </select>
                     @error('service_type')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>

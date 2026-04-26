@@ -12,8 +12,8 @@ class ServiceController extends Controller
         $store           = StoreProfile::first();
         $laptopServices  = Service::where('category', 'laptop')->where('is_active', true)->orderBy('sort_order')->get();
         $printerServices = Service::where('category', 'printer')->where('is_active', true)->orderBy('sort_order')->get();
-        $hpServices      = Service::where('category', 'hp')->where('is_active', true)->orderBy('sort_order')->get();
-        return view('services.index', compact('store', 'laptopServices', 'printerServices', 'hpServices'));
+        $pcServices      = Service::where('category', 'pc')->where('is_active', true)->orderBy('sort_order')->get();
+        return view('services.index', compact('store', 'laptopServices', 'printerServices', 'pcServices'));
     }
 
     public function laptop()
@@ -30,11 +30,11 @@ class ServiceController extends Controller
         return view('services.printer', compact('store', 'services'));
     }
 
-    public function hp()
+    public function pc()
     {
         $store    = StoreProfile::first();
-        $services = Service::where('category', 'hp')->where('is_active', true)->orderBy('sort_order')->get();
-        return view('services.hp', compact('store', 'services'));
+        $services = Service::where('category', 'pc')->where('is_active', true)->orderBy('sort_order')->get();
+        return view('services.pc', compact('store', 'services'));
     }
 
     public function show($slug)

@@ -14,13 +14,13 @@ class HomeController extends Controller
         $featuredServices = Service::where('is_active', true)->where('is_featured', true)->take(6)->get();
         $laptopServices   = Service::where('category', 'laptop')->where('is_active', true)->take(3)->get();
         $printerServices  = Service::where('category', 'printer')->where('is_active', true)->take(3)->get();
-        $hpServices       = Service::where('category', 'hp')->where('is_active', true)->take(3)->get();
+        $pcServices       = Service::where('category', 'pc')->where('is_active', true)->take(3)->get();
         $testimonials     = Testimonial::where('is_active', true)->latest()->take(6)->get();
 
         // Hero card data - real from CRUD
         $heroLaptop   = Service::where('category', 'laptop')->where('is_active', true)->first();
         $heroPrinter  = Service::where('category', 'printer')->where('is_active', true)->first();
-        $heroHp       = Service::where('category', 'hp')->where('is_active', true)->first();
+        $heroPc       = Service::where('category', 'pc')->where('is_active', true)->first();
 
         $stats = [
             'services'    => Service::where('is_active', true)->count(),
@@ -29,8 +29,8 @@ class HomeController extends Controller
             'customers'   => max(\App\Models\Order::count() + 500, 500),
         ];
 
-        return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'hpServices', 'testimonials', 'stats',
-            'heroLaptop', 'heroPrinter', 'heroHp'));
+        return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'pcServices', 'testimonials', 'stats',
+            'heroLaptop', 'heroPrinter', 'heroPc'));
 
     }
 }

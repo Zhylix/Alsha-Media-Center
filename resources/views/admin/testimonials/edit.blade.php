@@ -19,7 +19,7 @@
                     <select name="service_type" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
                         <option value="laptop" {{ old('service_type', $testimonial->service_type) === 'laptop' ? 'selected' : '' }}>Service Laptop</option>
                         <option value="printer" {{ old('service_type', $testimonial->service_type) === 'printer' ? 'selected' : '' }}>Service Printer</option>
-                        <option value="hp" {{ old('service_type', $testimonial->service_type) === 'hp' ? 'selected' : '' }}>Service HP</option>
+                        <option value="pc" {{ old('service_type', $testimonial->service_type) === 'pc' ? 'selected' : '' }}>Service PC</option>
                     </select>
                     @error('service_type')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
