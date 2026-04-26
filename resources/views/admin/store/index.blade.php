@@ -48,6 +48,30 @@
                     @endif
                 </div>
             </div>
+
+            <div class="border-t border-gray-200 pt-6">
+                <h4 class="text-base font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fas fa-photo-video text-red-500"></i> Gambar Hero (Background Halaman Depan)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Upload Gambar Hero Baru</label>
+                        <input type="file" name="hero_image" accept="image/*" class="form-input w-full px-4 py-3 rounded-xl text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-500/10 file:text-red-500 hover:file:bg-red-500/20">
+                        <p class="text-gray-500 text-xs mt-2">Format: JPG, PNG, WEBP (Maks. 5MB). Disarankan ukuran 1920x1080 px atau lebih besar.</p>
+                    </div>
+                    <div>
+                        @if($store && $store->hero_image)
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Gambar Hero Saat Ini</label>
+                        <div class="flex items-center gap-4">
+                            <div class="bg-white p-2 rounded-xl">
+                                <img src="{{ asset('storage/' . $store->hero_image) }}" alt="Hero" class="h-24 w-40 object-cover rounded-lg">
+                            </div>
+                            <button type="button" onclick="if(confirm('Yakin ingin menghapus gambar hero?')) document.getElementById('delete-hero-form').submit();" class="text-red-500 hover:text-red-400 text-sm font-medium px-4 py-2 bg-red-500/10 rounded-lg">
+                                <i class="fas fa-trash"></i> Hapus Hero
+                            </button>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="service-card p-8 rounded-2xl space-y-6">
@@ -120,6 +144,11 @@
     </form>
 
     <form id="delete-logo-form" action="{{ route('admin.store.logo.delete') }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <form id="delete-hero-form" action="{{ route('admin.store.hero.delete') }}" method="POST" class="hidden">
         @csrf
         @method('DELETE')
     </form>
