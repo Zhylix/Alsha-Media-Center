@@ -59,5 +59,6 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         Route::get('/store', [AdminStoreController::class, 'index'])->name('store.index');
         Route::put('/store', [AdminStoreController::class, 'update'])->name('store.update');
         Route::delete('/store/logo', [AdminStoreController::class, 'deleteLogo'])->name('store.logo.delete');
+        Route::delete('/store/hero-image', [AdminStoreController::class, 'deleteHeroImage'])->name('store.hero.delete');
     });
 });

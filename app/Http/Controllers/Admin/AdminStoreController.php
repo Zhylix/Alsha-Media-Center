@@ -36,6 +36,7 @@ class AdminStoreController extends Controller
             'open_hours'  => 'required|string|max:50',
             'open_days'   => 'required|string|max:100',
             'logo'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'hero_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $store = StoreProfile::first();
@@ -47,6 +48,13 @@ class AdminStoreController extends Controller
             $data['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
+        if ($request->hasFile('hero_image')) {
+            if ($store && $store->hero_image) {
+                Storage::disk('public')->delete($store->hero_image);
+            }
+            $data['hero_image'] = $request->file('hero_image')->store('hero', 'public');
+        }
+
         if ($store) {
             $store->update($data);
         } else {
@@ -54,6 +62,17 @@ class AdminStoreController extends Controller
         }
 
         return redirect()->route('admin.store.index')->with('success', 'Profil toko berhasil diperbarui!');
+    }
+
+    public function deleteHeroImage()
+    {
+        $store = StoreProfile::first();
+        if ($store && $store->hero_image) {
+            Storage::disk('public')->delete($store->hero_image);
+            $store->update(['hero_image' => null]);
+            return redirect()->route('admin.store.index')->with('success', 'Gambar hero berhasil dihapus!');
+        }
+        return redirect()->route('admin.store.index')->with('error', 'Tidak ada gambar hero untuk dihapus.');
     }
 
     public function deleteLogo()

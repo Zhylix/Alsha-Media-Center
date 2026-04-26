@@ -5,37 +5,33 @@
 @section('content')
 
 <!-- ===================== HERO ===================== -->
-<section class="relative min-h-screen bg-hero flex items-center overflow-hidden">
-    <!-- Background decorations -->
-    <div class="absolute inset-0 pointer-events-none overflow-hidden">
-        <div class="particle w-2 h-2 top-1/4 left-1/5 opacity-60" style="animation-delay: 0s;"></div>
-        <div class="particle w-3 h-3 top-1/3 left-2/3 opacity-40" style="animation-delay: 1s;"></div>
-        <div class="particle w-2 h-2 top-2/3 left-1/4 opacity-50" style="animation-delay: 2s;"></div>
-        <div class="particle w-4 h-4 top-3/4 left-3/4 opacity-30" style="animation-delay: 0.5s;"></div>
-        <div class="particle w-1 h-1 top-1/2 left-1/2 opacity-70" style="animation-delay: 1.5s;"></div>
+@php
+$heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_image) : asset('images/image.png');
+@endphp
+<section class="relative min-h-screen flex items-center overflow-hidden bg-hero-image" style="background-image: url('{{ $heroImageUrl }}');">
+    <!-- Overlay gelap agar teks tetap terbaca -->
+    <div class="absolute inset-0 bg-black/60 z-0"></div>
 
-        <!-- Glow circles -->
-        <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 left-1/4 w-80 h-80 bg-red-600/10 rounded-full blur-3xl"></div>
-    </div>
+    <!-- Background decorations (hanya tampil jika tidak pakai foto) -->
+    <!-- Dihapus karena sekarang selalu pakai gambar background -->
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Left Content -->
             <div>
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-red-600/20 text-red-600 text-sm font-medium mb-6 animate-fade-up">
-                    <span class="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border-white/20 text-white backdrop-blur-sm text-sm font-medium mb-6 animate-fade-up">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                     Terpercaya sejak {{ date('Y') - ($stats['experience'] ?? 5) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
                 </div>
 
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
                     Jasa Service
                     <span class="text-gradient block">Elektronik</span>
                     Terpercaya
                 </h1>
 
                 <p class="text-gray-600 text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
-                    Spesialis perbaikan <strong class="text-gray-900">PC</strong>, <strong class="text-gray-900">laptop</strong>, dan <strong class="text-gray-900">printer</strong>.
+                    Spesialis perbaikan <strong class="text-gray-900">laptop</strong>, <strong class="text-gray-900">printer</strong>, dan <strong class="text-gray-900">handphone</strong>.
                     Teknisi berpengalaman, spare part original, garansi 30 hari. Antar jemput tersedia!
                 </p>
 
@@ -44,7 +40,7 @@
                         <i class="fab fa-whatsapp"></i>
                         Chat WhatsApp
                     </a>
-                    <a href="{{ route('services.index') }}" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold text-base">
+                    <a href="{{ route('services.index') }}" class="border-white/30 text-white hover:bg-white/10 inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-base transition-all">
                         Lihat Layanan
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
@@ -52,9 +48,9 @@
 
                 <!-- Quick Category Buttons -->
                 <div class="flex flex-wrap gap-3 animate-fade-up" style="animation-delay: 0.4s;">
-                    <a href="{{ route('services.pc') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-desktop text-red-600"></i> PC</a>
                     <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-laptop text-red-600"></i> Laptop</a>
                     <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-print text-red-600"></i> Printer</a>
+                    <a href="{{ route('services.hp') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-mobile-alt text-red-600"></i> HP</a>
                 </div>
             </div>
 
@@ -66,7 +62,7 @@
                     <div class="text-4xl mb-3 animate-float"><i class="fas fa-laptop text-red-600"></i></div>
                     <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroLaptop->name }}</h3>
                     <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroLaptop->short_description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroLaptop->price_range }}</p>
+                    <p class="text-red-600 font-Qbold text-sm mt-3">{{ $heroLaptop->price_range }}</p>
                     <p class="text-gray-600 text-xs mt-1">Est. {{ $heroLaptop->estimated_days }} hari</p>
                 </div>
                 @else
@@ -107,6 +103,22 @@
                 <div class="service-card p-6 rounded-2xl text-center hover-glow" style="margin-top: -24px;">
                     <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
                     <h3 class="font-bold text-gray-900 text-sm">Service PC</h3>
+                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
+                </div>
+                @endif
+
+                <!-- Shipment Card -->
+                @if($heroShipment)
+                <div class="service-card p-6 rounded-2xl text-center hover-glow group">
+                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1.5s;"><i class="fas fa-truck text-red-600"></i></div>
+                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroShipment->name }}</h3>
+                    <p class="text-gray-500 text-xs mt-1">{{ $heroShipment->description }}</p>
+                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroShipment->price_display }}</p>
+                </div>
+                @else
+                <div class="service-card p-6 rounded-2xl text-center hover-glow">
+                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1.5s;"><i class="fas fa-truck text-red-600"></i></div>
+                    <h3 class="font-bold text-gray-900 text-sm">Antar Jemput</h3>
                     <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
                 </div>
                 @endif

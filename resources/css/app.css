@@ -47,6 +47,12 @@
     background: linear-gradient(135deg, #ffffff 0%, #f9fafb 40%, #f3f4f6 70%, #ffffff 100%);
 }
 
+.bg-hero-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .bg-dark-card {
     background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,250,251,0.98) 100%);
     backdrop-filter: blur(20px);
