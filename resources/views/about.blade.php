@@ -50,30 +50,6 @@
 
 <div class="section-line"></div>
 
-<!-- Team -->
-<section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14" data-animate>
-            <span class="text-red-600 text-sm font-bold uppercase tracking-widest">Tim Kami</span>
-            <h2 class="text-3xl font-black text-gray-900 mt-3">Teknisi <span class="text-gradient">Profesional</span> Kami</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach([
-                ['name' => 'Budi Teknisi', 'role' => 'Lead Technician - Laptop', 'exp' => '8 Tahun', 'icon' => '<i class="fas fa-tools text-red-600"></i>'],
-                ['name' => 'Sari Handayani', 'role' => 'HP & Smartphone Specialist', 'exp' => '5 Tahun', 'icon' => '<i class="fas fa-laptop-medical text-red-600"></i>'],
-                ['name' => 'Agus Purnama', 'role' => 'Printer & Peripherals Expert', 'exp' => '6 Tahun', 'icon' => '<i class=""></i><i class="fas fa-laptop text-red-600"></i>'],
-            ] as $member)
-            <div class="service-card p-6 rounded-2xl text-center" data-animate>
-                <div class="text-6xl mb-4">{!! $member['icon'] !!}</div>
-                <h3 class="font-bold text-gray-900 text-lg">{{ $member['name'] }}</h3>
-                <p class="text-red-600 text-sm mb-2">{{ $member['role'] }}</p>
-                <span class="badge badge-red">Pengalaman {{ $member['exp'] }}</span>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 <!-- Values -->
 <section class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,18 +81,24 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10" data-animate>
             <h2 class="text-3xl font-black text-gray-900">Lokasi <span class="text-gradient">Toko Kami</span></h2>
-            <p class="text-gray-600 mt-3">{{ $store->address ?? 'Jl. Jepara No. 123' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</p>
+            <p class="text-gray-600 mt-3">{{ $store->address ?? 'Jl. Raya Bangsri No 02. Kecamatan Bangsri' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</p>
         </div>
+        @if($store && $store->google_maps_link)
+        <iframe src="{{ $store->google_maps_link }}" width="100%" style="border:0; min-height: 400px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-2xl shadow-2xl border border-red-600/10"></iframe>
+        @else
         <div id="map" class="rounded-2xl shadow-2xl border border-red-600/10"></div>
+        @endif
     </div>
 </section>
 @endsection
 
 @push('scripts')
+@if(!($store && $store->google_maps_link))
 <script>
     const map = L.map('map').setView([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
     const icon = L.divIcon({ html: `<div style="background:linear-gradient(135deg,#dc2626,#991b1b);width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 15px rgba(220,38,38,0.5);border:3px solid white;display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:18px;"><i class="fas fa-wrench text-white"></i></span></div>`, className: '', iconSize:[40,40], iconAnchor:[20,40] });
-    L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], {icon}).addTo(map).bindPopup('<strong><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong><br>{{ $store->address ?? "Jl. Jepara No. 123" }}, {{ $store->city ?? "Bangsri, Jawa Tengah" }}').openPopup();
+    L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], {icon}).addTo(map).bindPopup('<strong><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong><br>{{ $store->address ?? "Jl. Raya Bangsri No 02. Kecamatan Bangsri" }}, {{ $store->city ?? "Bangsri, Jawa Tengah" }}').openPopup();
 </script>
+@endif
 @endpush

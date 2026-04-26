@@ -28,8 +28,6 @@ Route::get('/services/hp', [ServiceController::class, 'hp'])->name('services.hp'
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 // Orders
-Route::get('/order', [OrderController::class, 'create'])->name('order.create');
-Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
 Route::get('/order/track', [OrderController::class, 'track'])->name('order.track');
 

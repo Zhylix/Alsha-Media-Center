@@ -32,7 +32,6 @@
                     </div>
                     <div class="flex gap-2">
                         <a href="{{ route('services.show', $service->slug) }}" class="px-3 py-2 rounded-xl glass text-gray-700 hover:text-gray-900 text-xs transition-all">Detail</a>
-                        <a href="{{ route('order.create') }}?service={{ $service->slug }}" class="btn-primary px-4 py-2 rounded-xl text-white text-xs font-semibold">Pesan</a>
                     </div>
                 </div>
             </div>

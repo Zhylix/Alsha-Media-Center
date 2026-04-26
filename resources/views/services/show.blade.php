@@ -15,8 +15,8 @@
                 <h1 class="text-4xl font-black text-gray-900 mb-4">{{ $service->name }}</h1>
                 <p class="text-gray-600 text-lg mb-6">{{ $service->short_description }}</p>
                 <div class="flex flex-wrap gap-4">
-                    <a href="{{ route('order.create') }}?service={{ $service->slug }}" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fas fa-wrench text-red-600"></i> Pesan Sekarang</a>
-                    <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, saya ingin tanya tentang {{ $service->name }}" target="_blank" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold"><i class="fas fa-comments text-red-600"></i> Tanya WA</a>
+                    <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, saya ingin tanya tentang {{ $service->name }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fab fa-whatsapp"></i> Tanya via WhatsApp</a>
+                    <a href="{{ route('contact') }}" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold"><i class="fas fa-phone-alt text-red-600"></i> Hubungi Kami</a>
                 </div>
             </div>
             <div class="service-card p-8 rounded-2xl">

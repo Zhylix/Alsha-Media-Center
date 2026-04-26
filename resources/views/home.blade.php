@@ -40,9 +40,9 @@
                 </p>
 
                 <div class="flex flex-wrap gap-4 mb-10 animate-fade-up" style="animation-delay: 0.3s;">
-                    <a href="{{ route('order.create') }}" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        Pesan Sekarang
+                    <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base">
+                        <i class="fab fa-whatsapp"></i>
+                        Chat WhatsApp
                     </a>
                     <a href="{{ route('services.index') }}" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold text-base">
                         Lihat Layanan
@@ -296,13 +296,17 @@
         <div class="text-center mb-14" data-animate>
             <span class="text-red-600 text-sm font-bold uppercase tracking-widest"><i class="fas fa-map-marker-alt mr-1"></i> Lokasi Toko</span>
             <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-3">Temukan <span class="text-gradient">Kami di Sini</span></h2>
-            <p class="text-gray-600 mt-4">{{ $store->address ?? 'Jl. Jepara No. 123' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</p>
+            <p class="text-gray-600 mt-4">{{ $store->address ?? 'Jl. Raya Bangsri No 02. Kecamatan Bangsri' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <!-- Map -->
             <div class="lg:col-span-2" data-animate>
+                @if($store && $store->google_maps_link)
+                <iframe src="{{ $store->google_maps_link }}" width="100%" style="border:0; min-height: 400px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-2xl shadow-2xl border border-red-600/10"></iframe>
+                @else
                 <div id="map" class="rounded-2xl shadow-2xl border border-red-600/10"></div>
+                @endif
             </div>
 
             <!-- Store Info -->
@@ -334,9 +338,6 @@
                     </div>
                 </div>
                 @endif
-                <a href="https://maps.google.com/?q={{ $store->latitude ?? -6.5936 }},{{ $store->longitude ?? 110.6759 }}" target="_blank" class="btn-primary w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-white font-bold">
-                    <i class="fas fa-map text-white"></i> Buka di Google Maps
-                </a>
             </div>
         </div>
     </div>
@@ -349,11 +350,11 @@
         <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-6">Siap Perbaiki Perangkat Anda?</h2>
         <p class="text-gray-600 text-lg mb-10">Jangan biarkan masalah elektronik mengganggu produktivitas Anda. Hubungi kami sekarang!</p>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="{{ route('order.create') }}" class="btn-primary inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-white font-bold text-lg">
-                <i class="fas fa-wrench text-white"></i> Pesan Service Sekarang
+            <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="btn-primary inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-white font-bold text-lg">
+                <i class="fab fa-whatsapp text-white"></i> Chat WhatsApp
             </a>
-            <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}" target="_blank" class="btn-outline inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-red-600 font-bold text-lg">
-                <i class="fas fa-comments text-red-600"></i> Chat via WhatsApp
+            <a href="{{ route('contact') }}" class="btn-outline inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-red-600 font-bold text-lg">
+                <i class="fas fa-phone-alt text-red-600"></i> Hubungi Kami
             </a>
         </div>
     </div>
@@ -362,6 +363,7 @@
 @endsection
 
 @push('scripts')
+@if(!($store && $store->google_maps_link))
 <script>
     const map = L.map('map').setView([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], 16);
 
@@ -376,10 +378,11 @@
         .bindPopup(`
             <div style="font-family:Inter,sans-serif;padding:8px;min-width:200px;">
                 <strong style="color:#dc2626;font-size:15px;"><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong><br>
-                <span style="color:#64748b;font-size:13px;">{{ $store->address ?? 'Jl. Asia Jepara No. 123' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</span><br>
-                <span style="color:#4b5563;font-size:12px;font-weight:600;"><i class="fas fa-clock"></i> {{ $store->open_days ?? 'Buka' }}: {{ $store->open_hours ?? '08:00 - 20:00' }}</span>
+                <span style="color:#64748b;font-size:13px;">{{ $store->address ?? 'Jl. Raya Bangsri No 02. Kecamatan Bangsri' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</span><br>
+                <span style="color:#4b5563;font-size:12px;font-weight:600;"><i class="fas fa-clock text-red-500"></i> {{ $store->open_days ?? 'Buka' }}: {{ $store->open_hours ?? '08:00 - 20:00' }}</span>
             </div>
         `, { maxWidth: 250 })
         .openPopup();
 </script>
+@endif
 @endpush

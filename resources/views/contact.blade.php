@@ -56,7 +56,7 @@
             <div class="space-y-6" data-animate>
                 @if($store)
                 <div class="service-card p-6 rounded-2xl">
-                    <h3 class="font-bold text-gray-900 mb-4"><i class="fas fa-map-marker-alt text-red-500"></i> Informasi Kontak</h3>
+                    <h3 class="font-bold text-gray-900 mb-4"><i></i> Informasi Kontak</h3>
                     <div class="space-y-4">
                         <div class="flex items-start gap-3">
                             <span class="text-xl mt-0.5"><i class="fas fa-map-marker-alt text-red-500"></i></span>
@@ -89,7 +89,7 @@
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="text-xl mt-0.5"><i class="fas fa-clock"></i></span>
+                            <span class="text-xl mt-0.5"><i class="fas fa-clock text-red-500"></i></span>
                             <div>
                                 <p class="text-gray-600 text-sm font-medium">Jam Buka</p>
                                 <p class="text-gray-900 text-sm">{{ $store->open_days }}</p>
@@ -100,7 +100,11 @@
                 </div>
                 @endif
 
+                @if($store && $store->google_maps_link)
+                <iframe src="{{ $store->google_maps_link }}" width="100%" style="border:0; height:300px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-2xl shadow-2xl border border-red-600/10"></iframe>
+                @else
                 <div id="map" class="rounded-2xl shadow-2xl border border-red-600/10" style="height:300px;"></div>
+                @endif
 
                 <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center!" target="_blank" class="flex items-center gap-4 service-card p-5 rounded-2xl hover:border-red-600/30 transition-all">
                     <div class="text-4xl"><i class="fas fa-comments text-red-600"></i></div>
@@ -117,10 +121,12 @@
 @endsection
 
 @push('scripts')
+@if(!($store && $store->google_maps_link))
 <script>
     const map = L.map('map').setView([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap'}).addTo(map);
     const icon = L.divIcon({ html: `<div style="background:linear-gradient(135deg,#dc2626,#991b1b);width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 15px rgba(220,38,38,0.5);border:3px solid white;display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:16px;"><i class="fas fa-wrench text-white"></i></span></div>`, className:'', iconSize:[36,36], iconAnchor:[18,36] });
     L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], {icon}).addTo(map).bindPopup('<strong><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong>').openPopup();
 </script>
+@endif
 @endpush

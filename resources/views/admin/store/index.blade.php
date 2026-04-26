@@ -85,19 +85,36 @@
         </div>
 
         <div class="service-card p-8 rounded-2xl space-y-6">
-            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2"><i class="fas fa-map text-red-600"></i> Koordinat Peta</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2"><i class="fas fa-map text-red-600"></i> Link Google Maps</h3>
+            <div class="grid grid-cols-1 gap-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Latitude *</label>
-                    <input type="number" step="any" name="latitude" value="{{ old('latitude', $store->latitude ?? -6.9147) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Link Google Maps Embed (untuk Peta di Website)</label>
+                    <input type="url" name="google_maps_link" value="{{ old('google_maps_link', $store->google_maps_link ?? '') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="https://www.google.com/maps/embed?pb=...">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Longitude *</label>
-                    <input type="number" step="any" name="longitude" value="{{ old('longitude', $store->longitude ?? 107.6098) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Link Google Maps Langsung (untuk Tombol "Buka di Google Maps")</label>
+                    <input type="url" name="google_maps_direct_link" value="{{ old('google_maps_direct_link', $store->google_maps_direct_link ?? '') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="https://maps.app.goo.gl/... atau https://www.google.com/maps/search/?api=1&query=...">
                 </div>
             </div>
-            <p class="text-gray-500 text-xs"><i class="fas fa-lightbulb"></i> Tip: Buka Google Maps → klik kanan lokasi → pilih koordinat untuk mendapatkan lat/long yang akurat.</p>
-            <div id="adminMap" class="rounded-xl border border-red-500/20" style="height:300px;"></div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-sm text-yellow-800">
+                <p class="font-semibold mb-1"><i class="fas fa-lightbulb text-yellow-600"></i> Cara mendapatkan Link Google Maps:</p>
+                <ol class="list-decimal list-inside space-y-1 text-xs text-yellow-700">
+                    <li>Buka <strong>Google Maps</strong> di browser</li>
+                    <li>Cari lokasi toko Anda</li>
+                    <li>Klik tombol <strong>Share / Bagikan</strong></li>
+                    <li>Untuk <strong>Embed</strong>: Pilih tab <strong>Embed a map / Sematkan peta</strong>, salin URL dari kode iframe (bagian <code>src="..."</code>)</li>
+                    <li>Untuk <strong>Tombol</strong>: Pilih tab <strong>Send a link / Kirim tautan</strong>, salin link pendek yang muncul</li>
+                    <li>Tempel URL tersebut di kolom di atas</li>
+                </ol>
+            </div>
+            @if($store && $store->google_maps_link)
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-2">Preview Peta</label>
+                <div class="rounded-xl border border-red-500/20 overflow-hidden">
+                    <iframe src="{{ $store->google_maps_link }}" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            @endif
         </div>
 
         <div class="service-card p-8 rounded-2xl space-y-6">
@@ -125,40 +142,4 @@
     </form>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    const lat = {{ $store->latitude ?? -6.9147 }};
-    const lng = {{ $store->longitude ?? 107.6098 }};
-    const map = L.map('adminMap').setView([lat, lng], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
-
-    const icon = L.divIcon({
-        html: `<div style="background:linear-gradient(135deg,#dc2626,#991b1b);width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 15px rgba(220,38,38,0.5);border:3px solid white;display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:16px;"><i class="fas fa-wrench text-white"></i></span></div>`,
-        className: '', iconSize: [36,36], iconAnchor: [18,36]
-    });
-
-    const marker = L.marker([lat, lng], { icon, draggable: true }).addTo(map)
-        .bindPopup('<strong><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong><br>Geser pin untuk mengubah lokasi').openPopup();
-
-    marker.on('dragend', function(e) {
-        const pos = e.target.getLatLng();
-        document.querySelector('input[name="latitude"]').value = pos.lat.toFixed(7);
-        document.querySelector('input[name="longitude"]').value = pos.lng.toFixed(7);
-    });
-
-    document.querySelector('input[name="latitude"]').addEventListener('change', function() {
-        const newLat = parseFloat(this.value);
-        const newLng = parseFloat(document.querySelector('input[name="longitude"]').value);
-        marker.setLatLng([newLat, newLng]);
-        map.setView([newLat, newLng], 16);
-    });
-    document.querySelector('input[name="longitude"]').addEventListener('change', function() {
-        const newLat = parseFloat(document.querySelector('input[name="latitude"]').value);
-        const newLng = parseFloat(this.value);
-        marker.setLatLng([newLat, newLng]);
-        map.setView([newLat, newLng], 16);
-    });
-</script>
-@endpush
 
