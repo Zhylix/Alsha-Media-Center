@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <!-- Recent Messages -->
+    <!-- Recent Messages -->   
     <div class="service-card rounded-2xl overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-red-600/10">
             <h3 class="font-bold text-gray-900">Pesan Terbaru</h3>

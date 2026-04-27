@@ -16,13 +16,4 @@ class OrderController extends Controller
         return view('order-success', compact('store', 'order'));
     }
 
-    public function track(Request $request)
-    {
-        $store = StoreProfile::first();
-        $order = null;
-        if ($request->has('order_number')) {
-            $order = Order::where('order_number', $request->order_number)->with('service')->first();
-        }
-        return view('order-track', compact('store', 'order'));
-    }
 }

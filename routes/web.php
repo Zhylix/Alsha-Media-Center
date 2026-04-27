@@ -30,7 +30,6 @@ Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('servic
 
 // Orders
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
-Route::get('/order/track', [OrderController::class, 'track'])->name('order.track');
 
 // ADMIN AUTH
 Route::prefix('alsha')->name('admin.')->group(function () {
