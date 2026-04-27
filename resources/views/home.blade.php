@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Alsha Media Center - Jasa Service PC, Laptop & Printer Terpercaya Bangsri')
+@section('title', 'Alsha Media Center')
 
 @section('content')
 
@@ -18,7 +18,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             <div>
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border-white/20 text-white backdrop-blur-sm text-sm font-medium mb-6 animate-fade-up">
                     <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    Terpercaya sejak {{ date('Y') - ($stats['experience'] ?? 5) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
+                    Terpercaya sejak {{ date('Y') - ($stats->experience ?? 7) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
                 </div>
 
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
@@ -50,103 +50,34 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-print text-red-600"></i> Printer</a>
                 </div>
             </div>
-
-            <!-- Right - Hero Cards (Dynamic from CRUD) -->
-            <div class="grid grid-cols-2 gap-4 animate-fade-up" style="animation-delay: 0.3s;">
-                <!-- Laptop Card -->
-                @if($heroLaptop)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group">
-                    <div class="text-4xl mb-3 animate-float"><i class="fas fa-laptop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroLaptop->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroLaptop->short_description }}</p>
-                    <p class="text-red-600 font-Qbold text-sm mt-3">{{ $heroLaptop->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroLaptop->estimated_days }} hari</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow">
-                    <div class="text-4xl mb-3 animate-float"><i class="fas fa-laptop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service Laptop</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
-
-                <!-- Printer Card -->
-                @if($heroPrinter)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group" style="margin-top: 24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 0.5s;"><i class="fas fa-print text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroPrinter->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroPrinter->short_description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroPrinter->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroPrinter->estimated_days }} hari</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow" style="margin-top: 24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 0.5s;"><i class="fas fa-print text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service Printer</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
-
-                <!-- PC Card -->
-                @if($heroPc)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group" style="margin-top: -24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroPc->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroPc->short_description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroPc->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroPc->estimated_days }} hari</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow" style="margin-top: -24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service PC</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
-            </div>
         </div>
     </div>
 </section>
 
-<!-- ===================== STATS ===================== -->
+<!--  STATS  -->
 <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            @forelse($stats_items as $stat)
             <div class="text-center" data-animate>
                 <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-history text-white text-xl"></i>
+                    <i class="{{ $stat->icon }} text-white text-xl"></i>
                 </div>
-                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stats['experience'] }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Tahun Pengalaman</p>
+                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stat->value }}">{{ $stat->value }}</div>
+                <p class="text-gray-600 text-sm mt-2 font-medium">{{ $stat->label }}</p>
             </div>
-            <div class="text-center" data-animate>
-                <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-users text-white text-xl"></i>
-                </div>
-                <div class="text-4xl font-black text-gradient-warm stat-number" data-counter="{{ $stats['customers'] }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Pelanggan Puas</p>
+            @empty
+            <div class="col-span-2 md:col-span-4 text-center text-gray-500 py-10">
+                <p>Belum ada statistik. <a href="{{ route('admin.stats.index') }}" class="text-red-600">Tambah sekarang</a></p>
             </div>
-            <div class="text-center" data-animate>
-                <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-tools text-white text-xl"></i>
-                </div>
-                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stats['services'] * 10 + 100 }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Perangkat Diperbaiki/Bln</p>
-            </div>
-            <div class="text-center" data-animate>
-                <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-th-large text-white text-xl"></i>
-                </div>
-                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stats['services'] }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Jenis Layanan</p>
-            </div>
+            @endforelse
         </div>
     </div>
 </section>
 
 <div class="section-line"></div>
 
-<!-- ===================== FEATURED SERVICES ===================== -->
+<!--  FEATURED SERVICES  -->
 @if($featuredServices->count() > 0)
 <section class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

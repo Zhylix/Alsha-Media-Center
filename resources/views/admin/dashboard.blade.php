@@ -93,14 +93,17 @@
         </div>
         <div class="divide-y divide-blue-500/5">
             @foreach($recentMessages as $msg)
-            <a href="{{ route('admin.contacts.show', $msg) }}" class="block px-6 py-4 hover:bg-gray-100 transition-colors">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-gray-900 text-sm font-semibold truncate">{{ $msg->name }} @if(!$msg->is_read)<span class="w-2 h-2 bg-red-600 rounded-full inline-block ml-2"></span>@endif</p>
-                        <p class="text-gray-600 text-xs truncate">{{ $msg->subject }}</p>
-                        <p class="text-gray-500 text-xs">{{ $msg->created_at->diffForHumans() }}</p>
-                    </div>
-                    @if(!$msg->is_read)<span class="badge badge-red text-xs flex-shrink-0">Baru</span>@endif
+            <a href="{{ route('admin.contacts.show', $msg) }}" class="block px-6 py-3 hover:bg-gray-50 transition-colors">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                    <p class="text-gray-900 text-sm font-semibold truncate flex-1">{{ Str::limit($msg->name, 18) }}</p>
+                    @if(!$msg->is_read)
+                        <span class="w-2 h-2 bg-red-600 rounded-full flex-shrink-0"></span>
+                    @endif
+                </div>
+                <p class="text-gray-600 text-xs truncate mb-1">{{ Str::limit($msg->subject, 32) }}</p>
+                <div class="flex items-center justify-between gap-2">
+                    <p class="text-gray-500 text-xs">{{ $msg->created_at->diffForHumans() }}</p>
+                    @if(!$msg->is_read)<span class="badge badge-red text-xs px-2 py-0.5">Baru</span>@endif
                 </div>
             </a>
             @endforeach

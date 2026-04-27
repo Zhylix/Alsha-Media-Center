@@ -39,5 +39,8 @@ class DatabaseSeeder extends Seeder
             'open_hours'  => '08:00 - 20:00',
             'open_days'   => 'Senin - Sabtu',
         ]);
+
+        // Call Stat Seeder
+        $this->call(StatSeeder::class);
     }
 }
