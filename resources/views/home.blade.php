@@ -8,30 +8,56 @@
 @php
 $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_image) : asset('images/image.png');
 @endphp
-<section class="relative min-h-screen flex items-center overflow-hidden bg-hero-image" style="background-image: url('{{ $heroImageUrl }}');">
-    <!-- Overlay gelap agar teks tetap terbaca -->
-    <div class="absolute inset-0 bg-black/60 z-0"></div>
+<section class="relative min-h-screen overflow-hidden">
+    
+    <!-- BACKGROUND SPLIT -->
+    <div class="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
+        <!-- kiri box -->
+        <div class="bg-white"></div>
 
-    <!-- Background decorations (hanya tampil jika tidak pakai foto) -->
-    <!-- Dihapus karena sekarang selalu pakai gambar background -->
+        <!-- kanan gambar -->
+        <div 
+            class="bg-cover bg-center"
+            style="background-image: url('{{ $heroImageUrl }}');"
+        ></div>
+    </div>
+    <!-- GARIS TRANSISI SMOOTH -->
+    <div 
+        class="absolute inset-y-0 left-1/2 w-40 -translate-x-1/2 z-[1]"
+        style="
+            background: linear-gradient(
+                to right,
+                rgba(255,255,255,1) 0%,
+                rgba(255,255,255,0.95) 20%,
+                rgba(255,255,255,0.7) 50%,
+                rgba(255,255,255,0.3) 75%,
+                rgba(255,255,255,0) 100%
+            );
+            filter: blur(20px);
+        "
+    ></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+    <!-- overlay tipis biar gambar lebih smooth -->
+    <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+
+    <!-- CONTENT -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Left Content -->
             <div>
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border-white/20 text-white backdrop-blur-sm text-sm font-medium mb-6 animate-fade-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border-white/20 text-black backdrop-blur-sm text-sm font-medium mb-6 animate-fade-up">
                     <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                     Terpercaya sejak {{ date('Y') - ($stats['experience'] ?? 5) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
                 </div>
 
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-black leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
                     Jasa Service
                     <span class="text-gradient block">Elektronik</span>
                     Terpercaya
                 </h1>
 
-                <p class="text-gray-600 text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
-                    Spesialis perbaikan <strong class="text-gray-900">laptop</strong>, <strong class="text-gray-900">printer</strong>, dan <strong class="text-gray-900">handphone</strong>.
+                <p class="text-black text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
+                    Spesialis perbaikan <strong class="text-black">laptop</strong>, <strong class="text-black">printer</strong>, dan <strong class="text-black">handphone</strong>.
                     Teknisi berpengalaman, spare part original, garansi 30 hari. Antar jemput tersedia!
                 </p>
 
@@ -40,7 +66,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                         <i class="fab fa-whatsapp"></i>
                         Chat WhatsApp
                     </a>
-                    <a href="{{ route('services.index') }}" class="border-white/30 text-white hover:bg-white/10 inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-base transition-all">
+                    <a href="{{ route('services.index') }}" class="border-white/30 text-black hover:bg-black/10 inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-base transition-all">
                         Lihat Layanan
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
@@ -48,80 +74,10 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
                 <!-- Quick Category Buttons -->
                 <div class="flex flex-wrap gap-3 animate-fade-up" style="animation-delay: 0.4s;">
-                    <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-laptop text-red-600"></i> Laptop</a>
-                    <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-print text-red-600"></i> Printer</a>
-                    <a href="{{ route('services.hp') }}" class="flex items-center gap-2 px-4 py-2 glass rounded-xl hover:border-red-600/30 transition-all text-sm text-gray-700 hover:text-gray-900"><i class="fas fa-mobile-alt text-red-600"></i> HP</a>
+                    <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-laptop text-red-500"></i> Laptop</a>
+                    <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-print text-red-500"></i> Printer</a>
+                    <a href="{{ route('services.pc') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-desktop text-red-500"></i> PC</a>
                 </div>
-            </div>
-
-            <!-- Right - Hero Cards (Dynamic from CRUD) -->
-            <div class="grid grid-cols-2 gap-4 animate-fade-up" style="animation-delay: 0.3s;">
-                <!-- Laptop Card -->
-                @if($heroLaptop)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group">
-                    <div class="text-4xl mb-3 animate-float"><i class="fas fa-laptop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroLaptop->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroLaptop->short_description }}</p>
-                    <p class="text-red-600 font-Qbold text-sm mt-3">{{ $heroLaptop->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroLaptop->estimated_days }} hari</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow">
-                    <div class="text-4xl mb-3 animate-float"><i class="fas fa-laptop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service Laptop</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
-
-                <!-- Printer Card -->
-                @if($heroPrinter)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group" style="margin-top: 24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 0.5s;"><i class="fas fa-print text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroPrinter->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroPrinter->short_description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroPrinter->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroPrinter->estimated_days }} hari</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow" style="margin-top: 24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 0.5s;"><i class="fas fa-print text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service Printer</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
-
-                <!-- PC Card -->
-                @if($heroPc)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group" style="margin-top: -24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroPc->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 line-clamp-2">{{ $heroPc->short_description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroPc->price_range }}</p>
-                    <p class="text-gray-600 text-xs mt-1">Est. {{ $heroPc->estimated_days }} hari</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow" style="margin-top: -24px;">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;"><i class="fas fa-desktop text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Service PC</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
-
-                <!-- Shipment Card -->
-                @if($heroShipment)
-                <div class="service-card p-6 rounded-2xl text-center hover-glow group">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1.5s;"><i class="fas fa-truck text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">{{ $heroShipment->name }}</h3>
-                    <p class="text-gray-500 text-xs mt-1">{{ $heroShipment->description }}</p>
-                    <p class="text-red-600 font-bold text-sm mt-3">{{ $heroShipment->price_display }}</p>
-                </div>
-                @else
-                <div class="service-card p-6 rounded-2xl text-center hover-glow">
-                    <div class="text-4xl mb-3 animate-float" style="animation-delay: 1.5s;"><i class="fas fa-truck text-red-600"></i></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Antar Jemput</h3>
-                    <p class="text-gray-500 text-xs mt-1">Data belum tersedia</p>
-                </div>
-                @endif
             </div>
         </div>
     </div>
