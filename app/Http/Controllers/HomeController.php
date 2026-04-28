@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\Testimonial;
 use App\Models\StoreProfile;
+use App\Models\Stat;
 
 class HomeController extends Controller
 {
@@ -22,6 +23,9 @@ class HomeController extends Controller
         $heroPrinter  = Service::where('category', 'printer')->where('is_active', true)->first();
         $heroPc       = Service::where('category', 'pc')->where('is_active', true)->first();
 
+        // Get stats from database
+        $stats_items = Stat::where('is_active', true)->orderBy('sort_order')->get();
+
         $stats = [
             'services'    => Service::where('is_active', true)->count(),
             'orders'      => \App\Models\Order::count(),
@@ -29,7 +33,7 @@ class HomeController extends Controller
             'customers'   => max(\App\Models\Order::count() + 500, 500),
         ];
 
-        return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'pcServices', 'testimonials', 'stats',
+        return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'pcServices', 'testimonials', 'stats', 'stats_items',
             'heroLaptop', 'heroPrinter', 'heroPc'));
 
     }

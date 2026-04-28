@@ -65,6 +65,9 @@
             <a href="{{ route('admin.testimonials.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-star text-red-500"></i></span> Testimonial
             </a>
+            <a href="{{ route('admin.stats.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.stats.*') ? 'active' : '' }}">
+                <span class="text-lg"><i class="fas fa-chart-line text-red-500"></i></span> Statistik
+            </a>
 
             <p class="text-xs text-gray-500 uppercase font-bold tracking-widest px-3 mt-4 mb-2">Lainnya</p>
 

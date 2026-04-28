@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
+use App\Http\Controllers\Admin\AdminStatsController;
 use Illuminate\Support\Facades\Route;
 
 // PUBLIC ROUTES
@@ -29,7 +30,6 @@ Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('servic
 
 // Orders
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
-Route::get('/order/track', [OrderController::class, 'track'])->name('order.track');
 
 // ADMIN AUTH
 Route::prefix('alsha')->name('admin.')->group(function () {
@@ -43,6 +43,9 @@ Route::prefix('alsha')->name('admin.')->group(function () {
 
         // Services CRUD
         Route::resource('services', AdminServiceController::class);
+
+        // Stats CRUD
+        Route::resource('stats', AdminStatsController::class)->except(['show']);
 
         // Orders management
         Route::resource('orders', AdminOrderController::class)->except(['create', 'store']);

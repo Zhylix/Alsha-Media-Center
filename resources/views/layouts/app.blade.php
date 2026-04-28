@@ -110,10 +110,18 @@
                 <!-- Brand -->
                 <div class="lg:col-span-1">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl gradient-anim flex items-center justify-center text-xl text-gray-900"><i class="fas fa-wrench text-red-600"></i></div>
-                        <div>
-                            <span class="text-xl font-black text-gradient">Alsha</span><span class="text-xl font-black text-gray-900"> Media Center</span>
-                        </div>
+                        <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                            @if($store && $store->logo)
+                            <img src="{{ asset('storage/' . $store->logo) }}" alt="Logo" class="h-10 w-auto group-hover:scale-105 transition-transform">
+                            @else
+                            <div class="w-10 h-10 rounded-xl gradient-anim flex items-center justify-center text-xl font-black text-gray-900 shadow-lg group-hover:scale-110 transition-transform">
+                                <i class="fas fa-wrench text-white"></i>
+                            </div>
+                            @endif
+                            <div>
+                                <span class="text-xl font-black text-gradient">Alsha</span><span class="text-xl font-black text-gray-900"> Media Center</span>
+                            </div>
+                        </a>
                     </div>
                     <p class="text-gray-600 text-sm leading-relaxed mb-6">Solusi terpercaya untuk semua masalah elektronik Anda. Teknisi berpengalaman, spare part original, garansi resmi.</p>
                     <div class="flex items-center gap-3">
@@ -136,7 +144,6 @@
                         <li><a href="{{ route('services.pc') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-desktop text-gray-500"></i></span> Service PC</a></li>
                         <li><a href="{{ route('services.laptop') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-laptop text-gray-500"></i></span> Service Laptop</a></li>
                         <li><a href="{{ route('services.printer') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-print text-gray-500"></i></span> Service Printer</a></li>
-                        <li><a href="{{ route('order.track') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-search"></i></span> Lacak Pesanan</a></li>
                     </ul>
                 </div>
 

@@ -38,7 +38,6 @@
 
         <div class="flex flex-wrap gap-4 justify-center">
             <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, nomor pesanan saya: {{ $order->order_number }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fas fa-comments text-red-600"></i> Konfirmasi via WA</a>
-            <a href="{{ route('order.track') }}?order_number={{ $order->order_number }}" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold"><i class="fas fa-search"></i> Lacak Pesanan</a>
             <a href="{{ route('home') }}" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold"><i class="fas fa-home text-red-600"></i> Beranda</a>
         </div>
     </div>

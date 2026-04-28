@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Alsha Media Center - Jasa Service Laptop, Printer & HP Terpercaya Bangsri')
+@section('title', 'Alsha Media Center')
 
 @section('content')
 
@@ -14,7 +14,6 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     <div class="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
         <!-- kiri box -->
         <div class="bg-white"></div>
-
         <!-- kanan gambar -->
         <div 
             class="bg-cover bg-center"
@@ -42,12 +41,14 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
     <!-- CONTENT -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Left Content -->
             <div>
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border-white/20 text-black backdrop-blur-sm text-sm font-medium mb-6 animate-fade-up">
                     <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    Terpercaya sejak {{ date('Y') - ($stats['experience'] ?? 5) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
+                    Terpercaya sejak {{ date('Y') - ($stats->experience ?? 7) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
                 </div>
 
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-black leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
@@ -56,8 +57,11 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     Terpercaya
                 </h1>
 
+
                 <p class="text-black text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
                     Spesialis perbaikan <strong class="text-black">laptop</strong>, <strong class="text-black">printer</strong>, dan <strong class="text-black">handphone</strong>.
+                <p class="text-gray-600 text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
+                    Spesialis perbaikan <strong class="text-gray-900">laptop</strong>, <strong class="text-gray-900">printer</strong>, dan <strong class="text-gray-900">PC</strong>.
                     Teknisi berpengalaman, spare part original, garansi 30 hari. Antar jemput tersedia!
                 </p>
 
@@ -83,45 +87,30 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     </div>
 </section>
 
-<!-- ===================== STATS ===================== -->
+<!--  STATS  -->
 <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            @forelse($stats_items as $stat)
             <div class="text-center" data-animate>
                 <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-history text-white text-xl"></i>
+                    <i class="{{ $stat->icon }} text-white text-xl"></i>
                 </div>
-                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stats['experience'] }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Tahun Pengalaman</p>
+                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stat->value }}">{{ $stat->value }}</div>
+                <p class="text-gray-600 text-sm mt-2 font-medium">{{ $stat->label }}</p>
             </div>
-            <div class="text-center" data-animate>
-                <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-users text-white text-xl"></i>
-                </div>
-                <div class="text-4xl font-black text-gradient-warm stat-number" data-counter="{{ $stats['customers'] }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Pelanggan Puas</p>
+            @empty
+            <div class="col-span-2 md:col-span-4 text-center text-gray-500 py-10">
+                <p>Belum ada statistik. <a href="{{ route('admin.stats.index') }}" class="text-red-600">Tambah sekarang</a></p>
             </div>
-            <div class="text-center" data-animate>
-                <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-tools text-white text-xl"></i>
-                </div>
-                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stats['services'] * 10 + 100 }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Perangkat Diperbaiki/Bln</p>
-            </div>
-            <div class="text-center" data-animate>
-                <div class="w-14 h-14 mx-auto rounded-full bg-red-600 flex items-center justify-center mb-3 shadow-lg">
-                    <i class="fas fa-th-large text-white text-xl"></i>
-                </div>
-                <div class="text-4xl font-black text-gradient stat-number" data-counter="{{ $stats['services'] }}">0</div>
-                <p class="text-gray-600 text-sm mt-2 font-medium">Jenis Layanan</p>
-            </div>
+            @endforelse
         </div>
     </div>
 </section>
 
 <div class="section-line"></div>
 
-<!-- ===================== FEATURED SERVICES ===================== -->
+<!--  FEATURED SERVICES  -->
 @if($featuredServices->count() > 0)
 <section class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
