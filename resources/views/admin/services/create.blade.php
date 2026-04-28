@@ -48,11 +48,11 @@
                 </div>
                 <div class="flex items-center gap-6 pt-4">
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="is_active" class="w-4 h-4 rounded" {{ old('is_active', true) ? 'checked' : '' }}>
+                        <input type="checkbox" name="is_active" value="1" class="w-4 h-4 rounded" {{ old('is_active', true) ? 'checked' : '' }}>
                         <span class="text-gray-700 text-sm">Aktif</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="is_featured" class="w-4 h-4 rounded" {{ old('is_featured') ? 'checked' : '' }}>
+                        <input type="checkbox" name="is_featured" value="1" class="w-4 h-4 rounded" {{ old('is_featured') ? 'checked' : '' }}>
                         <span class="text-gray-700 text-sm"><i class="fas fa-star text-red-600"></i> Featured</span>
                     </label>
                 </div>
