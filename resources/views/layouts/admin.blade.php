@@ -62,12 +62,18 @@
                 <span class="ml-auto badge badge-red">{{ $pendingTicketCount }}</span>
                 @endif
             </a>
+            <a href="{{ route('admin.spareparts.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.spareparts.*') ? 'active' : '' }}">
+                <span class="text-lg"><i class="fas fa-box text-red-500"></i></span> Sparepart
+            </a>
             <a href="{{ route('admin.orders.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                <span class="text-lg"><i class="fas fa-clipboard-list text-red-500"></i></span> Pesanan
+                <span class="text-lg"><i class="fas fa-shopping-cart text-red-500"></i></span> Pesanan
                 @php $pendingCount = \App\Models\Order::where('status','pending')->count(); @endphp
                 @if($pendingCount > 0)
                 <span class="ml-auto badge badge-red">{{ $pendingCount }}</span>
                 @endif
+            </a>
+            <a href="{{ route('admin.promos.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.promos.*') ? 'active' : '' }}">
+                <span class="text-lg"><i class="fas fa-bullhorn text-red-500"></i></span> Promo
             </a>
             <a href="{{ route('admin.testimonials.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-star text-red-500"></i></span> Testimonial

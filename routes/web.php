@@ -12,9 +12,12 @@ use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AdminServiceTicketController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
+use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
 use App\Http\Controllers\Admin\AdminStatsController;
+use App\Http\Controllers\Admin\AdminSparepartController;
+use App\Http\Controllers\SparepartController;
 use Illuminate\Support\Facades\Route;
 
 // PUBLIC ROUTES
@@ -23,11 +26,17 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
+// Spareparts
+Route::get('/spareparts', [SparepartController::class, 'index'])->name('spareparts.index');
+Route::get('/spareparts/{category}', [SparepartController::class, 'category'])->name('spareparts.category');
+Route::get('/sparepart/{slug}', [SparepartController::class, 'show'])->name('spareparts.show');
+
 // Services
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/laptop', [ServiceController::class, 'laptop'])->name('services.laptop');
 Route::get('/services/printer', [ServiceController::class, 'printer'])->name('services.printer');
 Route::get('/services/pc', [ServiceController::class, 'pc'])->name('services.pc');
+Route::get('/services/software', [ServiceController::class, 'software'])->name('services.software');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 // Service Ticket Tracking (Public)
@@ -52,6 +61,12 @@ Route::prefix('alsha')->name('admin.')->group(function () {
 
         // Service Tickets CRUD (Repair Tracking)
         Route::resource('service-tickets', AdminServiceTicketController::class);
+
+        // Promos CRUD
+        Route::resource('promos', AdminPromoController::class);
+
+        // Spareparts CRUD
+        Route::resource('spareparts', AdminSparepartController::class);
 
         // Stats CRUD
         Route::resource('stats', AdminStatsController::class)->except(['show']);

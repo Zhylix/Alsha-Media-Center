@@ -46,7 +46,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             <div>
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border-white/20 text-black backdrop-blur-sm text-sm font-medium mb-6 animate-fade-up">
                     <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    Terpercaya sejak {{ date('Y') - ($stats['experience'] ?? 5) }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
+                    Terpercaya sejak {{ date('Y') - $stats['experience'] }} · {{ $store->city ?? 'Bangsri, Jawa Tengah' }}
                 </div>
 
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-black leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
@@ -76,6 +76,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-laptop text-red-500"></i> Laptop</a>
                     <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-print text-red-500"></i> Printer</a>
                     <a href="{{ route('services.pc') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-desktop text-red-500"></i> PC</a>
+                    <a href="{{ route('services.software') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-compact-disc text-red-500"></i> Software</a>
                 </div>
             </div>
         </div>
@@ -119,6 +120,47 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 </section>
 
 <div class="section-line"></div>
+
+<!-- ===================== PROMOS ===================== -->
+@if($activePromos->count() > 0)
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14" data-animate>
+            <span class="text-red-600 text-sm font-bold uppercase tracking-widest"><i class="fas fa-bullhorn mr-1"></i> Penawaran Spesial</span>
+            <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-3">Promo <span class="text-gradient">Terbaru</span> Kami</h2>
+            <p class="text-gray-600 mt-4 max-w-xl mx-auto">Manfaatkan promo menarik untuk layanan service pilihan Anda</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach($activePromos as $promo)
+            <div class="group relative bg-white rounded-3xl overflow-hidden shadow-xl border border-red-500/5 transition-all hover:scale-[1.02]" data-animate>
+                <div class="aspect-[16/9] relative overflow-hidden">
+                    @if($promo->image)
+                    <img src="{{ asset('storage/' . $promo->image) }}" alt="{{ $promo->title }}" class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500">
+                    @else
+                    <div class="w-full h-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-4xl">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    @endif
+                    @if($promo->discount_info)
+                    <div class="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg">
+                        {{ $promo->discount_info }}
+                    </div>
+                    @endif
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $promo->title }}</h3>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $promo->description }}</p>
+                    <div class="text-xs text-gray-500">
+                        <i class="fas fa-clock mr-1"></i> S/D {{ $promo->end_date->format('d M') }}
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 <!-- ===================== FEATURED SERVICES ===================== -->
 @if($featuredServices->count() > 0)
@@ -171,7 +213,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-14" data-animate>
-            <span class="text-red-600 text-sm font-bold uppercase tracking-widest"><i class="fas fa-award mr-1"></i> Keunggulan Kami</span>
+            <span class="text-red-600 text-sm font-bold uppercase tracking-widest"><i></i> Keunggulan Kami</span>
             <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-3">Mengapa Memilih <span class="text-gradient">Alsha Media Center</span>?</h2>
         </div>
 

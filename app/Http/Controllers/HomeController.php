@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\Testimonial;
 use App\Models\StoreProfile;
 use App\Models\Stat;
+use App\Models\Promo;
 
 class HomeController extends Controller
 {
@@ -17,8 +18,9 @@ class HomeController extends Controller
         $printerServices  = Service::where('category', 'printer')->where('is_active', true)->take(3)->get();
         $pcServices       = Service::where('category', 'pc')->where('is_active', true)->take(3)->get();
         $testimonials     = Testimonial::where('is_active', true)->latest()->take(6)->get();
+        $activePromos     = Promo::active()->latest()->take(3)->get();
 
-        // Hero card data - real from CRUD
+        // Hero card data
         $heroLaptop   = Service::where('category', 'laptop')->where('is_active', true)->first();
         $heroPrinter  = Service::where('category', 'printer')->where('is_active', true)->first();
         $heroPc       = Service::where('category', 'pc')->where('is_active', true)->first();
@@ -29,12 +31,12 @@ class HomeController extends Controller
         $stats = [
             'services'    => Service::where('is_active', true)->count(),
             'orders'      => \App\Models\Order::count(),
-            'experience'  => 10,
+            'experience'  => 12,
             'customers'   => max(\App\Models\Order::count() + 500, 500),
         ];
 
         return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'pcServices', 'testimonials', 'stats', 'stats_items',
-            'heroLaptop', 'heroPrinter', 'heroPc'));
+            'heroLaptop', 'heroPrinter', 'heroPc', 'activePromos'));
 
     }
 }

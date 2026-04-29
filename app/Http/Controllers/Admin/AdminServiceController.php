@@ -24,7 +24,7 @@ class AdminServiceController extends Controller
     {
         $data = $request->validate([
             'name'              => 'required|string|max:255',
-            'category'          => 'required|in:laptop,printer,pc',
+            'category'          => 'required|in:laptop,printer,pc,software',
             'description'       => 'required|string',
             'short_description' => 'nullable|string|max:300',
             'price_start'       => 'required|numeric|min:0',
@@ -57,7 +57,7 @@ class AdminServiceController extends Controller
     {
         $data = $request->validate([
             'name'              => 'required|string|max:255',
-            'category'          => 'required|in:laptop,printer,pc',
+            'category'          => 'required|in:laptop,printer,pc,software',
             'description'       => 'required|string',
             'short_description' => 'nullable|string|max:300',
             'price_start'       => 'required|numeric|min:0',
