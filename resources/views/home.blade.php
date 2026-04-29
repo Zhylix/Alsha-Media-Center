@@ -64,7 +64,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                 <div class="flex flex-col sm:flex-row gap-4 mb-10 justify-center lg:justify-start">
                     <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base shadow-md transition-all hover:scale-105 hover:shadow-xl w-full sm:w-auto">
                         <i class="fab fa-whatsapp"></i>
-                        Chat WhatsApp
+                        Chat WhatsAppgit
                     </a>
                     <a href="{{ route('services.index') }}" class="border-white/30 text-black hover:bg-black/10 inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-base transition-all">
                         Lihat Layanan
