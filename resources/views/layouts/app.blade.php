@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ $metaDesc ?? 'Alsha Media Center – Jasa service PC, laptop, dan printer terpercaya di Bangsri. Teknisi berpengalaman, spare part original, garansi resmi.' }}">
+    <meta name="description" content="{{ $metaDesc ?? 'AMC | Service Bangsri' }}">
     <meta name="keywords" content="service pc bangsri, service laptop bangsri, service printer bangsri, alsha media center">
-    <title>@yield('title', 'Alsha Media Center') | Jasa Service PC, Laptop & Printer</title>
+    <title>@yield('title', 'Alsha Media Center')</title>
     @if($store && $store->logo)
     <link rel="icon" href="{{ asset('storage/' . $store->logo) }}">
     @else
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
-                        <i class="fas fa-search-location mr-1 text-xs"></i> Tracking
+                        <i class="text-xs"></i> Tracking
                     </a>
                     <a href="{{ route('contact') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('contact') ? 'active text-red-600' : '' }}">Kontak</a>
                 </div>

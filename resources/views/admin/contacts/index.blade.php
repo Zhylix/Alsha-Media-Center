@@ -55,3 +55,4 @@
     <div class="px-6 py-4 border-t border-red-600/10">{{ $messages->links() }}</div>
     @endif
 </div>
+@endsection

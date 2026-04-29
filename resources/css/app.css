@@ -127,7 +127,7 @@
 
 /* ========== GRADIENT BG ========== */
 .gradient-anim {
-    background: linear-gradient(270deg, #dc2626, #ef4444, #991b1b, #dc2626);
+    background: linear-gradient(270deg, #700404c7, #500404, #991b1b, #dc2626);
     background-size: 400% 400%;
     animation: gradientMove 6s ease infinite;
 }

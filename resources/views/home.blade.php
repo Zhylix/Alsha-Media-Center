@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Alsha Media Center - Jasa Service Laptop, Printer & HP Terpercaya Bangsri')
+@section('title', 'AMC | Service Bangsri')
 
 @section('content')
 
@@ -21,7 +21,6 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             style="background-image: url('{{ $heroImageUrl }}');"
         ></div>
     </div>
-    <!-- GARIS TRANSISI SMOOTH -->
     <div 
         class="absolute inset-y-0 left-1/2 w-40 -translate-x-1/2 z-[1]"
         style="
@@ -77,20 +76,6 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-laptop text-red-500"></i> Laptop</a>
                     <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-print text-red-500"></i> Printer</a>
                     <a href="{{ route('services.pc') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-desktop text-red-500"></i> PC</a>
-                </div>
-            </div>
-
-            <!-- KANAN: Image -->
-            <div class="order-1 lg:order-2 relative animate-fade-up" style="animation-delay: 0.1s;">
-                <div class="relative rounded-3xl shadow-xl overflow-hidden">
-                    <img
-                        src="{{ $heroImageUrl }}"
-                        alt="Hero Alsha Media Center"
-                        class="w-full h-[220px] sm:h-[300px] lg:h-[450px] object-cover object-center"
-                    >
-
-                    <!-- Gradient overlay merah ringan -->
-                    <div class="absolute inset-0 bg-gradient-to-l from-red-600/20 to-transparent z-10"></div>
                 </div>
             </div>
         </div>
@@ -325,18 +310,15 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
+<!-- CTA -->
 <section class="py-20 relative overflow-hidden">
-    <div class="absolute inset-0 gradient-anim opacity-10"></div>
+    <div class="absolute inset-0 bg-red-800 opacity-90"></div>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
-        <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-6">Siap Perbaiki Perangkat Anda?</h2>
-        <p class="text-gray-600 text-lg mb-10">Jangan biarkan masalah elektronik mengganggu produktivitas Anda. Hubungi kami sekarang!</p>
+        <h2 class="text-4xl sm:text-5xl font-black text-white mb-6">Siap Perbaiki Perangkat Anda?</h2>
+        <p class="text-gray-300 text-lg mb-10">Jangan biarkan masalah elektronik mengganggu produktivitas Anda. Hubungi kami sekarang!</p>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="btn-primary inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-white font-bold text-lg">
-                <i class="fab fa-whatsapp text-white"></i> Chat WhatsApp
-            </a>
-            <a href="{{ route('contact') }}" class="btn-outline inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-red-600 font-bold text-lg">
-                <i class="fas fa-phone-alt text-red-600"></i> Hubungi Kami
+            <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="bg-white inline-flex items-center gap-2 px-10 py-5 rounded-2xl text-red-800 font-bold text-lg">
+                <i class="fab fa-whatsapp"></i> Kontak Kami
             </a>
         </div>
     </div>
