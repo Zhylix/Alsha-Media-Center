@@ -1,48 +1,82 @@
 @extends('layouts.app')
-@section('title', 'Semua Layanan')
+@section('title', 'Semua Layanan | Alsha Media Center')
 
 @section('content')
-<section class="relative py-32 bg-hero overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-red-600/10 rounded-full blur-3xl"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <span class="text-red-600 text-sm font-bold uppercase tracking-widest">Layanan Kami</span>
-        <h1 class="text-4xl sm:text-5xl font-black text-gray-900 mt-3 mb-4">Semua <span class="text-gradient">Jasa Service</span></h1>
-        <p class="text-gray-600 text-lg max-w-2xl mx-auto">Pilih layanan yang Anda butuhkan. Semua dikerjakan oleh teknisi berpengalaman dengan garansi resmi.</p>
-        <!-- Quick Nav -->
-        <div class="flex justify-center gap-4 mt-8 flex-wrap">
-            <a href="{{ route('services.pc') }}" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold"><i class="fas fa-desktop text-red-600"></i> PC</a>
-            <a href="{{ route('services.laptop') }}" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl text-red-600 font-semibold"><i class="fas fa-laptop text-red-600"></i> Laptop</a>
-            <a href="{{ route('services.printer') }}" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl text-red-600 font-semibold"><i class="fas fa-print text-red-600"></i> Printer</a>
+
+<!-- ===================== HERO ===================== -->
+<section class="relative py-36 bg-white overflow-hidden">
+    <div class="absolute top-0 right-0 w-[45%] h-full bg-gray-50 hidden lg:block" style="clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)"></div>
+    <div class="absolute bottom-0 left-0 w-48 h-1 bg-[#C8000A]"></div>
+    
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+        <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2.5 mb-6">
+                <span class="block w-6 h-px bg-[#C8000A]"></span>
+                <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Layanan Kami</span>
+            </div>
+            <h1 class="text-5xl sm:text-6xl font-black text-gray-900 tracking-tight leading-tight mb-5">
+                Semua <span class="text-[#C8000A]">Jasa Service</span>
+            </h1>
+            <p class="text-gray-400 text-lg leading-relaxed mb-10">Pilih layanan yang Anda butuhkan. Semua dikerjakan oleh teknisi berpengalaman dengan garansi resmi.</p>
+
+            <!-- Quick Nav -->
+            <div class="flex flex-wrap gap-3">
+                <a href="#laptop" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors">
+                    <i class="fas fa-laptop text-xs"></i> Laptop
+                </a>
+                <a href="#printer" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all">
+                    <i class="fas fa-print text-xs"></i> Printer
+                </a>
+                <a href="#pc" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all">
+                    <i class="fas fa-desktop text-xs"></i> PC / Komputer
+                </a>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Laptop Services -->
-<section class="py-20" id="laptop">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-10" data-animate>
-            <div>
-                <div class="flex items-center gap-3 mb-2"><span class="text-4xl"><i class="fas fa-laptop text-red-600"></i></span><span class="badge badge-gray">Laptop</span></div>
-                <h2 class="text-2xl font-black text-gray-900">Service <span class="text-gradient">Laptop</span></h2>
+<!-- ===================== LAPTOP SERVICES ===================== -->
+<section class="py-24 bg-white" id="laptop">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <!-- Section title -->
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-5">
+                <div class="w-14 h-14 bg-[#C8000A] flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-laptop text-white text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-0.5">Kategori</div>
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Service <span class="text-[#C8000A]">Laptop</span></h2>
+                </div>
             </div>
-            <a href="{{ route('services.laptop') }}" class="btn-outline px-5 py-2.5 rounded-xl text-red-600 text-sm font-semibold hidden sm:block">Lihat Semua →</a>
+            <a href="{{ route('services.laptop') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
+                Semua <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($laptopServices as $service)
-            <div class="service-card p-6 rounded-2xl" data-animate>
-                <div class="flex items-start justify-between mb-3">
-                    <h3 class="font-bold text-gray-900 text-base">{{ $service->name }}</h3>
-                    @if($service->is_featured)<span class="badge badge-red"><i class="fas fa-star text-red-600"></i> Populer</span>@endif
+            <div class="group relative bg-white border border-gray-100 p-7 hover:border-[#C8000A]/20 hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 hover:-translate-y-0.5">
+                <div class="absolute -right-3 -top-3 w-6 h-6 bg-[#C8000A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="font-black text-gray-900 text-base leading-tight pr-3">{{ $service->name }}</h3>
+                    @if($service->is_featured)
+                    <span class="flex-shrink-0 px-2 py-1 bg-red-50 text-[#C8000A] text-[10px] font-black uppercase tracking-wide">Populer</span>
+                    @endif
                 </div>
-                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
-                <div class="flex items-center justify-between">
+                
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
+                
+                <div class="flex items-end justify-between pt-5 border-t border-gray-50">
                     <div>
-                        <p class="text-red-600 font-bold text-sm">{{ $service->price_range }}</p>
-                        <p class="text-gray-500 text-xs">Est. {{ $service->estimated_days }} hari</p>
+                        <div class="text-[#C8000A] font-black">{{ $service->price_range }}</div>
+                        <div class="text-gray-400 text-xs mt-0.5">Est. {{ $service->estimated_days }} hari</div>
                     </div>
-                    <a href="{{ route('services.show', $service->slug) }}" class="btn-primary px-4 py-2 rounded-xl text-white text-xs font-semibold">Detail</a>
+                    <a href="{{ route('services.show', $service->slug) }}" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wide hover:bg-[#A00008] transition-colors">
+                        Detail <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
                 </div>
             </div>
             @endforeach
@@ -50,32 +84,52 @@
     </div>
 </section>
 
-<div class="section-line"></div>
+<!-- Divider -->
+<div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div class="h-px bg-gray-100"></div>
+</div>
 
-<!-- Printer Services -->
-<section class="py-20 bg-white" id="printer">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-10" data-animate>
-            <div>
-                <div class="flex items-center gap-3 mb-2"><span class="text-4xl"><i class="fas fa-print text-red-600"></i></span><span class="badge badge-dark">Printer</span></div>
-                <h2 class="text-2xl font-black text-gray-900">Service <span class="text-gradient">Printer</span></h2>
+<!-- ===================== PRINTER SERVICES ===================== -->
+<section class="py-24 bg-white" id="printer">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-5">
+                <div class="w-14 h-14 bg-gray-900 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-print text-white text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-0.5">Kategori</div>
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Service <span class="text-[#C8000A]">Printer</span></h2>
+                </div>
             </div>
-            <a href="{{ route('services.printer') }}" class="btn-outline px-5 py-2.5 rounded-xl text-red-600 text-sm font-semibold hidden sm:block">Lihat Semua →</a>
+            <a href="{{ route('services.printer') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
+                Semua <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($printerServices as $service)
-            <div class="service-card p-6 rounded-2xl" data-animate>
-                <div class="flex items-start justify-between mb-3">
-                    <h3 class="font-bold text-gray-900 text-base">{{ $service->name }}</h3>
-                    @if($service->is_featured)<span class="badge badge-red"><i class="fas fa-star text-red-600"></i> Populer</span>@endif
+            <div class="group relative bg-white border border-gray-100 p-7 hover:border-[#C8000A]/20 hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 hover:-translate-y-0.5">
+                <div class="absolute -right-3 -top-3 w-6 h-6 bg-[#C8000A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="font-black text-gray-900 text-base leading-tight pr-3">{{ $service->name }}</h3>
+                    @if($service->is_featured)
+                    <span class="flex-shrink-0 px-2 py-1 bg-red-50 text-[#C8000A] text-[10px] font-black uppercase tracking-wide">Populer</span>
+                    @endif
                 </div>
-                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
-                <div class="flex items-center justify-between">
+                
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
+                
+                <div class="flex items-end justify-between pt-5 border-t border-gray-50">
                     <div>
-                        <p class="text-red-600 font-bold text-sm">{{ $service->price_range }}</p>
-                        <p class="text-gray-500 text-xs">Est. {{ $service->estimated_days }} hari</p>
+                        <div class="text-[#C8000A] font-black">{{ $service->price_range }}</div>
+                        <div class="text-gray-400 text-xs mt-0.5">Est. {{ $service->estimated_days }} hari</div>
                     </div>
-                    <a href="{{ route('services.show', $service->slug) }}" class="btn-primary px-4 py-2 rounded-xl text-white text-xs font-semibold">Detail</a>
+                    <a href="{{ route('services.show', $service->slug) }}" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wide hover:bg-[#A00008] transition-colors">
+                        Detail <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
                 </div>
             </div>
             @endforeach
@@ -83,36 +137,74 @@
     </div>
 </section>
 
-<div class="section-line"></div>
+<!-- Divider -->
+<div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div class="h-px bg-gray-100"></div>
+</div>
 
-<!-- PC Services -->
-<section class="py-20" id="pc">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-10" data-animate>
-            <div>
-                <div class="flex items-center gap-3 mb-2"><span class="text-4xl"><i class="fas fa-desktop text-red-600"></i></span><span class="badge badge-red">PC</span></div>
-                <h2 class="text-2xl font-black text-gray-900">Service <span class="text-gradient">Komputer</span></h2>
+<!-- ===================== PC SERVICES ===================== -->
+<section class="py-24 bg-white" id="pc">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-5">
+                <div class="w-14 h-14 bg-[#C8000A] flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-desktop text-white text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-0.5">Kategori</div>
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Service <span class="text-[#C8000A]">Komputer</span></h2>
+                </div>
             </div>
-            <a href="{{ route('services.pc') }}" class="btn-outline px-5 py-2.5 rounded-xl text-red-600 text-sm font-semibold hidden sm:block">Lihat Semua →</a>
+            <a href="{{ route('services.pc') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
+                Semua <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($pcServices as $service)
-            <div class="service-card p-6 rounded-2xl" data-animate>
-                <div class="flex items-start justify-between mb-3">
-                    <h3 class="font-bold text-gray-900 text-base">{{ $service->name }}</h3>
-                    @if($service->is_featured)<span class="badge badge-red"><i class="fas fa-star text-red-600"></i> Populer</span>@endif
+            <div class="group relative bg-white border border-gray-100 p-7 hover:border-[#C8000A]/20 hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 hover:-translate-y-0.5">
+                <div class="absolute -right-3 -top-3 w-6 h-6 bg-[#C8000A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="font-black text-gray-900 text-base leading-tight pr-3">{{ $service->name }}</h3>
+                    @if($service->is_featured)
+                    <span class="flex-shrink-0 px-2 py-1 bg-red-50 text-[#C8000A] text-[10px] font-black uppercase tracking-wide">Populer</span>
+                    @endif
                 </div>
-                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
-                <div class="flex items-center justify-between">
+                
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
+                
+                <div class="flex items-end justify-between pt-5 border-t border-gray-50">
                     <div>
-                        <p class="text-red-600 font-bold text-sm">{{ $service->price_range }}</p>
-                        <p class="text-gray-500 text-xs">Est. {{ $service->estimated_days }} hari</p>
+                        <div class="text-[#C8000A] font-black">{{ $service->price_range }}</div>
+                        <div class="text-gray-400 text-xs mt-0.5">Est. {{ $service->estimated_days }} hari</div>
                     </div>
-                    <a href="{{ route('services.show', $service->slug) }}" class="btn-primary px-4 py-2 rounded-xl text-white text-xs font-semibold">Detail</a>
+                    <a href="{{ route('services.show', $service->slug) }}" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wide hover:bg-[#A00008] transition-colors">
+                        Detail <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
                 </div>
             </div>
             @endforeach
         </div>
     </div>
 </section>
+
+<!-- ===================== CTA STRIP ===================== -->
+<section class="py-16 bg-[#C8000A] relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%); background-size: 20px 20px;"></div>
+    <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+            <h3 class="text-2xl font-black text-white">Tidak menemukan yang Anda cari?</h3>
+            <p class="text-white/70 text-sm mt-1">Hubungi kami langsung, kami siap membantu!</p>
+        </div>
+        <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC!" 
+           target="_blank"
+           class="flex-shrink-0 inline-flex items-center gap-3 px-8 py-4 bg-white text-[#C8000A] font-black text-sm uppercase tracking-wider hover:bg-gray-50 transition-colors shadow-lg">
+            <i class="fab fa-whatsapp text-lg"></i>
+            Konsultasi Gratis
+        </a>
+    </div>
+</section>
+
 @endsection

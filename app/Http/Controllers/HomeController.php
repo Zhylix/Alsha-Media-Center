@@ -7,6 +7,7 @@ use App\Models\Testimonial;
 use App\Models\StoreProfile;
 use App\Models\Stat;
 use App\Models\Promo;
+use App\Models\Order;
 
 class HomeController extends Controller
 {
@@ -28,15 +29,17 @@ class HomeController extends Controller
         // Get stats from database
         $stats_items = Stat::where('is_active', true)->orderBy('sort_order')->get();
 
+// Get stats from database - dynamic and conditional
+        $stats_items = Stat::where('is_active', true)->orderBy('sort_order')->get();
+
+        // Keep computed stats but make available via Stat model preference
         $stats = [
             'services'    => Service::where('is_active', true)->count(),
-            'orders'      => \App\Models\Order::count(),
-            'experience'  => 12,
-            'customers'   => max(\App\Models\Order::count() + 500, 500),
+            'experience'  => $stats_items->where('label', 'like', '%pengalam%')->first()?->value ?? 12,
+            'customers'   => $stats_items->where('label', 'like', '%pelangg%')->first()?->value ?? max(Order::count() + 500, 500),
         ];
 
-        return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'pcServices', 'testimonials', 'stats', 'stats_items',
-            'heroLaptop', 'heroPrinter', 'heroPc', 'activePromos'));
+        return view('home', compact('store', 'featuredServices', 'laptopServices', 'printerServices', 'pcServices', 'testimonials', 'stats_items', 'heroLaptop', 'heroPrinter', 'heroPc', 'activePromos'));
 
     }
 }
