@@ -54,7 +54,9 @@
                             <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
                         </div>
                     </div>
-
+                    <a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
+                        <i class="fas fa-search-location mr-1 text-xs"></i> Tracking
+                    </a>
                     <a href="{{ route('contact') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('contact') ? 'active text-red-600' : '' }}">Kontak</a>
                 </div>
 

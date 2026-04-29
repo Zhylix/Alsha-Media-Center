@@ -52,7 +52,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-black leading-tight mb-6 animate-fade-up" style="animation-delay: 0.1s;">
                     Jasa Service
-                    <span class="text-gradient block">Elektronik</span>
+                    <span class="text-red-600 block">Elektronik</span>
                     Terpercaya
                 </h1>
 
@@ -61,8 +61,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     Teknisi berpengalaman, spare part original, garansi 30 hari. Antar jemput tersedia!
                 </p>
 
-                <div class="flex flex-wrap gap-4 mb-10 animate-fade-up" style="animation-delay: 0.3s;">
-                    <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base">
+                <div class="flex flex-col sm:flex-row gap-4 mb-10 justify-center lg:justify-start">
+                    <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20konsultasi..." target="_blank" class="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base shadow-md transition-all hover:scale-105 hover:shadow-xl w-full sm:w-auto">
                         <i class="fab fa-whatsapp"></i>
                         Chat WhatsApp
                     </a>
@@ -77,6 +77,20 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <a href="{{ route('services.laptop') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-laptop text-red-500"></i> Laptop</a>
                     <a href="{{ route('services.printer') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-print text-red-500"></i> Printer</a>
                     <a href="{{ route('services.pc') }}" class="flex items-center gap-2 px-4 py-2 bg-black/10 border-black/20 text-black hover:bg-black/20 rounded-xl transition-all text-sm"><i class="fas fa-desktop text-red-500"></i> PC</a>
+                </div>
+            </div>
+
+            <!-- KANAN: Image -->
+            <div class="order-1 lg:order-2 relative animate-fade-up" style="animation-delay: 0.1s;">
+                <div class="relative rounded-3xl shadow-xl overflow-hidden">
+                    <img
+                        src="{{ $heroImageUrl }}"
+                        alt="Hero Alsha Media Center"
+                        class="w-full h-[220px] sm:h-[300px] lg:h-[450px] object-cover object-center"
+                    >
+
+                    <!-- Gradient overlay merah ringan -->
+                    <div class="absolute inset-0 bg-gradient-to-l from-red-600/20 to-transparent z-10"></div>
                 </div>
             </div>
         </div>
@@ -332,22 +346,39 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
 @push('scripts')
 @if(!($store && $store->google_maps_link))
+@php
+    $storeData = [
+        'lat' => $store->latitude ?? -6.9147,
+        'lng' => $store->longitude ?? 107.6098,
+        'address' => $store->address ?? 'Jl. Raya Bangsri No 02. Kecamatan Bangsri',
+        'city' => $store->city ?? 'Bangsri, Jawa Tengah',
+        'open_days' => $store->open_days ?? 'Buka',
+        'open_hours' => $store->open_hours ?? '08:00 - 20:00'
+    ];
+@endphp
 <script>
-    const map = L.map('map').setView([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], 16);
+    const storeData = {{ json_encode($storeData) }};
+
+    const map = L.map('map').setView([storeData.lat, storeData.lng], 16);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    const icon = L.divIcon({ html: `<div style="background:linear-gradient(135deg,#dc2626,#991b1b);width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 15px rgba(220,38,38,0.5);border:3px solid white;display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:18px;"><i class="fas fa-wrench text-white"></i></span></div>`, className: '', iconSize:[40,40], iconAnchor:[20,40] });
+    const icon = L.divIcon({ 
+        html: `<div style="background:linear-gradient(135deg,#dc2626,#991b1b);width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 15px rgba(220,38,38,0.5);border:3px solid white;display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:18px;"><i class="fas fa-wrench text-white"></i></span></div>`, 
+        className: '', 
+        iconSize: [40,40], 
+        iconAnchor: [20,40] 
+    });
 
-    L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], { icon })
+    L.marker([storeData.lat, storeData.lng], { icon })
         .addTo(map)
         .bindPopup(`
             <div style="font-family:Inter,sans-serif;padding:8px;min-width:200px;">
                 <strong style="color:#dc2626;font-size:15px;"><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong><br>
-                <span style="color:#64748b;font-size:13px;">{{ $store->address ?? 'Jl. Raya Bangsri No 02. Kecamatan Bangsri' }}, {{ $store->city ?? 'Bangsri, Jawa Tengah' }}</span><br>
-                <span style="color:#4b5563;font-size:12px;font-weight:600;"><i class="fas fa-clock text-red-500"></i> {{ $store->open_days ?? 'Buka' }}: {{ $store->open_hours ?? '08:00 - 20:00' }}</span>
+                <span style="color:#64748b;font-size:13px;">${storeData.address}, ${storeData.city}</span><br>
+                <span style="color:#4b5563;font-size:12px;font-weight:600;"><i class="fas fa-clock text-red-500"></i> ${storeData.open_days}: ${storeData.open_hours}</span>
             </div>
         `, { maxWidth: 250 })
         .openPopup();

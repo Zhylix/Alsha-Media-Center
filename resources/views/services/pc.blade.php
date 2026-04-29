@@ -43,7 +43,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
         <h2 class="text-2xl font-black text-gray-900 mb-8">Layanan PC yang Kami Tangani</h2>
         <div class="flex flex-wrap justify-center gap-4">
-            @foreach(['Rakit PC','Upgrade RAM','Ganti SSD/HDD','Install Ulang OS','Perbaikan Motherboard','Ganti PSU','Service VGA','Cleaning Thermal'] as $brand)
+            @foreach(['Bluescreen','Upgrade RAM','Ganti SSD/HDD','Install Ulang OS','Perbaikan Motherboard','Service Keyboard','LCD','Cleaning Thermal','Mati Total','Speaker','Dan Lain-lain'] as $brand)
             <span class="px-5 py-2.5 glass rounded-xl text-gray-700 text-sm font-medium">{{ $brand }}</span>
             @endforeach
         </div>

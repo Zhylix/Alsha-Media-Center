@@ -55,7 +55,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-14" data-animate>
             <span class="text-red-600 text-sm font-bold uppercase tracking-widest">Nilai Kami</span>
-            <h2 class="text-3xl font-black text-gray-900 mt-3">Komitmen <span class="text-gradient">Kami Untuk Anda</span></h2>
+            <h2 class="text-3xl font-black text-gray-900 mt-3">Komitmen <span class="text-gradient">AMC Untuk Anda</span></h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach([

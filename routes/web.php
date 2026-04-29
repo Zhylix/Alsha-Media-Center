@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceTicketController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminServiceController;
+use App\Http\Controllers\Admin\AdminServiceTicketController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
 use App\Http\Controllers\Admin\AdminContactController;
@@ -28,6 +30,10 @@ Route::get('/services/printer', [ServiceController::class, 'printer'])->name('se
 Route::get('/services/pc', [ServiceController::class, 'pc'])->name('services.pc');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
+// Service Ticket Tracking (Public)
+Route::get('/tracking', [ServiceTicketController::class, 'index'])->name('tracking.index');
+Route::post('/tracking', [ServiceTicketController::class, 'search'])->name('tracking.search');
+
 // Orders
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
 
@@ -41,8 +47,11 @@ Route::prefix('alsha')->name('admin.')->group(function () {
     Route::middleware(\App\Http\Middleware\AdminAuthenticated::class)->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // Services CRUD
+        // Services CRUD (Catalog)
         Route::resource('services', AdminServiceController::class);
+
+        // Service Tickets CRUD (Repair Tracking)
+        Route::resource('service-tickets', AdminServiceTicketController::class);
 
         // Stats CRUD
         Route::resource('stats', AdminStatsController::class)->except(['show']);
