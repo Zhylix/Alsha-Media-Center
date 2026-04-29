@@ -25,9 +25,7 @@
                 <span class="text-red-600 text-sm font-bold uppercase tracking-widest">Cerita Kami</span>
                 <h2 class="text-3xl font-black text-gray-900 mt-3 mb-6">Berawal dari <span class="text-gradient">Passion</span> Teknologi</h2>
                 <div class="space-y-4 text-gray-600 leading-relaxed">
-                    <p>{{ $store->description ?? 'Alsha Media Center adalah bengkel service elektronik profesional yang berpengalaman lebih dari 10 tahun.' }}</p>
-                    <p>Berdiri sejak tahun 2014, kami telah melayani ribuan pelanggan di Bangsri dan sekitarnya. Komitmen kami adalah memberikan solusi terbaik dengan harga yang terjangkau dan transparansi penuh kepada pelanggan.</p>
-                    <p>Kami percaya bahwa setiap perangkat elektronik memiliki nilai dan layak untuk diperbaiki. Dengan teknisi berpengalaman dan peralatan modern, kami siap mengembalikan performa perangkat Anda seperti semula.</p>
+                    <p>{{ $store->description ?? 'Alsha Media Center adalah bengkel service elektronik profesional yang berpengalaman lebih dari 10 tahun.<br>' }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4" data-animate>
