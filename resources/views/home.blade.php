@@ -16,7 +16,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     <!-- Diagonal Red Panel -->
     <div class="absolute inset-y-0 right-0 w-[55%] bg-[#C8000A] clip-diagonal hidden lg:block"></div>
     
-    <!-- Hero Image overlay on red panel -->
+    <!-- Hero Image -->
     <div 
         class="absolute inset-y-0 right-0 w-[55%] hidden lg:block clip-diagonal"
         style="background-image: url('{{ $heroImageUrl }}'); background-size: cover; background-position: center; opacity: 0.15;"
@@ -144,6 +144,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
 
 <!-- ===================== PAKET INSTAL WINDOWS ===================== -->
+@if($activePromos->count() > 0 && ($laptopServices->count() > 0 || $printerServices->count() > 0 || $pcServices->count() > 0))
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-14">
@@ -163,13 +164,18 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
         @if($activePromos->count() > 0)
         <div class="grid gap-8 xl:grid-cols-3">
             @foreach($activePromos as $promo)
-            <div class="group bg-white border border-gray-200 rounded-[2rem] overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-                @if($promo->image)
-                <div class="h-56 overflow-hidden">
+            <div class="group bg-white border border-gray-200 rounded-[2rem] overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col">
+                <div class="h-56 overflow-hidden bg-gray-100 flex items-center justify-center">
+                    @if($promo->image)
                     <img src="{{ asset('storage/' . $promo->image) }}" alt="{{ $promo->title }}" class="w-full h-full object-cover" />
+                    @else
+                    <div class="text-center">
+                        <i class="fas fa-image text-gray-300 text-4xl mb-2"></i>
+                        <p class="text-gray-400 text-sm">Tidak ada gambar</p>
+                    </div>
+                    @endif
                 </div>
-                @endif
-                <div class="px-8 py-10">
+                <div class="px-8 py-10 flex-1 flex flex-col">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between 2gap-3 mb-5">
                         <span class="text-xs font-black uppercase tracking-[0.3em] text-[#C8000A]">Paket</span>
                         @if($promo->discount_info)
@@ -187,7 +193,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                         @endif
                         <div class="flex items-center gap-3">
                             <span class="text-[#C8000A]"><i class="fas fa-check-circle"></i></span>
-                            <span class="font-semibold">Paket aktif dan dapat diubah dari admin</span>
+                            <span class="font-semibold">Paket aktif dan jika ingin lebih lanjut silahkan hubungi Admin</span>
                         </div>
                     </div>
                 </div>
@@ -206,6 +212,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
         @endif
     </div>
 </section>
+@endif
 
 <!-- ===================== FEATURED SERVICES ===================== -->
 @if($featuredServices->count() > 0)
@@ -473,7 +480,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 <!-- ===================== CTA ===================== -->
 <section class="py-28 bg-gray-900 relative overflow-hidden">
     <!-- Background accent -->
-    <div class="absolute inset-y-0 left-0 w-2 bg-[#C8000A]"></div>
+    
     <div class="absolute top-0 right-0 w-64 h-64 bg-[#C8000A]/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
 
     <div class="relative max-w-4xl mx-auto px-6 sm:px-8 text-center">

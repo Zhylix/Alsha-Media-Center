@@ -42,8 +42,5 @@ class DatabaseSeeder extends Seeder
 
         // Call Stat Seeder
         $this->call(StatSeeder::class);
-
-        // Call Promo Seeder
-        $this->call(PromoSeeder::class);
     }
 }

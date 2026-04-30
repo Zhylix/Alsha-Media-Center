@@ -36,6 +36,7 @@
 </section>
 
 <!-- ===================== LAPTOP SERVICES ===================== -->
+@if($laptopServices->count() > 0)
 <section class="py-24 bg-white" id="laptop">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <!-- Section title -->
@@ -83,13 +84,17 @@
         </div>
     </div>
 </section>
+@endif
 
 <!-- Divider -->
+@if($laptopServices->count() > 0 && ($printerServices->count() > 0 || $pcServices->count() > 0))
 <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
     <div class="h-px bg-gray-100"></div>
 </div>
+@endif
 
 <!-- ===================== PRINTER SERVICES ===================== -->
+@if($printerServices->count() > 0)
 <section class="py-24 bg-white" id="printer">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex items-center justify-between mb-12">
@@ -136,13 +141,17 @@
         </div>
     </div>
 </section>
+@endif
 
 <!-- Divider -->
+@if(($laptopServices->count() > 0 || $printerServices->count() > 0) && $pcServices->count() > 0)
 <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
     <div class="h-px bg-gray-100"></div>
 </div>
+@endif
 
 <!-- ===================== PC SERVICES ===================== -->
+@if($pcServices->count() > 0)
 <section class="py-24 bg-white" id="pc">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex items-center justify-between mb-12">
@@ -189,6 +198,7 @@
         </div>
     </div>
 </section>
+@endif
 
 <!-- ===================== CTA STRIP ===================== -->
 <section class="py-16 bg-[#C8000A] relative overflow-hidden">
