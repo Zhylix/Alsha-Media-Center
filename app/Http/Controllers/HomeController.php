@@ -19,7 +19,7 @@ class HomeController extends Controller
         $printerServices  = Service::where('category', 'printer')->where('is_active', true)->take(3)->get();
         $pcServices       = Service::where('category', 'pc')->where('is_active', true)->take(3)->get();
         $testimonials     = Testimonial::where('is_active', true)->latest()->take(6)->get();
-        $activePromos     = Promo::active()->latest()->take(3)->get();
+        $activePromos     = Promo::active()->orderBy('sort_order')->orderBy('created_at', 'desc')->take(3)->get();
 
         // Hero card data
         $heroLaptop   = Service::where('category', 'laptop')->where('is_active', true)->first();

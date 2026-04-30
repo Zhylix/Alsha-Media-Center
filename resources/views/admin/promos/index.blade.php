@@ -15,7 +15,7 @@
     <div class="overflow-x-auto">
         <table class="admin-table w-full">
             <thead><tr>
-                <th>Judul Promo</th><th>Diskon/Info</th><th>Masa Berlaku</th><th>Status</th><th>Aksi</th>
+                <th>Judul Promo</th><th>Diskon/Info</th><th>Masa Berlaku</th><th>Status</th><th>Urutan</th><th>Aksi</th>
             </tr></thead>
             <tbody>
                 @foreach($promos as $promo)
@@ -42,6 +42,7 @@
                             {{ $promo->isValid ? 'Berjalan' : ($promo->is_active ? 'Terjadwal/Berakhir' : 'Nonaktif') }}
                         </span>
                     </td>
+                    <td class="text-center text-gray-600 font-semibold">{{ $promo->sort_order }}</td>
                     <td>
                         <div class="flex items-center gap-2">
                             <a href="{{ route('admin.promos.edit', $promo) }}" class="px-3 py-1.5 rounded-lg bg-red-600/10 text-red-600 hover:bg-red-600/20 text-xs font-medium transition-colors">Edit</a>

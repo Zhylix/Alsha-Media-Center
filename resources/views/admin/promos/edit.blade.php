@@ -25,6 +25,11 @@
                     <label class="block text-sm font-medium text-gray-600 mb-2">Tanggal Berakhir *</label>
                     <input type="datetime-local" name="end_date" value="{{ old('end_date', $promo->end_date->format('Y-m-d\TH:i')) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Urutan Tampilan</label>
+                    <input type="number" name="sort_order" value="{{ old('sort_order', $promo->sort_order ?? 0) }}" min="0" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="0">
+                    <p class="text-gray-500 text-[10px] mt-1 italic">* Angka kecil tampil lebih dulu (0 = paling atas)</p>
+                </div>
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Deskripsi Promo *</label>
                     <textarea name="description" required rows="5" class="form-input w-full px-4 py-3 rounded-xl text-sm resize-none">{{ old('description', $promo->description) }}</textarea>

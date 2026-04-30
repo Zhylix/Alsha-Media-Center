@@ -12,7 +12,7 @@ class AdminPromoController extends Controller
 {
     public function index()
     {
-        $promos = Promo::latest()->paginate(15);
+        $promos = Promo::orderBy('sort_order')->orderBy('created_at', 'desc')->paginate(15);
         return view('admin.promos.index', compact('promos'));
     }
 
@@ -29,11 +29,13 @@ class AdminPromoController extends Controller
             'discount_info' => 'nullable|string|max:100',
             'start_date'    => 'required|date',
             'end_date'      => 'required|date|after:start_date',
+            'sort_order'    => 'nullable|integer|min:0',
             'image'         => 'nullable|image|max:2048',
         ]);
 
         $data['slug'] = Str::slug($data['title']) . '-' . rand(100, 999);
         $data['is_active'] = $request->has('is_active');
+        $data['sort_order'] = $data['sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('promos', 'public');
@@ -56,11 +58,13 @@ class AdminPromoController extends Controller
             'discount_info' => 'nullable|string|max:100',
             'start_date'    => 'required|date',
             'end_date'      => 'required|date|after:start_date',
+            'sort_order'    => 'nullable|integer|min:0',
             'image'         => 'nullable|image|max:2048',
         ]);
 
         $data['slug'] = Str::slug($data['title']) . '-' . rand(100, 999);
         $data['is_active'] = $request->has('is_active');
+        $data['sort_order'] = $data['sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($promo->image) {

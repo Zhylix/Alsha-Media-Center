@@ -170,7 +170,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                 </div>
                 @endif
                 <div class="px-8 py-10">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between 2gap-3 mb-5">
                         <span class="text-xs font-black uppercase tracking-[0.3em] text-[#C8000A]">Paket</span>
                         @if($promo->discount_info)
                         <span class="inline-flex items-center gap-2 rounded-full bg-[#FFF1F1] px-4 py-2 text-xs font-bold text-[#C8000A] uppercase">{{ $promo->discount_info }}</span>

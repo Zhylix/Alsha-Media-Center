@@ -11,7 +11,7 @@ class Promo extends Model
 
     protected $fillable = [
         'title', 'slug', 'description', 'image', 'discount_info',
-        'start_date', 'end_date', 'is_active'
+        'start_date', 'end_date', 'is_active', 'sort_order'
     ];
 
     protected $casts = [
