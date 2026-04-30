@@ -14,12 +14,12 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     <div class="absolute inset-0 bg-white"></div>
     
     <!-- Diagonal Red Panel -->
-    <div class="absolute inset-y-0 right-0 w-[55%] bg-[#C8000A] clip-diagonal hidden lg:block"></div>
+    <div class="absolute inset-y-0 right-0 w-[54%]  clip-diagonal hidden lg:block"></div>
     
     <!-- Hero Image -->
     <div 
         class="absolute inset-y-0 right-0 w-[55%] hidden lg:block clip-diagonal"
-        style="background-image: url('{{ $heroImageUrl }}'); background-size: cover; background-position: center; opacity: 0.15;"
+        style="background-image: url('{{ $heroImageUrl }}'); background-size: cover; background-position: center; opacity: 100;"
     ></div>
 
     <!-- Geometric accents -->
@@ -79,10 +79,10 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     @foreach([
                         ['route' => route('services.laptop'), 'icon' => 'fa-laptop', 'label' => 'Laptop'],
                         ['route' => route('services.printer'), 'icon' => 'fa-print', 'label' => 'Printer'],
-                        ['route' => route('services.pc'), 'icon' => 'fa-desktop', 'label' => 'PC / Komputer'],
+                        ['route' => route('services.pc'), 'icon' => 'fa-desktop', 'label' => 'PC'],
                         ['route' => route('services.software'), 'icon' => 'fa-compact-disc', 'label' => 'Software'],
                     ] as $cat)
-                    <a href="{{ $cat['route'] }}" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-100 bg-gray-50 text-gray-600 text-xs font-semibold uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] hover:bg-red-50 transition-all duration-200">
+                    <a href="{{ $cat['route'] }}" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 bg-gray-200 rounded-sm text-gray-600 text-xs font-semibold uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] hover:bg-red-50 transition-all duration-200">
                         <i class="fas {{ $cat['icon'] }} text-[#C8000A] text-xs"></i>
                         {{ $cat['label'] }}
                     </a>

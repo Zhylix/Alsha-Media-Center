@@ -125,6 +125,7 @@
     background-clip: text;
 }
 
+
 /* ========== GRADIENT BG ========== */
 .gradient-anim {
     background: linear-gradient(270deg, #700404c7, #500404, #991b1b, #dc2626);
@@ -230,6 +231,15 @@
 
 /* ========== MAP ========== */
 #map { height: 480px; border-radius: 16px; z-index: 10; }
+
+/* ========== HERO DIAGONAL ========== */
+.clip-diagonal-left {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
+}
+
+.clip-diagonal-right {
+    clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+}
 
 /* ========== FORM ========== */
 .form-input {
