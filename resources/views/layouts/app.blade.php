@@ -56,10 +56,10 @@
                             <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-compact-disc text-gray-500"></i> Jasa Installasi</a>
                         </div>
                     </div>
-                    <a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
+<a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
                         <i class="text-xs"></i> Tracking
                     </a>
-                    <a href="{{ route('contact') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('contact') ? 'active text-red-600' : '' }}">Kontak</a>
+                    <a href="{{ route('order.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('order.*') ? 'active text-red-600' : '' }}">Hubungi Kami</a>
                 </div>
 
                 <!-- CTA + Mobile Toggle -->
@@ -81,7 +81,7 @@
                 <a href="{{ route('services.laptop') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
                 <a href="{{ route('services.printer') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
                 <a href="{{ route('services.software') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-compact-disc text-gray-500"></i> Jasa Installasi</a>
-                <a href="{{ route('contact') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Kontak</a>
+<a href="{{ route('order.index') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Hubungi Kami</a>
             </div>
         </div>
     </nav>

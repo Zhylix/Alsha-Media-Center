@@ -44,6 +44,13 @@ Route::get('/tracking', [ServiceTicketController::class, 'index'])->name('tracki
 Route::post('/tracking', [ServiceTicketController::class, 'search'])->name('tracking.search');
 
 // Orders
+Route::get('/pesanan', [OrderController::class, 'index'])->name('order.index');
+Route::post('/pesanan', [OrderController::class, 'store'])->name('order.store');
+Route::get('/pesanan/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
+Route::get('/pesanan/tracking', [OrderController::class, 'trackingIndex'])->name('order.tracking');
+Route::post('/pesanan/tracking', [OrderController::class, 'tracking'])->name('order.tracking.post');
+
+// Backward compatibility
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
 
 // ADMIN AUTH
@@ -71,8 +78,10 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         // Stats CRUD
         Route::resource('stats', AdminStatsController::class)->except(['show']);
 
-        // Orders management
+// Orders management
         Route::resource('orders', AdminOrderController::class)->except(['create', 'store']);
+        Route::post('orders/{order}/accept', [AdminOrderController::class, 'accept'])->name('orders.accept');
+        Route::post('orders/{order}/reject', [AdminOrderController::class, 'reject'])->name('orders.reject');
 
         // Testimonials CRUD
         Route::resource('testimonials', AdminTestimonialController::class)->except(['show']);

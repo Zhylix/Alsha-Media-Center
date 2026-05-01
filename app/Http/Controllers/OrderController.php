@@ -5,15 +5,188 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\Order;
 use App\Models\StoreProfile;
+use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        $services = Service::where('is_active', true)->orderBy('sort_order')->get();
+        $store = StoreProfile::first();
+        
+        // Group services by category
+        $servicesByCategory = $services->groupBy('category');
+        
+        return view('order', compact('services', 'servicesByCategory', 'store'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_email' => 'required|email|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'customer_address' => 'nullable|string|max:500',
+            'service_id' => 'required|exists:services,id',
+            'device_description' => 'required|string|max:1000',
+            'problem_description' => 'required|string|max:2000',
+        ]);
+
+        $service = Service::findOrFail($validated['service_id']);
+
+        // Create order with generated order number
+        $order = Order::create([
+            'order_number' => Order::generateOrderNumber(),
+            'customer_name' => $validated['customer_name'],
+            'customer_email' => $validated['customer_email'],
+            'customer_phone' => $validated['customer_phone'],
+            'customer_address' => $validated['customer_address'] ?? null,
+            'service_id' => $validated['service_id'],
+            'device_description' => $validated['device_description'],
+            'problem_description' => $validated['problem_description'],
+            'service_price' => $service->price_start,
+            'shipment_price' => 0,
+            'total_price' => $service->price_start,
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
+        ]);
+
+        // Send notification to all admins
+        $this->notifyAdmins($order, $service);
+
+        return redirect()->route('order.success', ['orderNumber' => $order->order_number])
+            ->with('success', 'Pesanan Anda telah berhasil dibuat!');
+    }
+
     public function success($orderNumber)
     {
         $store = StoreProfile::first();
         $order = Order::where('order_number', $orderNumber)->with('service')->firstOrFail();
+        
         return view('order-success', compact('store', 'order'));
     }
 
+    public function tracking(Request $request)
+    {
+        $request->validate([
+            'order_number' => 'required|string',
+        ]);
+
+        $orderNumber = strtoupper(trim($request->input('order_number')));
+        $order = Order::where('order_number', $orderNumber)->with('service')->first();
+
+        if (!$order) {
+            return redirect()->route('order.tracking')
+                ->with('error', 'Nomor pesanan tidak ditemukan. Periksa kembali nomor yang Anda masukkan.');
+        }
+
+        return view('order-track', compact('order'));
+    }
+
+    public function trackingIndex()
+    {
+        $store = StoreProfile::first();
+        return view('order-track', compact('store'));
+    }
+
+    /**
+     * Notify all admins about new order via WhatsApp and Email
+     */
+    private function notifyAdmins(Order $order, Service $service): void
+    {
+        $admins = Admin::all();
+        $store = StoreProfile::first();
+
+        $message = "🔔 *Pesanan BaruAMC!*\n\n";
+        $message .= "━━━━━━━━━━━━━━━━━━\n";
+        $message .= "📋 *Nomor Pesanan:* {$order->order_number}\n";
+        $message .= "👤 *Pelanggan:* {$order->customer_name}\n";
+        $message .= "📞 *Telepon:* {$order->customer_phone}\n";
+        $message .= "📧 *Email:* {$order->customer_email}\n";
+        $message .= "🛠️ *Layanan:* {$service->name}\n";
+        $message .= "💻 *Device:* {$order->device_description}\n";
+        $message .= "⚠️ *Masalah:* {$order->problem_description}\n";
+        $message .= "💰 *Estimasi Harga:* Rp " . number_format($order->total_price, 0, ',', '.') . "\n";
+        $message .= "━━━━━━━━━━━━━━━━━━\n";
+        $message .= "📅 *Tanggal:* " . $order->created_at->format('d/m/Y H:i') . "\n\n";
+        $message .= "_Silakan login ke admin untuk mengonfirmasi pesanan._";
+
+        // Notify via WhatsApp
+        foreach ($admins as $admin) {
+            if ($admin->whatsapp) {
+                $this->sendWhatsAppMessage($admin->whatsapp, $message);
+            }
+        }
+
+        // Also send to storeWhatsapp if available
+        if ($store && $store->whatsapp) {
+            $this->sendWhatsAppMessage($store->whatsapp, $message);
+        }
+
+        // Notify via Email
+        foreach ($admins as $admin) {
+            if ($admin->email) {
+                $this->sendEmailNotification($admin->email, $order, $service);
+            }
+        }
+    }
+
+    /**
+     * Send WhatsApp message using Fonnte API (free Indonesian WhatsApp sender)
+     */
+    private function sendWhatsAppMessage(string $phone, string $message): void
+    {
+        try {
+            $phone = preg_replace('/\D/', '', $phone);
+            if (substr($phone, 0, 1) === '0') {
+                $phone = '62' . substr($phone, 1);
+            } elseif (substr($phone, 0, 2) !== '62') {
+                $phone = '62' . $phone;
+            }
+
+            // Using Fonnte API (free for Indonesian users)
+            $token = config('services.fonnte.token');
+            
+            if ($token) {
+                Http::withHeaders([
+                    'Authorization' => $token,
+                ])->post('https://api.fonnte.com/send', [
+                    'target' => $phone,
+                    'message' => $message,
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('WhatsApp notification failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Send email notification to admin
+     */
+    private function sendEmailNotification(string $email, Order $order, Service $service): void
+    {
+        try {
+            \Mail::raw(
+                "Pesanan BaruAMC!\n\n" .
+                "Nomor Pesanan: {$order->order_number}\n" .
+                "Pelanggan: {$order->customer_name}\n" .
+                "Telepon: {$order->customer_phone}\n" .
+                "Email: {$order->customer_email}\n" .
+                "Layanan: {$service->name}\n" .
+                "Device: {$order->device_description}\n" .
+                "Masalah: {$order->problem_description}\n" .
+                "Estimasi Harga: Rp " . number_format($order->total_price, 0, ',', '.') . "\n" .
+                "Tanggal: {$order->created_at}\n",
+                function ($message) use ($email, $order) {
+                    $message->to($email)
+                        ->subject("Pesanan BaruAMC: {$order->order_number}");
+                }
+            );
+        } catch (\Exception $e) {
+            \Log::error('Email notification failed: ' . $e->getMessage());
+        }
+    }
 }

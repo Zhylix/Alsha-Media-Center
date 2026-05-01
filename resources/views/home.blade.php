@@ -21,13 +21,6 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
         class="absolute inset-y-0 right-0 w-[55%] hidden lg:block clip-diagonal"
         style="background-image: url('{{ $heroImageUrl }}'); background-size: cover; background-position: center; opacity: 100;"
     ></div>
-
-    <!-- Geometric accents -->
-    <div class="absolute top-0 right-[45%] w-px h-full bg-red-100 hidden lg:block"></div>
-    <div class="absolute bottom-24 left-12 w-24 h-24 border border-red-100 rotate-45 hidden xl:block"></div>
-    <div class="absolute top-32 right-[48%] w-3 h-3 bg-[#C8000A] rounded-full hidden lg:block"></div>
-    <div class="absolute top-48 right-[46%] w-1.5 h-1.5 bg-red-300 rounded-full hidden lg:block"></div>
-
     <!-- Mobile background image -->
     <div 
         class="absolute inset-0 lg:hidden"
@@ -64,12 +57,12 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20konsultasi..." 
                        target="_blank" 
                        class="amc-btn-primary group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#C8000A] text-white font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:bg-[#A00008] hover:shadow-2xl hover:shadow-red-900/30 hover:-translate-y-0.5">
-                        <i class="fab fa-whatsapp text-base"></i>
+                        <i class="fab fa-whatsapp text-base "></i>
                         Chat WhatsApp
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
                     <a href="{{ route('services.index') }}" 
-                       class="inline-flex items-center justify-center gap-3 px-8 py-4 border border-gray-200 text-gray-700 font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:border-[#C8000A] hover:text-[#C8000A]">
+                       class="inline-flex items-center justify-center gap-3 px-8 py-4 border border-gray-500 text-gray-700 font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:border-[#C8000A] hover:text-[#C8000A]">
                         Lihat Layanan
                     </a>
                 </div>
@@ -143,7 +136,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     </section>
 
 
-<!-- ===================== PAKET INSTAL WINDOWS ===================== -->
+<!-- ===================== PAKET -->
 @if($activePromos->count() > 0 && ($laptopServices->count() > 0 || $printerServices->count() > 0 || $pcServices->count() > 0))
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
@@ -153,7 +146,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <span class="block w-6 h-px bg-[#C8000A]"></span>
                     <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Paket Service</span>
                 </div>
-                <h2 class="text-4xl font-black text-gray-900 tracking-tight">Paket <span class="text-[#C8000A]">Instal Ulang / Cuci Windows</span></h2>
+                <h2 class="text-4xl font-black text-gray-900 tracking-tight">Paket <span class="text-[#C8000A]">Service x</span></h2>
                 <p class="mt-4 text-gray-500">Kelola paket promo langsung dari admin panel. Setiap paket yang aktif akan tampil di halaman home dalam format card sederhana dan elegan.</p>
             </div>
             <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC%2C%20saya%20ingin%20mengetahui%20detail%20paket%20instal%20ulang%20Windows" target="_blank" class="btn-primary inline-flex items-center gap-3 px-6 py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-[0.15em]">

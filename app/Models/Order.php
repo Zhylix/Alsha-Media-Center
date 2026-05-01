@@ -44,11 +44,13 @@ class Order extends Model
     {
         return match($this->status) {
             'pending'     => ['label' => 'Menunggu', 'color' => 'yellow'],
-            'confirmed'   => ['label' => 'Dikonfirmasi', 'color' => 'blue'],
+            'diterima'    => ['label' => 'Diterima', 'color' => 'blue'],
+            'ditolak'     => ['label' => 'Ditolak', 'color' => 'red'],
+            'confirmed'  => ['label' => 'Dikonfirmasi', 'color' => 'blue'],
             'in_progress' => ['label' => 'Diproses', 'color' => 'purple'],
-            'completed'   => ['label' => 'Selesai', 'color' => 'green'],
-            'cancelled'   => ['label' => 'Dibatalkan', 'color' => 'red'],
-            default       => ['label' => ucfirst($this->status), 'color' => 'gray'],
+            'completed'  => ['label' => 'Selesai', 'color' => 'green'],
+            'cancelled'  => ['label' => 'Dibatalkan', 'color' => 'red'],
+            default      => ['label' => ucfirst($this->status), 'color' => 'gray'],
         };
     }
 
@@ -56,9 +58,26 @@ class Order extends Model
     {
         return match($this->payment_status) {
             'unpaid'   => ['label' => 'Belum Dibayar', 'color' => 'red'],
-            'paid'     => ['label' => 'Sudah Dibayar', 'color' => 'green'],
+            'paid'    => ['label' => 'Sudah Dibayar', 'color' => 'green'],
             'refunded' => ['label' => 'Refund', 'color' => 'gray'],
-            default    => ['label' => ucfirst($this->payment_status), 'color' => 'gray'],
+            default   => ['label' => ucfirst($this->payment_status), 'color' => 'gray'],
         };
+    }
+
+    public static function generateOrderNumber(): string
+    {
+        $today = now()->format('Ymd');
+        $count = self::whereDate('created_at', today())->count() + 1;
+        
+        return "AMC-" . $today . "-" . str_pad($count, 3, '0', STR_PAD_LEFT);
+    }
+
+    public static function getAvailableStatuses(): array
+    {
+        return [
+            'pending'   => 'Menunggu',
+            'diterima' => 'Diterima',
+            'ditolak'  => 'Ditolak',
+        ];
     }
 }
