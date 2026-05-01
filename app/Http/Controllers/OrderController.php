@@ -54,7 +54,7 @@ class OrderController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        // Send notification to all admins
+        // Send notification to primary admin
         $this->notifyAdmins($order, $service);
 
         return redirect()->route('order.success', ['orderNumber' => $order->order_number])
@@ -93,11 +93,13 @@ class OrderController extends Controller
     }
 
     /**
-     * Notify all admins about new order via WhatsApp and Email
+     * Notify admin about new order via WhatsApp and Email
+     * Notifies the designated primary admin (first active superadmin or first active admin)
      */
     private function notifyAdmins(Order $order, Service $service): void
     {
-        $admins = Admin::all();
+        // Get the primary admin for notifications (first active superadmin or first active admin)
+        $primaryAdmin = Admin::getPrimaryAdmin();
         $store = StoreProfile::first();
 
         $message = "🔔 *Pesanan BaruAMC!*\n\n";
@@ -114,23 +116,19 @@ class OrderController extends Controller
         $message .= "📅 *Tanggal:* " . $order->created_at->format('d/m/Y H:i') . "\n\n";
         $message .= "_Silakan login ke admin untuk mengonfirmasi pesanan._";
 
-        // Notify via WhatsApp
-        foreach ($admins as $admin) {
-            if ($admin->whatsapp) {
-                $this->sendWhatsAppMessage($admin->whatsapp, $message);
-            }
+        // Notify primary admin via WhatsApp
+        if ($primaryAdmin && $primaryAdmin->whatsapp) {
+            $this->sendWhatsAppMessage($primaryAdmin->whatsapp, $message);
         }
 
-        // Also send to storeWhatsapp if available
+        // Also send to store WhatsApp if available
         if ($store && $store->whatsapp) {
             $this->sendWhatsAppMessage($store->whatsapp, $message);
         }
 
-        // Notify via Email
-        foreach ($admins as $admin) {
-            if ($admin->email) {
-                $this->sendEmailNotification($admin->email, $order, $service);
-            }
+        // Notify primary admin via Email
+        if ($primaryAdmin && $primaryAdmin->email) {
+            $this->sendEmailNotification($primaryAdmin->email, $order, $service);
         }
     }
 

@@ -29,7 +29,7 @@
             </a>
         </div>
 
-        <!-- Admin Info -->
+<!-- Admin Info -->
         <div class="px-4 py-4 border-b border-red-500/20">
             <div class="flex items-center gap-3 px-2">
                 <div class="w-9 h-9 rounded-full gradient-anim flex items-center justify-center text-gray-900 text-sm font-bold">
@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-900">{{ session('admin_name', 'Administrator') }}</p>
-                    <p class="text-xs text-gray-500">Super Admin</p>
+                    <p class="text-xs text-gray-500">{{ session('admin_role') == 'superadmin' ? 'Super Admin' : 'Admin' }}</p>
                 </div>
             </div>
         </div>
@@ -91,9 +91,14 @@
                 <span class="ml-auto badge badge-red">{{ $unreadCount }}</span>
                 @endif
             </a>
-            <a href="{{ route('admin.store.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 {{ request()->routeIs('admin.store.*') ? 'active' : '' }}">
+<a href="{{ route('admin.store.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 {{ request()->routeIs('admin.store.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-store"></i></span> Profil Toko
             </a>
+            @if(session('admin_role') == 'superadmin')
+            <a href="{{ route('admin.admins.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
+                <span class="text-lg"><i class="fas fa-user-shield text-yellow-500"></i></span> Kelola Admin
+            </a>
+            @endif
             <a href="{{ route('home') }}" target="_blank" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900">
                 <span class="text-lg"><i class="fas fa-globe"></i></span> Lihat Website
             </a>

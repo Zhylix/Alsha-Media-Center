@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
 use App\Http\Controllers\Admin\AdminStatsController;
 use App\Http\Controllers\Admin\AdminSparepartController;
+use App\Http\Controllers\Admin\AdminManagerController;
 use App\Http\Controllers\SparepartController;
 use Illuminate\Support\Facades\Route;
 
@@ -91,10 +92,16 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
         Route::delete('/contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
 
-        // Store profile
+// Store profile
         Route::get('/store', [AdminStoreController::class, 'index'])->name('store.index');
         Route::put('/store', [AdminStoreController::class, 'update'])->name('store.update');
         Route::delete('/store/logo', [AdminStoreController::class, 'deleteLogo'])->name('store.logo.delete');
         Route::delete('/store/hero-image', [AdminStoreController::class, 'deleteHeroImage'])->name('store.hero.delete');
+
+        // Admin Management (Only accessible by superadmin)
+        Route::middleware(\App\Http\Middleware\AdminRoleMiddleware::class . ':superadmin')->group(function () {
+            Route::resource('admins', AdminManagerController::class)->except(['show']);
+            Route::patch('admins/{admin}/toggle', [AdminManagerController::class, 'toggleActive'])->name('admins.toggle');
+        });
     });
 });

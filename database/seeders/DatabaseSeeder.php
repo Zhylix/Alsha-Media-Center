@@ -15,11 +15,24 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
+// Superadmin
+        Admin::create([
+            'name'     => 'Super Administrator',
+            'email'    => 'superadmin@techfixpro.com',
+            'username' => 'superadmin',
+            'password' => Hash::make('superadmin123'),
+            'role'     => 'superadmin',
+            'is_active'=> true,
+        ]);
+
+        // Regular Admin
         Admin::create([
             'name'     => 'Administrator',
             'email'    => 'admin@techfixpro.com',
+            'username' => 'admin',
             'password' => Hash::make('admin123'),
+            'role'     => 'admin',
+            'is_active'=> true,
         ]);
 
         // Store Profile

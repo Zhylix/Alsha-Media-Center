@@ -27,7 +27,19 @@ class AdminAuthController extends Controller
         $admin = Admin::where('username', $request->username)->first();
 
         if ($admin && Hash::check($request->password, $admin->password)) {
-            session(['admin_logged_in' => true, 'admin_id' => $admin->id, 'admin_name' => $admin->name]);
+            // Check if admin account is active
+            if (!$admin->isActive()) {
+                return back()->withErrors(['username' => 'Akun admin nonaktif. Hubungi superadmin untuk mengaktifkan.'])->withInput();
+            }
+
+            // Store admin data in session
+            session([
+                'admin_logged_in' => true, 
+                'admin_id' => $admin->id, 
+                'admin_name' => $admin->name,
+                'admin_role' => $admin->role,
+            ]);
+            
             return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, ' . $admin->name . '!');
         }
 
@@ -36,7 +48,7 @@ class AdminAuthController extends Controller
 
     public function logout()
     {
-        session()->forget(['admin_logged_in', 'admin_id', 'admin_name']);
+        session()->forget(['admin_logged_in', 'admin_id', 'admin_name', 'admin_role']);
         return redirect()->route('admin.login')->with('success', 'Anda telah berhasil logout.');
     }
 }

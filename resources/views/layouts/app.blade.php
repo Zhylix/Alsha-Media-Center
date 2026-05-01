@@ -158,7 +158,7 @@
                     <h4 class="text-gray-900 font-bold mb-5 text-sm uppercase tracking-wider">Informasi</h4>
                     <ul class="space-y-3 text-sm">
                         <li><a href="{{ route('about') }}" class="text-gray-600 hover:text-red-600 transition-colors">Tentang Kami</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-600 hover:text-red-600 transition-colors">Hubungi Kami</a></li>
+                        <li><a href="{{ route('order.index') }}" class="text-gray-600 hover:text-red-600 transition-colors">Hubungi Kami</a></li>
                     </ul>
                 </div>
 
