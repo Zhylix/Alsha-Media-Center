@@ -5,56 +5,98 @@
 
 @section('content')
 <!-- Stats Cards -->
+@if($stats_items->isNotEmpty() || array_sum($operational_stats) > 0)
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+    {{-- Dynamic Stats from Stat model --}}
+    @foreach($stats_items as $stat)
+    <div class="service-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between mb-4">
+            <div class="text-3xl"><i class="{{ $stat->icon }} text-red-600"></i></div>
+            <span class="badge badge-gray">Custom</span>
+        </div>
+        <p class="text-3xl font-black text-gray-900">{{ $stat->value }}</p>
+        <p class="text-gray-600 text-sm mt-1">{{ $stat->label }}</p>
+    </div>
+    @endforeach
+    
+    {{-- Operational stats (always show if data exists) --}}
+    @if(isset($operational_stats['total_orders']) && $operational_stats['total_orders'] > 0)
     <div class="service-card p-6 rounded-2xl">
         <div class="flex items-center justify-between mb-4">
             <div class="text-3xl"><i class="fas fa-clipboard-list text-red-600"></i></div>
             <span class="badge badge-gray">Total</span>
         </div>
-        <p class="text-3xl font-black text-gray-900">{{ $stats['total_orders'] }}</p>
+        <p class="text-3xl font-black text-gray-900">{{ $operational_stats['total_orders'] }}</p>
         <p class="text-gray-600 text-sm mt-1">Total Pesanan</p>
     </div>
+    @endif
+    
+    @if(isset($operational_stats['pending_orders']) && $operational_stats['pending_orders'] > 0)
     <div class="service-card p-6 rounded-2xl">
         <div class="flex items-center justify-between mb-4">
             <div class="text-3xl"><i class="fas fa-hourglass-half text-red-600"></i></div>
             <span class="badge badge-red">Pending</span>
         </div>
-        <p class="text-3xl font-black text-gray-900">{{ $stats['pending_orders'] }}</p>
+        <p class="text-3xl font-black text-gray-900">{{ $operational_stats['pending_orders'] }}</p>
         <p class="text-gray-600 text-sm mt-1">Pesanan Menunggu</p>
     </div>
+    @endif
+    
+    @if(isset($operational_stats['completed_orders']) && $operational_stats['completed_orders'] > 0)
     <div class="service-card p-6 rounded-2xl">
         <div class="flex items-center justify-between mb-4">
             <div class="text-3xl"><i class="fas fa-check text-red-600"></i></div>
             <span class="badge badge-gray">Selesai</span>
         </div>
-        <p class="text-3xl font-black text-gray-900">{{ $stats['completed_orders'] }}</p>
+        <p class="text-3xl font-black text-gray-900">{{ $operational_stats['completed_orders'] }}</p>
         <p class="text-gray-600 text-sm mt-1">Pesanan Selesai</p>
     </div>
+    @endif
+    
+    @if(isset($operational_stats['total_services']) && $operational_stats['total_services'] > 0)
     <div class="service-card p-6 rounded-2xl">
         <div class="flex items-center justify-between mb-4">
             <div class="text-3xl"><i class="fas fa-tools text-red-600"></i></div>
             <span class="badge badge-dark">Aktif</span>
         </div>
-        <p class="text-3xl font-black text-gray-900">{{ $stats['total_services'] }}</p>
+        <p class="text-3xl font-black text-gray-900">{{ $operational_stats['total_services'] }}</p>
         <p class="text-gray-600 text-sm mt-1">Layanan Aktif</p>
     </div>
+    @endif
+    
+    @if(isset($operational_stats['unread_messages']) && $operational_stats['unread_messages'] > 0)
     <div class="service-card p-6 rounded-2xl">
         <div class="flex items-center justify-between mb-4">
-            <div class="text-3xl"><i class="fas fa-envelope-open-text"></i></div>
+            <div class="text-3xl"><i class="fas fa-envelope-open-text text-red-600"></i></div>
             <span class="badge badge-red">Baru</span>
         </div>
-        <p class="text-3xl font-black text-gray-900">{{ $stats['unread_messages'] }}</p>
+        <p class="text-3xl font-black text-gray-900">{{ $operational_stats['unread_messages'] }}</p>
         <p class="text-gray-600 text-sm mt-1">Pesan Belum Dibaca</p>
     </div>
+    @endif
+    
+    @if(isset($operational_stats['total_revenue']) && $operational_stats['total_revenue'] > 0)
     <div class="service-card p-6 rounded-2xl">
         <div class="flex items-center justify-between mb-4">
             <div class="text-3xl"><i class="fas fa-coins text-red-600"></i></div>
             <span class="badge badge-red">Revenue</span>
         </div>
-        <p class="text-xl font-black text-gray-900">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</p>
+        <p class="text-xl font-black text-gray-900">Rp {{ number_format($operational_stats['total_revenue'], 0, ',', '.') }}</p>
         <p class="text-gray-600 text-sm mt-1">Total Pendapatan</p>
     </div>
+    @endif
 </div>
+
+@else
+<div class="text-center py-16 bg-white border-2 border-dashed border-gray-200 rounded-3xl mb-8">
+    <i class="fas fa-chart-bar text-6xl text-gray-300 mb-6"></i>
+    <h3 class="text-2xl font-black text-gray-900 mb-2">Belum Ada Data Statistik</h3>
+    <p class="text-gray-600 mb-6 max-w-md mx-auto">Tambahkan statistik melalui menu Statistik atau tunggu aktivitas bisnis untuk mengisi data operasional.</p>
+    <a href="{{ route('admin.stats.index') }}" class="btn-primary px-8 py-3 text-sm font-black">
+        <i class="fas fa-plus mr-2"></i>Kelola Statistik
+    </a>
+</div>
+@endif
 
 <!-- Recent Orders & Messages -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

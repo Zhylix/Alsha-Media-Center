@@ -37,6 +37,13 @@ class ServiceController extends Controller
         return view('services.pc', compact('store', 'services'));
     }
 
+    public function software()
+    {
+        $store    = StoreProfile::first();
+        $services = Service::where('category', 'software')->where('is_active', true)->orderBy('sort_order')->get();
+        return view('services.software', compact('store', 'services'));
+    }
+
     public function show($slug)
     {
         $store   = StoreProfile::first();

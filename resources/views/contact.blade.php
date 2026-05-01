@@ -1,123 +1,170 @@
 @extends('layouts.app')
-@section('title', 'Kontak Kami')
+@section('title', 'Kontak Kami | Alsha Media Center')
 @section('content')
-<section class="relative py-32 bg-hero overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-1/3 right-1/3 w-72 h-72 bg-red-600/10 rounded-full blur-3xl"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <span class="text-red-600 text-sm font-bold uppercase tracking-widest">Kontak</span>
-        <h1 class="text-4xl sm:text-5xl font-black text-gray-900 mt-3 mb-4">Hubungi <span class="text-gradient">Kami</span></h1>
-        <p class="text-gray-600 text-lg max-w-xl mx-auto">Ada pertanyaan atau butuh bantuan? Kami siap membantu Anda!</p>
+
+<!-- ===================== HERO ===================== -->
+<section class="relative py-36 bg-white overflow-hidden">
+    <!-- Geometric accent -->
+    <div class="absolute top-0 right-0 w-[40%] h-full bg-gray-50 hidden lg:block" style="clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)"></div>
+    <div class="absolute bottom-0 left-0 w-48 h-1 bg-[#C8000A]"></div>
+
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+        <div class="max-w-xl">
+            <div class="inline-flex items-center gap-2.5 mb-6">
+                <span class="block w-6 h-px bg-[#C8000A]"></span>
+                <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Kontak</span>
+            </div>
+            <h1 class="text-5xl sm:text-6xl font-black text-gray-900 tracking-tight leading-tight mb-5">
+                Hubungi<br><span class="text-[#C8000A]">Kami</span>
+            </h1>
+            <p class="text-gray-400 text-lg leading-relaxed">Ada pertanyaan atau butuh bantuan? Kami siap membantu Anda setiap saat.</p>
+        </div>
     </div>
 </section>
 
-<section class="py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<!-- ===================== MAIN CONTENT ===================== -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
             <!-- Contact Form -->
-            <div data-animate>
-                <h2 class="text-2xl font-black text-gray-900 mb-6">Kirim <span class="text-gradient">Pesan</span></h2>
+            <div>
+                <div class="inline-flex items-center gap-2.5 mb-8">
+                    <span class="block w-6 h-px bg-[#C8000A]"></span>
+                    <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Kirim Pesan</span>
+                </div>
+                
+                @if(session('success'))
+                <div class="flex items-start gap-3 p-4 bg-green-50 border border-green-200 mb-8">
+                    <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
+                    <p class="text-green-800 text-sm font-medium">{{ session('success') }}</p>
+                </div>
+                @endif
+
                 <form method="POST" action="{{ route('contact.store') }}" class="space-y-5">
                     @csrf
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-2">Nama Lengkap *</label>
-                            <input type="text" name="name" value="{{ old('name') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Nama Anda">
-                            @error('name')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
+                            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Nama Lengkap <span class="text-[#C8000A]">*</span></label>
+                            <input type="text" name="name" value="{{ old('name') }}" required 
+                                   class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
+                                   placeholder="Nama lengkap Anda">
+                            @error('name')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-2">No. Telepon</label>
-                            <input type="text" name="phone" value="{{ old('phone') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="08xx-xxxx-xxxx">
+                            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">No. Telepon</label>
+                            <input type="text" name="phone" value="{{ old('phone') }}" 
+                                   class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
+                                   placeholder="08xx-xxxx-xxxx">
                         </div>
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">Email *</label>
-                        <input type="email" name="email" value="{{ old('email') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="email@example.com">
-                        @error('email')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
+                        <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Email <span class="text-[#C8000A]">*</span></label>
+                        <input type="email" name="email" value="{{ old('email') }}" required 
+                               class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
+                               placeholder="email@contoh.com">
+                        @error('email')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">Subjek *</label>
-                        <input type="text" name="subject" value="{{ old('subject') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Pertanyaan tentang...">
-                        @error('subject')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
+                        <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Subjek <span class="text-[#C8000A]">*</span></label>
+                        <input type="text" name="subject" value="{{ old('subject') }}" required 
+                               class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
+                               placeholder="Pertanyaan tentang...">
+                        @error('subject')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">Pesan *</label>
-                        <textarea name="message" required rows="5" class="form-input w-full px-4 py-3 rounded-xl text-sm resize-none" placeholder="Tuliskan pesan Anda di sini...">{{ old('message') }}</textarea>
-                        @error('message')<p class="text-red-400 text-xs mt-1">{{ $message }}</p>@enderror
+                        <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Pesan <span class="text-[#C8000A]">*</span></label>
+                        <textarea name="message" required rows="6" 
+                                  class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors resize-none"
+                                  placeholder="Tuliskan pesan atau pertanyaan Anda di sini...">{{ old('message') }}</textarea>
+                        @error('message')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
                     </div>
-                    <button type="submit" class="btn-primary w-full py-4 rounded-2xl text-white font-bold">
-                        <i class="fas fa-envelope-open-text"></i> Kirim Pesan
+
+                    <button type="submit" 
+                            class="group w-full flex items-center justify-center gap-3 px-8 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors">
+                        <i class="fas fa-paper-plane text-sm"></i>
+                        Kirim Pesan
+                        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
                     </button>
                 </form>
             </div>
 
             <!-- Contact Info + Map -->
-            <div class="space-y-6" data-animate>
+            <div class="space-y-5">
+                <div class="inline-flex items-center gap-2.5 mb-3">
+                    <span class="block w-6 h-px bg-[#C8000A]"></span>
+                    <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Informasi Toko</span>
+                </div>
+
                 @if($store)
-                <div class="service-card p-6 rounded-2xl">
-                    <h3 class="font-bold text-gray-900 mb-4"><i></i> Informasi Kontak</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start gap-3">
-                            <span class="text-xl mt-0.5"><i class="fas fa-map-marker-alt text-red-500"></i></span>
-                            <div>
-                                <p class="text-gray-600 text-sm font-medium">Alamat</p>
-                                <p class="text-gray-900 text-sm">{{ $store->address }}, {{ $store->city }}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-xl mt-0.5"><i class="fas fa-phone-alt text-red-600"></i></span>
-                            <div>
-                                <p class="text-gray-600 text-sm font-medium">Telepon</p>
-                                <a href="tel:{{ $store->phone }}" class="text-red-600 text-sm hover:text-gray-900 transition-colors">{{ $store->phone }}</a>
-                            </div>
-                        </div>
-                        @if($store->whatsapp)
-                        <div class="flex items-start gap-3">
-                            <span class="text-xl mt-0.5"><i class="fas fa-comments text-red-600"></i></span>
-                            <div>
-                                <p class="text-gray-600 text-sm font-medium">WhatsApp</p>
-                                <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp) }}" class="text-red-600 text-sm hover:text-gray-900 transition-colors">{{ $store->whatsapp }}</a>
-                            </div>
-                        </div>
-                        @endif
-                        <div class="flex items-start gap-3">
-                            <span class="text-xl mt-0.5"><i class="fas fa-envelope text-red-600"></i></span>
-                            <div>
-                                <p class="text-gray-600 text-sm font-medium">Email</p>
-                                <a href="mailto:{{ $store->email }}" class="text-red-600 text-sm hover:text-gray-900 transition-colors">{{ $store->email }}</a>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-xl mt-0.5"><i class="fas fa-clock text-red-500"></i></span>
-                            <div>
-                                <p class="text-gray-600 text-sm font-medium">Jam Buka</p>
-                                <p class="text-gray-900 text-sm">{{ $store->open_days }}</p>
-                                <p class="text-red-600 text-sm font-semibold">{{ $store->open_hours }}</p>
-                            </div>
-                        </div>
+                @foreach([
+                    ['icon' => 'fa-map-marker-alt', 'label' => 'Alamat Toko', 'line1' => $store->address, 'line2' => $store->city],
+                    ['icon' => 'fa-clock', 'label' => 'Jam Operasional', 'line1' => $store->open_days, 'line2' => $store->open_hours, 'accent' => true],
+                ] as $info)
+                <div class="flex items-start gap-4 p-5 border border-gray-100 hover:border-[#C8000A]/20 transition-colors">
+                    <div class="w-10 h-10 bg-[#C8000A] flex items-center justify-center flex-shrink-0">
+                        <i class="fas {{ $info['icon'] }} text-white text-sm"></i>
                     </div>
+                    <div>
+                        <p class="text-[10px] font-black uppercase tracking-[0.12em] text-gray-400 mb-1">{{ $info['label'] }}</p>
+                        <p class="text-gray-800 text-sm font-semibold">{{ $info['line1'] }}</p>
+                        <p class="text-sm {{ isset($info['accent']) ? 'text-[#C8000A] font-black' : 'text-gray-500' }}">{{ $info['line2'] }}</p>
+                    </div>
+                </div>
+                @endforeach
+
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="tel:{{ $store->phone }}" class="group flex items-start gap-3 p-4 border border-gray-100 hover:border-[#C8000A]/30 hover:bg-red-50 transition-all">
+                        <div class="w-8 h-8 bg-red-50 group-hover:bg-[#C8000A] flex items-center justify-center flex-shrink-0 transition-colors">
+                            <i class="fas fa-phone-alt text-[#C8000A] group-hover:text-white text-xs transition-colors"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase tracking-[0.1em] text-gray-400 mb-1">Telepon</p>
+                            <p class="text-gray-800 text-xs font-bold">{{ $store->phone }}</p>
+                        </div>
+                    </a>
+                    <a href="mailto:{{ $store->email }}" class="group flex items-start gap-3 p-4 border border-gray-100 hover:border-[#C8000A]/30 hover:bg-red-50 transition-all">
+                        <div class="w-8 h-8 bg-red-50 group-hover:bg-[#C8000A] flex items-center justify-center flex-shrink-0 transition-colors">
+                            <i class="fas fa-envelope text-[#C8000A] group-hover:text-white text-xs transition-colors"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase tracking-[0.1em] text-gray-400 mb-1">Email</p>
+                            <p class="text-gray-800 text-xs font-bold">{{ $store->email }}</p>
+                        </div>
+                    </a>
                 </div>
                 @endif
 
-                @if($store && $store->google_maps_link)
-                <iframe src="{{ $store->google_maps_link }}" width="100%" style="border:0; height:300px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-2xl shadow-2xl border border-red-600/10"></iframe>
-                @else
-                <div id="map" class="rounded-2xl shadow-2xl border border-red-600/10" style="height:300px;"></div>
+                <!-- WhatsApp CTA -->
+                @if($store && $store->whatsapp)
+                <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp) }}?text=Halo%20Alsha%20Media%20Center!" 
+                   target="_blank"
+                   class="group flex items-center gap-4 p-5 bg-[#C8000A] text-white hover:bg-[#A00008] transition-colors">
+                    <i class="fab fa-whatsapp text-3xl flex-shrink-0"></i>
+                    <div>
+                        <p class="font-black text-sm">Chat via WhatsApp</p>
+                        <p class="text-white/70 text-xs">Respon cepat, biasanya balas dalam menit</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-sm ml-auto group-hover:translate-x-1 transition-transform"></i>
+                </a>
                 @endif
 
-                <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo%20Alsha%20Media%20Center!" target="_blank" class="flex items-center gap-4 service-card p-5 rounded-2xl hover:border-red-600/30 transition-all">
-                    <div class="text-4xl"><i class="fas fa-comments text-red-600"></i></div>
-                    <div>
-                        <p class="font-bold text-gray-900">Chat via WhatsApp</p>
-                        <p class="text-gray-600 text-sm">Respon cepat, biasanya balas dalam menit</p>
-                    </div>
-                    <svg class="w-5 h-5 text-red-600 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </a>
+                <!-- Map -->
+                <div class="overflow-hidden border border-gray-200">
+                    @if($store && $store->google_maps_link)
+                    <iframe src="{{ $store->google_maps_link }}" width="100%" style="border:0; height:280px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    @else
+                    <div id="map" style="height:280px;"></div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
 </section>
+
 @endsection
 
 @push('scripts')
@@ -125,8 +172,13 @@
 <script>
     const map = L.map('map').setView([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap'}).addTo(map);
-    const icon = L.divIcon({ html: `<div style="background:linear-gradient(135deg,#dc2626,#991b1b);width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 15px rgba(220,38,38,0.5);border:3px solid white;display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:16px;"><i class="fas fa-wrench text-white"></i></span></div>`, className:'', iconSize:[36,36], iconAnchor:[18,36] });
-    L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], {icon}).addTo(map).bindPopup('<strong><i class="fas fa-wrench text-red-600"></i> Alsha Media Center</strong>').openPopup();
+    const icon = L.divIcon({ 
+        html: `<div style="background:#C8000A;width:40px;height:40px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,0,10,0.4);"><i class="fas fa-wrench" style="color:white;font-size:16px;"></i></div>`, 
+        className:'', iconSize:[40,40], iconAnchor:[20,40] 
+    });
+    L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], {icon}).addTo(map)
+     .bindPopup('<strong style="color:#C8000A;">Alsha Media Center</strong>')
+     .openPopup();
 </script>
 @endif
 @endpush

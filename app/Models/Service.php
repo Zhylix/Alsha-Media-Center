@@ -34,6 +34,7 @@ class Service extends Model
             'laptop' => 'Laptop',
             'printer' => 'Printer',
             'pc' => 'PC / Komputer',
+            'software' => 'Installasi Software',
             default => ucfirst($this->category),
         };
     }
