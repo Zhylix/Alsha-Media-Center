@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth" data-turbo="true">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ $metaDesc ?? 'AMC | Service Bangsri' }}">
     <meta name="keywords" content="service pc bangsri, service laptop bangsri, service printer bangsri, alsha media center">
-    <title>@yield('title', 'Alsha Media Center')</title>
+    <title>@yield('title', 'Alsha Media Center')    <meta name="csrf-token" content="{{ csrf_token() }}">
+</title>
     @if($store && $store->logo)
     <link rel="icon" href="{{ asset('storage/' . $store->logo) }}">
     @else

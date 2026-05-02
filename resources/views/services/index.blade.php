@@ -30,7 +30,7 @@
                 <a href="#pc" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
                     <i class="fas fa-desktop text-xs"></i> PC / Komputer
                 </a>
-                <a href="#pc" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
+<a href="#software" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
                     <i class="fas fa-desktop text-xs"></i> Software
                 </a>
             </div>
@@ -344,8 +344,15 @@
 </section>
 @endif
 
-<!-- ===================== Software ====================== -->
-@if($pcServices->count() > 0)
+<!-- Divider - Between PC and Software -->
+@if($pcServices->count() > 0 && $softwareServices->count() > 0)
+<div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div class="h-px bg-gray-100"></div>
+</div>
+@endif
+
+<!-- ===================== SOFTWARE SERVICES ===================== -->
+@if($softwareServices->count() > 0)
 <section class="py-24 bg-white" id="software">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex items-center justify-between mb-12">
@@ -358,13 +365,13 @@
                     <h2 class="text-3xl font-black text-gray-900 tracking-tight">Installasi <span class="text-[#C8000A]">Software</span></h2>
                 </div>
             </div>
-            <a href="{{ route('services.printer') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
+<a href="{{ route('services.software') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
                 Semua <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($pcServices as $service)
+            @foreach($softwareServices as $service)
             <!-- Modern Service Card - SaaS Dashboard Style -->
             <div class="group relative bg-white rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 border border-gray-300">
                 

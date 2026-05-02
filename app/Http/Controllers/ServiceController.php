@@ -7,13 +7,14 @@ use App\Models\StoreProfile;
 
 class ServiceController extends Controller
 {
-    public function index()
+public function index()
     {
-        $store           = StoreProfile::first();
+        $store            = StoreProfile::first();
         $laptopServices  = Service::where('category', 'laptop')->where('is_active', true)->orderBy('sort_order')->get();
         $printerServices = Service::where('category', 'printer')->where('is_active', true)->orderBy('sort_order')->get();
         $pcServices      = Service::where('category', 'pc')->where('is_active', true)->orderBy('sort_order')->get();
-        return view('services.index', compact('store', 'laptopServices', 'printerServices', 'pcServices'));
+        $softwareServices = Service::where('category', 'software')->where('is_active', true)->orderBy('sort_order')->get();
+        return view('services.index', compact('store', 'laptopServices', 'printerServices', 'pcServices', 'softwareServices'));
     }
 
     public function laptop()
