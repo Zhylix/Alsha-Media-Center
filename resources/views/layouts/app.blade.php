@@ -49,14 +49,14 @@
                             Layanan <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div class="absolute top-full left-0 mt-2 w-52 glass rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl border border-red-500/20">
-                            <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-tools text-red-500"></i> Semua Layanan</a>
-                            <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-desktop text-gray-500"></i> Service PC</a>
-                            <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
-                            <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
-                            <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-compact-disc text-gray-500"></i> Jasa Installasi</a>
+                            <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-tools {{ request()->routeIs('services.index') ? 'text-red-600' : 'text-gray-500' }}"></i> Semua Layanan</a>
+                            <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all "><i class="fas fa-desktop {{ request()->routeIs('services.pc') ? 'text-red-600' : 'text-gray-500' }}"></i> Service PC</a>
+                            <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'text-red-600' : 'text-gray-500' }}"></i></i> Service Laptop</a>
+                            <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-print {{ request()->routeIs('services.printer') ? 'text-red-600' : 'text-gray-500' }}"></i> Service Printer</a>
+                            <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'text-red-600' : 'text-gray-500' }}"></i> Jasa Installasi</a>
                         </div>
                     </div>
-<a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
+                    <a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
                         <i class="text-xs"></i> Tracking
                     </a>
                     <a href="{{ route('order.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('order.*') ? 'active text-red-600' : '' }}">Hubungi Kami</a>
@@ -81,7 +81,7 @@
                 <a href="{{ route('services.laptop') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
                 <a href="{{ route('services.printer') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
                 <a href="{{ route('services.software') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-compact-disc text-gray-500"></i> Jasa Installasi</a>
-<a href="{{ route('order.index') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Hubungi Kami</a>
+                <a href="{{ route('order.index') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Hubungi Kami</a>
             </div>
         </div>
     </nav>
