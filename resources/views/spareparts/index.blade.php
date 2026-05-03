@@ -48,12 +48,17 @@
                     <p class="text-gray-500 text-xs mb-4 line-clamp-2">{{ $item->description }}</p>
                     
                     <div class="mt-auto">
-                        <p class="text-red-600 font-black text-xl mb-4">
-                            {{ $item->price ? 'Rp ' . number_format($item->price, 0, ',', '.') : 'Hubungi Kami' }}
-                        </p>
-                        <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20tertarik%20dengan%20{{ $item->name }}" target="_blank" class="w-full btn-primary inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-sm transition-all">
+                    <p class="text-red-600 font-black text-xl mb-4">
+                        {{ $item->price ? 'Rp ' . number_format($item->price, 0, ',', '.') : 'Hubungi Kami' }}
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <a href="{{ route('spareparts.show', $item->slug) }}" class="flex-1 text-xs py-2 px-4 rounded-xl border border-red-500/30 text-red-600 font-bold hover:bg-red-50 hover:shadow-md transition-all text-center flex items-center justify-center h-11 btn-outline">
+                            Lihat Detail
+                        </a>
+                        <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20tertarik%20dengan%20{{ $item->name }}" target="_blank" class="flex-1 btn-primary inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-sm transition-all">
                             <i class="fab fa-whatsapp"></i> Tanya Stok
                         </a>
+                    </div>
                     </div>
                 </div>
             </div>

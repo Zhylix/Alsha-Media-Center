@@ -34,7 +34,7 @@
                             @endif
                             <div>
                                 <p class="text-gray-900 font-semibold text-sm">{{ $item->name }}</p>
-                                <p class="text-gray-500 text-xs">{{ Str::limit($item->description, 50) }}</p>
+                                <p class="text-gray-500 text-xs line-clamp-2">{{ $item->description ?: 'Tidak ada deskripsi' }}</p>
                             </div>
                         </div>
                     </td>
