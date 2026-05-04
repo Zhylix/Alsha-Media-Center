@@ -130,9 +130,39 @@ class AdminOrderController extends Controller
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil dihapus!');
     }
 
-    public function create() { return redirect()->route('admin.orders.index'); }
-    public function store(Request $request) { return redirect()->route('admin.orders.index'); }
-    public function edit(Order $order) { return view('admin.orders.show', compact('order')); }
+    public function create()
+    {
+        $services = Service::where('is_active', true)->orderBy('name')->get();
+        
+        return view('admin.orders.create', compact('services'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'customer_email' => 'nullable|email|max:255',
+            'service_id' => 'required|exists:services,id',
+            'service_price' => 'required|numeric|min:0',
+            'shipment_price' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $data['order_number'] = 'AMC-' . date('Ymd') . '-' . strtoupper(uniqid());
+        $data['status'] = 'pending';
+        $data['total_price'] = $data['service_price'] + ($data['shipment_price'] ?? 0);
+
+        $order = Order::create($data);
+
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Pesanan baru berhasil dibuat!');
+    }
+
+    public function edit(Order $order)
+    {
+        $services = Service::where('is_active', true)->orderBy('name')->get();
+        return view('admin.orders.show', compact('order', 'services'));
+    }
 
     /**
      * Notify customer about order status changes

@@ -51,8 +51,8 @@ Route::get('/pesanan/success/{orderNumber}', [OrderController::class, 'success']
 Route::get('/pesanan/tracking', [OrderController::class, 'trackingIndex'])->name('order.tracking');
 Route::post('/pesanan/tracking', [OrderController::class, 'tracking'])->name('order.tracking.post');
 
-// Backward compatibility
-Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order.success');
+// Backward compatibility - renamed to avoid conflict
+Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order-success'); // was 'order.success'
 
 // ADMIN AUTH
 Route::prefix('alsha')->name('admin.')->group(function () {
@@ -80,7 +80,7 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         Route::resource('stats', AdminStatsController::class)->except(['show']);
 
 // Orders management
-        Route::resource('orders', AdminOrderController::class)->except(['create', 'store']);
+        Route::resource('orders', AdminOrderController::class);
         Route::post('orders/{order}/accept', [AdminOrderController::class, 'accept'])->name('orders.accept');
         Route::post('orders/{order}/reject', [AdminOrderController::class, 'reject'])->name('orders.reject');
 
