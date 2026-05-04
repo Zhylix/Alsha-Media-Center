@@ -277,6 +277,60 @@
     background: linear-gradient(180deg, #ffffff, #f9fafb);
     border-right: 1px solid rgba(229,231,235,1);
 }
+
+.admin-sidebar-open {
+    transform: translateX(0);
+}
+
+.admin-sidebar-closed {
+    transform: translateX(-100%);
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.hamburger span {
+    width: 24px;
+    height: 3px;
+    background: #dc2626;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
 .admin-nav-item {
     transition: all 0.2s ease;
     border-radius: 10px;
@@ -289,6 +343,53 @@
 .admin-table { width: 100%; }
 .admin-table th { background: rgba(243,244,246,1); color: #4b5563; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 12px 16px; border-bottom: 2px solid rgba(229,231,235,1); }
 .admin-table td { padding: 12px 16px; border-bottom: 1px solid rgba(229,231,235,1); }
+
+@media (max-width: 768px) {
+    .admin-table {
+        font-size: 0.875rem;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 8px 12px;
+    }
+    
+    .admin-table thead {
+        display: none;
+    }
+    
+    .admin-table tr {
+        display: block;
+        margin-bottom: 12px;
+        border: 1px solid rgba(229,231,235,0.5);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .admin-table td {
+        display: block;
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+        border: none;
+        border-bottom: 1px solid rgba(229,231,235,0.3);
+    }
+    
+    .admin-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 12px;
+        width: 45%;
+        font-weight: 600;
+        color: #6b7280;
+        text-align: left;
+    }
+    
+    .admin-table td:last-child {
+        border-bottom: none;
+    }
+}
 .admin-table tr:hover td { background: rgba(249,250,251,1); }
 
 /* ========== TOAST ========== */
@@ -316,4 +417,10 @@
 /* ========== RESPONSIVE ========== */
 @media (max-width: 640px) {
     #map { height: 300px; }
+}
+
+@media (max-width: 1024px) {
+    .service-card {
+        margin-bottom: 1.5rem;
+    }
 }

@@ -6,7 +6,7 @@
 @section('content')
 <!-- Stats Cards -->
 @if($stats_items->isNotEmpty() || array_sum($operational_stats) > 0)
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-10 lg:mb-12">
     {{-- Dynamic Stats from Stat model --}}
     @foreach($stats_items as $stat)
     <div class="service-card p-6 rounded-2xl">
@@ -99,7 +99,7 @@
 @endif
 
 <!-- Recent Orders & Messages -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
     <!-- Recent Orders -->
     <div class="service-card rounded-2xl overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-red-600/10">
@@ -108,7 +108,12 @@
         </div>
         <div class="overflow-x-auto">
             <table class="admin-table">
-                <thead><tr><th>Order #</th><th>Pelanggan</th><th>Layanan</th><th>Status</th></tr></thead>
+                <thead><tr>
+                    <th data-label="Order #">Order #</th>
+                    <th data-label="Pelanggan">Pelanggan</th>
+                    <th data-label="Layanan">Layanan</th>
+                    <th data-label="Status">Status</th>
+                </tr></thead>
                 <tbody>
                     @foreach($recentOrders as $order)
                     @php $badge = $order->status_badge; @endphp
@@ -133,7 +138,7 @@
             <h3 class="font-bold text-gray-900">Pesan Terbaru</h3>
             <a href="{{ route('admin.contacts.index') }}" class="text-red-600 text-sm hover:text-gray-900 transition-colors">Lihat Semua <i class="fas fa-arrow-right"></i></a>
         </div>
-        <div class="divide-y divide-blue-500/5">
+        <div class="divide-y divide-gray-100/50 [&>a]:py-4 [&>a]:px-6 [&>a:hover]:rounded-xl [&>a:hover]:bg-gray-50/50">
             @foreach($recentMessages as $msg)
             <a href="{{ route('admin.contacts.show', $msg) }}" class="block px-6 py-3 hover:bg-gray-50 transition-colors">
                 <div class="flex items-center justify-between gap-2 mb-1">
@@ -156,3 +161,5 @@
     </div>
 </div>
 @endsection
+
+    
