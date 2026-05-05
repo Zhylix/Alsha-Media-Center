@@ -16,9 +16,7 @@ use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
 use App\Http\Controllers\Admin\AdminStatsController;
-use App\Http\Controllers\Admin\AdminSparepartController;
 use App\Http\Controllers\Admin\AdminManagerController;
-use App\Http\Controllers\SparepartController;
 use Illuminate\Support\Facades\Route;
 
 // PUBLIC ROUTES
@@ -26,11 +24,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-// Spareparts
-Route::get('/spareparts', [SparepartController::class, 'index'])->name('spareparts.index');
-Route::get('/spareparts/{category}', [SparepartController::class, 'category'])->name('spareparts.category');
-Route::get('/sparepart/{slug}', [SparepartController::class, 'show'])->name('spareparts.show');
 
 // Services
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
@@ -72,9 +65,6 @@ Route::prefix('alsha')->name('admin.')->group(function () {
 
         // Promos CRUD
         Route::resource('promos', AdminPromoController::class);
-
-        // Spareparts CRUD
-        Route::resource('spareparts', AdminSparepartController::class);
 
         // Stats CRUD
         Route::resource('stats', AdminStatsController::class)->except(['show']);

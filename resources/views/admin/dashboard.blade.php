@@ -182,10 +182,6 @@
         <div class="quick-icon"><i class="fas fa-wrench"></i></div>
         <span class="quick-label">Servis Masuk</span>
     </a>
-    <a href="{{ route('admin.spareparts.index') }}" class="quick-btn">
-        <div class="quick-icon"><i class="fas fa-box"></i></div>
-        <span class="quick-label">Kelola Sparepart</span>
-    </a>
 </div>
 
 {{-- ============================================================

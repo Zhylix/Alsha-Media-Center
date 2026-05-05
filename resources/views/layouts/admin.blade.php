@@ -542,11 +542,6 @@
                 @endif
             </a>
 
-            <a href="{{ route('admin.spareparts.index') }}"
-               class="admin-nav-item {{ request()->routeIs('admin.spareparts.*') ? 'active' : '' }}">
-                <i class="fas fa-box"></i> Sparepart
-            </a>
-
             <a href="{{ route('admin.orders.index') }}"
                class="admin-nav-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                 <i class="fas fa-shopping-cart"></i> Pesanan
