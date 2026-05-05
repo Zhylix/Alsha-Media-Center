@@ -41,7 +41,6 @@
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center gap-1">
                     <a href="{{ route('home') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('home') ? 'active text-red-600' : '' }}">Beranda</a>
-                    <a href="{{ route('spareparts.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('spareparts.*') ? 'active text-red-600' : '' }}">Sparepart</a>
                     <a href="{{ route('about') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('about') ? 'active text-red-600' : '' }}">Tentang Kami</a>
 
                     <!-- Services Dropdown -->
