@@ -492,7 +492,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
            target="_blank" 
            class="group inline-flex items-center gap-3 px-12 py-5 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-white hover:text-[#C8000A] transition-all duration-300 shadow-2xl shadow-red-900/30">
             <i class="fab fa-whatsapp text-xl"></i>
-            Kontak Kami Sekarang
+            Kontak Kami
             <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
         </a>
     </div>

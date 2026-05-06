@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ $metaDesc ?? 'AMC | Service Bangsri' }}">
     <meta name="keywords" content="service pc bangsri, service laptop bangsri, service printer bangsri, alsha media center">
-    <title>@yield('title', 'Alsha Media Center')    <meta name="csrf-token" content="{{ csrf_token() }}">
-</title>
+    <title>@yield('title', 'Alsha Media Center')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @if($store && $store->logo)
     <link rel="icon" href="{{ asset('storage/' . $store->logo) }}">
     @else
@@ -44,14 +44,14 @@
                     <a href="{{ route('about') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('about') ? 'active text-red-600' : '' }}">Tentang Kami</a>
 
                     <!-- Services Dropdown -->
-                    <div class="relative group">
+    <div class="relative group">
                         <button class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all flex items-center gap-1 {{ request()->routeIs('services.*') ? 'active text-red-600' : '' }}">
                             Layanan <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div class="absolute top-full left-0 mt-2 w-52 glass rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl border border-red-500/20">
                             <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-tools {{ request()->routeIs('services.index') ? 'text-red-600' : 'text-gray-500' }}"></i> Semua Layanan</a>
                             <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all "><i class="fas fa-desktop {{ request()->routeIs('services.pc') ? 'text-red-600' : 'text-gray-500' }}"></i> Service PC</a>
-                            <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'text-red-600' : 'text-gray-500' }}"></i></i> Service Laptop</a>
+                            <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'text-red-600' : 'text-gray-500' }}"></i> Service Laptop</a>
                             <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-print {{ request()->routeIs('services.printer') ? 'text-red-600' : 'text-gray-500' }}"></i> Service Printer</a>
                             <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'text-red-600' : 'text-gray-500' }}"></i> Jasa Installasi</a>
                         </div>
@@ -200,17 +200,23 @@
     @stack('scripts')
 
     <script>
-        // Mobile menu toggle
-        document.getElementById('mobileBtn').addEventListener('click', function() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        });
+        if (!window.__appLayoutTurboGuard) {
+            window.__appLayoutTurboGuard = true;
 
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) nav.classList.add('navbar-scrolled');
-            else nav.classList.remove('navbar-scrolled');
-        });
+            // Mobile menu toggle
+            const mobileBtn = document.getElementById('mobileBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileBtn && mobileMenu) {
+                const toggle = () => mobileMenu.classList.toggle('hidden');
+                mobileBtn.addEventListener('click', toggle);
+            }
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 50) nav.classList.add('navbar-scrolled');
+                else nav.classList.remove('navbar-scrolled');
+            });
 
         // Auto-dismiss toast
         setTimeout(() => {
@@ -222,8 +228,8 @@
             });
         }, 4000);
 
-        // Scroll animations
-        const observer = new IntersectionObserver((entries) => {
+            // Scroll animations
+            const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
@@ -260,6 +266,7 @@
             });
         }, { threshold: 0.5 });
         document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+    }
     </script>
 </body>
 </html>
