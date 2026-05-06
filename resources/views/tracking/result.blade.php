@@ -72,8 +72,7 @@
                     $steps = [
                         ['key' => 'pending', 'icon' => 'fa-hourglass-start', 'label' => 'Menunggu Pengecekan'],
                         ['key' => 'checking', 'icon' => 'fa-search', 'label' => 'Sedang Dicek Teknisi'],
-                        ['key' => 'proses', 'icon' => 'fa-tools', 'label' => 'Sedang Diperbaiki'],
-                        ['key' => 'waiting_part', 'icon' => 'fa-box-open', 'label' => 'Menunggu Sparepart'],
+                        ['key' => 'proses', 'icon' => 'fa-tools', 'label' => 'Sedang Diperbaiki'],  
                         ['key' => 'selesai', 'icon' => 'fa-check-circle', 'label' => 'Sudah Selesai'],
                         ['key' => 'diambil', 'icon' => 'fa-flag-checkered', 'label' => 'Sudah Diambil'],
                     ];

@@ -44,9 +44,6 @@
                     <option value="proses" {{ old('status', $serviceTicket->status) === 'proses' ? 'selected' : '' }}>
                         🔧 Sedang Diperbaiki
                     </option>
-                    <option value="waiting_part" {{ old('status', $serviceTicket->status) === 'waiting_part' ? 'selected' : '' }}>
-                        📦 Menunggu Sparepart
-                    </option>
                     <option value="selesai" {{ old('status', $serviceTicket->status) === 'selesai' ? 'selected' : '' }}>
                         ✅ Sudah Selesai
                     </option>

@@ -6,14 +6,14 @@
 @section('content')
 <!-- Filters -->
 <form method="GET" class="flex flex-wrap gap-3 mb-6">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama/order..." class="form-input px-4 py-2.5 rounded-xl text-sm w-56">
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama/order..." class="form-input pl-4 pr-4 py-5 h-8 rounded-xl text-sm w-56">
     <select name="status" class="form-input px-4 py-2.5 rounded-xl text-sm">
-        <option value="">Semua Status</option>
+        <option value="">Status</option>
         @foreach(['pending'=>'Menunggu','confirmed'=>'Dikonfirmasi','in_progress'=>'Diproses','completed'=>'Selesai','cancelled'=>'Dibatalkan'] as $val=>$lbl)
         <option value="{{ $val }}" {{ request('status')===$val?'selected':'' }}>{{ $lbl }}</option>
         @endforeach
     </select>
-    <button type="submit" class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-semibold">Filter</button>
+    <button type="submit" class="btn-primary w-16 py-2.5 rounded-xl text-white text-sm font-semibold">Filter</button>
     @if(request()->hasAny(['search','status']))
     <a href="{{ route('admin.orders.index') }}" class="btn-outline px-5 py-2.5 rounded-xl text-red-600 text-sm font-semibold">Reset</a>
     @endif
