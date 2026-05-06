@@ -175,8 +175,10 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                         <span class="inline-flex items-center gap-2 rounded-full bg-[#FFF1F1] px-4 py-2 text-xs font-bold text-[#C8000A] uppercase">{{ $promo->discount_info }}</span>
                         @endif
                     </div>
+
                     <h3 class="text-2xl font-black text-gray-900 mb-4">{{ $promo->title }}</h3>
                     <p class="text-gray-600 mb-6 leading-relaxed">{{ \Illuminate\Support\Str::limit($promo->description, 160) }}</p>
+
                     <div class="space-y-3 text-sm text-gray-500">
                         @if($promo->start_date && $promo->end_date)
                         <div class="flex items-center gap-3">
@@ -184,10 +186,32 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                             <span>{{ $promo->start_date->format('d M Y') }} - {{ $promo->end_date->format('d M Y') }}</span>
                         </div>
                         @endif
+
                         <div class="flex items-center gap-3">
                             <span class="text-[#C8000A]"><i class="fas fa-check-circle"></i></span>
-                            <span class="font-semibold">Paket aktif dan jika ingin lebih lanjut silahkan hubungi Admin</span>
+                            <span class="font-semibold">Paket aktif</span>
+                            <span class="text-gray-400">— jadwal berlaku sesuai tanggal yang tertera</span>
                         </div>
+
+                        @if($promo->end_date)
+                        @php
+                            $daysLeft = now()->diffInDays($promo->end_date, false);
+                        @endphp
+                        @if($daysLeft >= 0)
+                        <div class="flex items-center gap-3">
+                            <span class="text-[#C8000A]"><i class="fas fa-hourglass-half"></i></span>
+                            <span class="font-semibold">{{ $daysLeft }} hari</span>
+                            <span class="text-gray-400">tersisa</span>
+                        </div>
+                        @endif
+                        @endif
+                    </div>
+
+                    <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-3">
+                        <a href="/paket/{{ $promo->slug }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors rounded-xl w-full">
+                            Lihat Detail Paket
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
                     </div>
                 </div>
             </div>
