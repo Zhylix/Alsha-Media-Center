@@ -199,74 +199,107 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     @stack('scripts')
 
-    <script>
-        if (!window.__appLayoutTurboGuard) {
-            window.__appLayoutTurboGuard = true;
+<script>
+// Mobile menu toggle (Turbo-friendly)
+(function () {
+    const mobileBtnSelector = '#mobileBtn';
+    const menuId = 'mobileMenu';
 
-            // Mobile menu toggle
-            const mobileBtn = document.getElementById('mobileBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (mobileBtn && mobileMenu) {
-                const toggle = () => mobileMenu.classList.toggle('hidden');
-                mobileBtn.addEventListener('click', toggle);
-            }
-
-            // Navbar scroll effect
-            window.addEventListener('scroll', function() {
-                const nav = document.getElementById('navbar');
-                if (window.scrollY > 50) nav.classList.add('navbar-scrolled');
-                else nav.classList.remove('navbar-scrolled');
-            });
-
-        // Auto-dismiss toast
-        setTimeout(() => {
-            document.querySelectorAll('.toast-msg').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateX(100%)';
-                el.style.transition = 'all 0.4s ease';
-                setTimeout(() => el.remove(), 400);
-            });
-        }, 4000);
-
-            // Scroll animations
-            const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('[data-animate]').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.7s ease';
-            observer.observe(el);
-        });
-
-        // Counter animation
-        function animateCounter(el, target) {
-            let current = 0;
-            const step = target / 60;
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) { current = target; clearInterval(timer); }
-                el.textContent = Math.floor(current).toLocaleString('id-ID');
-            }, 30);
-        }
-
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target, parseInt(entry.target.dataset.counter));
-                    counterObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-        document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+    function getMenu() {
+        return document.getElementById(menuId);
     }
-    </script>
+
+    function setMenuHidden(hidden) {
+        const menu = getMenu();
+        if (!menu) return;
+        menu.classList.toggle('hidden', hidden);
+    }
+
+    function initMobileMenu() {
+        const btn = document.querySelector(mobileBtnSelector);
+        const menu = getMenu();
+        if (!btn || !menu) return;
+
+        // Reset state on every turbo:load so it never gets stuck
+        setMenuHidden(true);
+
+        // Use onclick assignment so it can't stack multiple listeners across turbo visits
+        btn.onclick = function (e) {
+            e.stopPropagation();
+            const isHidden = menu.classList.contains('hidden');
+            setMenuHidden(!isHidden);
+        };
+
+        // Close menu when a link is tapped (mobile)
+        menu.querySelectorAll('a').forEach(a => {
+            a.onclick = () => setMenuHidden(true);
+        });
+    }
+
+    document.addEventListener('turbo:load', initMobileMenu);
+
+    // When turbo caches/restores the DOM, keep it closed
+    document.addEventListener('turbo:before-cache', () => {
+        setMenuHidden(true);
+    });
+})();
+
+
+document.addEventListener("turbo:load", () => {
+
+
+    // Auto-dismiss toast
+    setTimeout(() => {
+        document.querySelectorAll('.toast-msg').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateX(100%)';
+            el.style.transition = 'all 0.4s ease';
+            setTimeout(() => el.remove(), 400);
+        });
+    }, 4000);
+
+    // Scroll animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('[data-animate]').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'all 0.7s ease';
+        observer.observe(el);
+    });
+
+    // Counter
+    function animateCounter(el, target) {
+        let current = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = Math.floor(current).toLocaleString('id-ID');
+        }, 30);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target, parseInt(entry.target.dataset.counter));
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+
+});
+
+</script>
 </body>
 </html>

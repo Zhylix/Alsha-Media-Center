@@ -422,7 +422,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             <!-- Map -->
             <div class="lg:col-span-2 overflow-hidden border border-gray-200">
                 @if($store && $store->google_maps_link)
-                <iframe src="{{ $store->google_maps_link }}" width="100%" style="border:0; min-height: 420px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="{{ e($store->google_maps_link) }}" width="100%" style="border:0; min-height: 420px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 @else
                 <div id="map" style="min-height: 420px;"></div>
                 @endif
@@ -537,7 +537,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     ];
 @endphp
 <script>
-    const storeData = {{ json_encode($storeData) }};
+    const storeData = @json($storeData);
+
     const map = L.map('map').setView([storeData.lat, storeData.lng], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
