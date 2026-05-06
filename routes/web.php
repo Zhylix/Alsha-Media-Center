@@ -47,6 +47,11 @@ Route::post('/pesanan/tracking', [OrderController::class, 'tracking'])->name('or
 // Backward compatibility - renamed to avoid conflict
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order-success'); // was 'order.success'
 
+// Packages (converted from promos)
+Route::get('/paket', [\App\Http\Controllers\PromoController::class, 'index']);
+Route::get('/paket/{slug}', [\App\Http\Controllers\PromoController::class, 'show']);
+
+
 // ADMIN AUTH
 Route::prefix('alsha')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');

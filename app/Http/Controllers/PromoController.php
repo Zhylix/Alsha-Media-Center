@@ -12,13 +12,13 @@ class PromoController extends Controller
     {
         $store = StoreProfile::first();
         $promos = Promo::active()->latest()->get();
-        return view('promos.index', compact('store', 'promos'));
+        return view('packages.index', compact('store', 'promos'));
     }
 
     public function show($slug)
     {
         $store = StoreProfile::first();
         $promo = Promo::where('slug', $slug)->firstOrFail();
-        return view('promos.show', compact('store', 'promo'));
+        return view('packages.show', compact('store', 'promo'));
     }
 }
