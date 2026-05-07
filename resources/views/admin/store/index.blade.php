@@ -44,7 +44,7 @@
             {{-- Tab Contents --}}
             <div class="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
                 {{-- Tab 1: Info Dasar --}}
-                <div id="basic" class="tab-content @if($loop->first) block @else hidden @endif">
+                <div id="basic" class="tab-content block">
                     <div class="service-card p-8 rounded-2xl space-y-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3"><i class="fas fa-store text-red-500"></i>Informasi Dasar Toko</h3>
                         <div class="grid grid-cols-1 gap-6">
@@ -304,7 +304,7 @@
 
 @push('scripts')
 <script>
-let formData = @json({{ json_encode($store ?? (object)[]) }});
+let formData = @json($store ?? (object) []);
 let progressFields = ['store_name', 'description', 'address', 'city', 'phone', 'email', 'open_days', 'open_hours'];
 
 // Tab switching
