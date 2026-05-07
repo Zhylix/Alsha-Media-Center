@@ -8,6 +8,7 @@ use App\Models\StoreProfile;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendOrderNotificationsJob;
 use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
@@ -54,8 +55,8 @@ class OrderController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        // Send notification to primary admin
-        $this->notifyAdmins($order, $service);
+        // Send notification async (queue) supaya request user tidak berat/lama
+        SendOrderNotificationsJob::dispatch($order->id, $service->id);
 
         return redirect()->route('order.success', ['orderNumber' => $order->order_number])
             ->with('success', 'Pesanan Anda telah berhasil dibuat!');
