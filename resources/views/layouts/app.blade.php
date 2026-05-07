@@ -74,8 +74,8 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="md:hidden hidden glass border-t border-red-500/20">
             <div class="px-4 py-4 space-y-1">
-                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('home') ? 'text-red-600' : '' }}"><i class="fas fa-tools hover:text-red-600 transition-all {{ request()->routeIs('home') ? 'active text-red-600' : '' }}"></i> Beranda </a>
-                <a href="{{ route('about') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('about') ? 'text-red-600' : '' }}"><i class="fas fa-tools hover:text-red-600 transition-all {{ request()->routeIs('about') ? 'active text-red-600' : '' }}"></i> Tentang Kami </a>               
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('home') ? 'text-red-600' : '' }}"><i class="fas fa-home hover:text-red-600 transition-all {{ request()->routeIs('home') ? 'active text-red-600' : '' }}"></i> Beranda </a>
+                <a href="{{ route('about') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('about') ? 'text-red-600' : '' }}"><i class="fas fa-building hover:text-red-600 transition-all {{ request()->routeIs('about') ? 'active text-red-600' : '' }}"></i> Tentang Kami </a>               
                 <div id="mobileServicesDropdown">
 
                     <button id="mobileServicesBtn"
@@ -110,7 +110,7 @@
 
                     </div>
                 </div>
-                <a href="{{ route('order.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('order.index') ? 'active text-red-600' : '' }}"><i class="fas fa-tools {{ request()->routeIs('order.index') ? 'active text-red-600' : '' }}"></i> Hubungi Kami </a>    
+                <a href="{{ route('order.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('order.index') ? 'active text-red-600' : '' }}"><i class="fas fa-phone-alt {{ request()->routeIs('order.index') ? 'active text-red-600' : '' }}"></i> Hubungi Kami </a>    
             </div>
         </div>
     </nav>
@@ -227,21 +227,9 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     @stack('scripts')
+
 <script>
-// Mobile menu toggle (Turbo-friendly)
-(function () {
-    const mobileBtnSelector = '#mobileBtn';
-    const menuId = 'mobileMenu';
-
-    function getMenu() {
-        return document.getElementById(menuId);
-    }
-
-    function setMenuHidden(hidden) {
-        const menu = getMenu();
-        if (!menu) return;
-        menu.classList.toggle('hidden', hidden);
-    }
+(() => {
 
     function initMobileMenu() {
         const btn = document.querySelector('#mobileBtn');
@@ -251,133 +239,126 @@
 
         menu.classList.add('hidden');
 
-        // Use onclick assignment so it can't stack multiple listeners across turbo visits
-        btn.onclick = function (e) {
+        btn.onclick = (e) => {
             e.stopPropagation();
-            const isHidden = menu.classList.contains('hidden');
-            setMenuHidden(!isHidden);
+            menu.classList.toggle('hidden');
         };
 
-        // Close menu when a link is tapped (mobile)
         menu.querySelectorAll('a').forEach(a => {
-            a.onclick = () => setMenuHidden(true);
+            a.onclick = () => menu.classList.add('hidden');
         });
     }
 
-    document.addEventListener('turbo:load', initMobileMenu);
-
-    // When turbo caches/restores the DOM, keep it closed
-    document.addEventListener('turbo:before-cache', () => {
-        setMenuHidden(true);
-    });
-})();
-
-
-document.addEventListener("turbo:load", () => {
-
-    // Auto-dismiss toast
-    setTimeout(() => {
-        document.querySelectorAll('.toast-msg').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateX(100%)';
-            el.style.transition = 'all 0.4s ease';
-
-            setTimeout(() => el.remove(), 400);
-        });
-    }, 4000);
-
-    // Scroll animation
-    const scrollObserver = new IntersectionObserver((entries) => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-
-                scrollObserver.unobserve(entry.target);
-            }
-        });
-
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('[data-animate]').forEach(el => {
-
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.7s ease';
-
-        scrollObserver.observe(el);
-    });
-
-    // Counter
-    function animateCounter(el, target) {
-
-        let current = 0;
-        const step = target / 60;
-
-        const timer = setInterval(() => {
-
-            current += step;
-
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
-            }
-
-            el.textContent = Math.floor(current)
-                .toLocaleString('id-ID');
-
-        }, 30);
-    }
-
-    const counterObserver = new IntersectionObserver((entries) => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-
-                animateCounter(
-                    entry.target,
-                    parseInt(entry.target.dataset.counter)
-                );
-
-                counterObserver.unobserve(entry.target);
-            }
-        });
-
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('[data-counter]')
-        .forEach(el => counterObserver.observe(el));
-function initMobileMenu() {
-
-    const btn = document.getElementById('mobileBtn');
-    const menu = document.getElementById('mobileMenu');
-
-    if (!btn || !menu) return;
-
-    btn.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-    });
-}
-
-function initMobileServicesDropdown() {
+    function initMobileServicesDropdown() {
 
     const btn = document.getElementById('mobileServicesBtn');
     const menu = document.getElementById('mobileServicesMenu');
     const chevron = document.getElementById('mobileServicesChevron');
 
-    if (!btn || !menu || !chevron) return;
+    if (!btn || !menu) return;
 
-    btn.addEventListener('click', () => {
+    menu.classList.add('hidden');
+
+    btn.onclick = (e) => {
+
+        e.stopPropagation();
+
+        const isHidden = menu.classList.contains('hidden');
 
         menu.classList.toggle('hidden');
-        chevron.classList.toggle('rotate-180');
-    });
+
+        if (chevron) {
+            chevron.style.transform =
+                isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    };
 }
-});
+
+    function initAnimations() {
+
+        // Toast
+        setTimeout(() => {
+            document.querySelectorAll('.toast-msg').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(100%)';
+                el.style.transition = 'all 0.4s ease';
+
+                setTimeout(() => el.remove(), 400);
+            });
+        }, 4000);
+
+        // Scroll animation
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    scrollObserver.unobserve(entry.target);
+                }
+
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('[data-animate]').forEach(el => {
+
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.7s ease';
+
+            scrollObserver.observe(el);
+        });
+
+        // Counter
+        function animateCounter(el, target) {
+
+            let current = 0;
+            const step = target / 60;
+
+            const timer = setInterval(() => {
+
+                current += step;
+
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                el.textContent =
+                    Math.floor(current).toLocaleString('id-ID');
+
+            }, 30);
+        }
+
+        const counterObserver = new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    animateCounter(
+                        entry.target,
+                        parseInt(entry.target.dataset.counter)
+                    );
+
+                    counterObserver.unobserve(entry.target);
+                }
+
+            });
+
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-counter]')
+            .forEach(el => counterObserver.observe(el));
+    }
+
+    document.addEventListener('turbo:load', () => {
+        initMobileMenu();
+        initMobileServicesDropdown();
+        initAnimations();
+    });
+
+})();
 </script>
 </body>
 </html>
