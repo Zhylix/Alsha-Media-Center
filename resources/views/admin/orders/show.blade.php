@@ -79,9 +79,42 @@
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Harga Service</label>
                             <input type="number" name="service_price" value="{{ $order->service_price }}" 
-                                   class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0">
+                                   class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="service-price-input">
                         </div>
+
+                        <div class="mt-3">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Diskon Service % (opsional)</label>
+                            <input type="number" name="service_discount_percent" value="{{ old('service_discount_percent', $order->service_discount_percent ?? 0) }}"
+                                   min="0" max="100" step="1" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="service-discount-percent-input">
+                        </div>
+
+                        <div class="mt-2 text-sm">
+                            <p class="text-gray-600">Harga Asli: <span class="font-semibold text-gray-900 line-through" id="service-original-price">Rp {{ number_format((float)($order->service_price ?? 0),0,',','.') }}</span></p>
+                            <p class="text-gray-600">Harga Setelah Diskon: <span class="font-black text-[#C8000A]" id="service-discounted-price">Rp {{ number_format((float)($order->service_price ?? 0),0,',','.') }}</span></p>
+                            <p class="text-xs text-gray-500 mt-1">Diskon: <span class="font-semibold" id="service-discount-percent-label">{{ (float)($order->service_discount_percent ?? 0) }}%</span></p>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Harga Pengiriman</label>
+                            <input type="number" name="shipment_price" value="{{ $order->shipment_price ?? 0 }}"
+                                   min="0" step="1000" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="shipment-price-input">
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Diskon Pengiriman % (opsional)</label>
+                            <input type="number" name="shipment_discount_percent" value="{{ old('shipment_discount_percent', $order->shipment_discount_percent ?? 0) }}"
+                                   min="0" max="100" step="1" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="shipment-discount-percent-input">
+                        </div>
+
+                        <div class="mt-2 text-sm">
+                            <p class="text-gray-600">Harga Asli: <span class="font-semibold text-gray-900 line-through" id="shipment-original-price">Rp {{ number_format((float)($order->shipment_price ?? 0),0,',','.') }}</span></p>
+                            <p class="text-gray-600">Harga Setelah Diskon: <span class="font-black text-[#C8000A]" id="shipment-discounted-price">Rp {{ number_format((float)($order->shipment_price ?? 0),0,',','.') }}</span></p>
+                            <p class="text-xs text-gray-500 mt-1">Diskon: <span class="font-semibold" id="shipment-discount-percent-label">{{ (float)($order->shipment_discount_percent ?? 0) }}%</span></p>
+                        </div>
+
                         <button type="submit" class="btn-primary w-full py-3 rounded-xl text-white text-sm font-semibold">
+
+
                             <i class="fas fa-check"></i> Terima Pesanan
                         </button>
                     </div>

@@ -42,8 +42,34 @@ class AdminOrderController extends Controller
             'status' => 'required|in:pending,diterima,ditolak,confirmed,in_progress,completed,cancelled',
             'service_id' => 'nullable|exists:services,id',
             'service_price' => 'nullable|numeric|min:0',
+            'service_discount_percent' => 'nullable|numeric|min:0|max:100',
+            'shipment_price' => 'nullable|numeric|min:0',
+            'shipment_discount_percent' => 'nullable|numeric|min:0|max:100',
             'notes' => 'nullable|string|max:1000',
         ]);
+
+        // Jika admin hanya update status (tanpa input harga/diskon), jangan ubah service_price/shipment_price.
+        $hasPricingInput = array_key_exists('service_price', $data) || array_key_exists('shipment_price', $data)
+            || array_key_exists('service_discount_percent', $data) || array_key_exists('shipment_discount_percent', $data);
+
+        if ($hasPricingInput) {
+            // Hitung ulang total dengan diskon jika ada
+            $servicePrice = isset($data['service_price']) && $data['service_price'] !== '' ? (float) $data['service_price'] : (float) $order->service_price;
+            $serviceDiscountPercent = isset($data['service_discount_percent']) && $data['service_discount_percent'] !== '' ? (float) $data['service_discount_percent'] : 0;
+            $serviceDiscountPercent = min(100, max(0, $serviceDiscountPercent));
+            $serviceAfter = $servicePrice - ($servicePrice * $serviceDiscountPercent / 100);
+
+            $shipmentPrice = isset($data['shipment_price']) && $data['shipment_price'] !== '' ? (float) $data['shipment_price'] : (float) $order->shipment_price;
+            $shipmentDiscountPercent = isset($data['shipment_discount_percent']) && $data['shipment_discount_percent'] !== '' ? (float) $data['shipment_discount_percent'] : 0;
+            $shipmentDiscountPercent = min(100, max(0, $shipmentDiscountPercent));
+            $shipmentAfter = $shipmentPrice - ($shipmentPrice * $shipmentDiscountPercent / 100);
+
+            $data['service_price'] = $serviceAfter;
+            $data['shipment_price'] = $shipmentAfter;
+            $data['total_price'] = $serviceAfter + $shipmentAfter;
+        }
+
+
 
         // Update timestamps based on status
         if ($data['status'] === 'diterima' && !$order->confirmed_at) {
@@ -56,12 +82,23 @@ class AdminOrderController extends Controller
             $data['completed_at'] = now();
         }
 
-        // Update service price if provided
-        if (!empty($data['service_price'])) {
-            $data['total_price'] = $data['service_price'] + $order->shipment_price;
-        }
+        // Hitung ulang total dengan diskon jika ada
+        $servicePrice = isset($data['service_price']) && $data['service_price'] !== '' ? (float) $data['service_price'] : (float) $order->service_price;
+        $serviceDiscountPercent = isset($data['service_discount_percent']) && $data['service_discount_percent'] !== '' ? (float) $data['service_discount_percent'] : 0;
+        $serviceDiscountPercent = min(100, max(0, $serviceDiscountPercent));
+        $serviceAfter = $servicePrice - ($servicePrice * $serviceDiscountPercent / 100);
+
+        $shipmentPrice = isset($data['shipment_price']) && $data['shipment_price'] !== '' ? (float) $data['shipment_price'] : (float) $order->shipment_price;
+        $shipmentDiscountPercent = isset($data['shipment_discount_percent']) && $data['shipment_discount_percent'] !== '' ? (float) $data['shipment_discount_percent'] : 0;
+        $shipmentDiscountPercent = min(100, max(0, $shipmentDiscountPercent));
+        $shipmentAfter = $shipmentPrice - ($shipmentPrice * $shipmentDiscountPercent / 100);
+
+        $data['service_price'] = $serviceAfter;
+        $data['shipment_price'] = $shipmentAfter;
+        $data['total_price'] = $serviceAfter + $shipmentAfter;
 
         $order->update(array_filter($data));
+
 
         // Send notification to customer
         $this->notifyCustomer($order);
@@ -77,8 +114,12 @@ class AdminOrderController extends Controller
         $data = $request->validate([
             'service_id' => 'nullable|exists:services,id',
             'service_price' => 'nullable|numeric|min:0',
+            'service_discount_percent' => 'nullable|numeric|min:0|max:100',
+            'shipment_price' => 'nullable|numeric|min:0',
+            'shipment_discount_percent' => 'nullable|numeric|min:0|max:100',
             'notes' => 'nullable|string|max:1000',
         ]);
+
 
         $updateData = [
             'status' => 'diterima',
@@ -88,13 +129,52 @@ class AdminOrderController extends Controller
         if (!empty($data['service_id'])) {
             $updateData['service_id'] = $data['service_id'];
         }
-        if (!empty($data['service_price'])) {
-            $updateData['service_price'] = $data['service_price'];
-            $updateData['total_price'] = $data['service_price'] + $order->shipment_price;
+
+        // Hitung ulang harga jika admin mengubah service_price dan/atau diskonnya
+        $hasServicePricingInput = array_key_exists('service_price', $data)
+            || array_key_exists('service_discount_percent', $data);
+
+        if ($hasServicePricingInput) {
+            $servicePrice = isset($data['service_price']) && $data['service_price'] !== '' ? (float) $data['service_price'] : (float) $order->service_price;
+            $serviceDiscountPercent = isset($data['service_discount_percent']) && $data['service_discount_percent'] !== '' ? (float) $data['service_discount_percent'] : 0;
+            $serviceDiscountPercent = min(100, max(0, $serviceDiscountPercent));
+
+            $serviceAfter = $servicePrice - ($servicePrice * $serviceDiscountPercent / 100);
+
+            $updateData['service_price'] = $serviceAfter;
         }
+
+        $hasShipmentPricingInput = array_key_exists('shipment_price', $data)
+            || array_key_exists('shipment_discount_percent', $data);
+
+        if ($hasShipmentPricingInput) {
+            $shipmentPrice = isset($data['shipment_price']) && $data['shipment_price'] !== '' ? (float) $data['shipment_price'] : (float) $order->shipment_price;
+            $shipmentDiscountPercent = isset($data['shipment_discount_percent']) && $data['shipment_discount_percent'] !== '' ? (float) $data['shipment_discount_percent'] : 0;
+            $shipmentDiscountPercent = min(100, max(0, $shipmentDiscountPercent));
+
+            $shipmentAfter = $shipmentPrice - ($shipmentPrice * $shipmentDiscountPercent / 100);
+
+            $updateData['shipment_price'] = $shipmentAfter;
+        }
+
+        // Selalu update total_price mengikuti service_price/shipment_price terbaru
+        $newServicePrice = array_key_exists('service_price', $updateData) ? (float) $updateData['service_price'] : (float) $order->service_price;
+        $newShipmentPrice = array_key_exists('shipment_price', $updateData) ? (float) $updateData['shipment_price'] : (float) $order->shipment_price;
+        $updateData['total_price'] = $newServicePrice + $newShipmentPrice;
+
+        // simpan diskon persen (opsional) ke order jika kolomnya ada di database
+        if (array_key_exists('service_discount_percent', $data)) {
+            $updateData['service_discount_percent'] = $data['service_discount_percent'];
+        }
+        if (array_key_exists('shipment_discount_percent', $data)) {
+            $updateData['shipment_discount_percent'] = $data['shipment_discount_percent'];
+        }
+
+
         if (!empty($data['notes'])) {
             $updateData['notes'] = $data['notes'];
         }
+
 
         $order->update(array_filter($updateData));
 
@@ -145,13 +225,29 @@ class AdminOrderController extends Controller
             'customer_email' => 'nullable|email|max:255',
             'service_id' => 'required|exists:services,id',
             'service_price' => 'required|numeric|min:0',
+            'service_discount_percent' => 'nullable|numeric|min:0|max:100',
             'shipment_price' => 'nullable|numeric|min:0',
+            'shipment_discount_percent' => 'nullable|numeric|min:0|max:100',
             'notes' => 'nullable|string|max:1000',
         ]);
 
+        $servicePrice = (float) $data['service_price'];
+        $serviceDiscountPercent = isset($data['service_discount_percent']) && $data['service_discount_percent'] !== '' ? (float) $data['service_discount_percent'] : 0;
+        $serviceDiscountPercent = min(100, max(0, $serviceDiscountPercent));
+        $serviceAfter = $servicePrice - ($servicePrice * $serviceDiscountPercent / 100);
+
+        $shipmentPrice = isset($data['shipment_price']) && $data['shipment_price'] !== '' ? (float) $data['shipment_price'] : 0;
+        $shipmentDiscountPercent = isset($data['shipment_discount_percent']) && $data['shipment_discount_percent'] !== '' ? (float) $data['shipment_discount_percent'] : 0;
+        $shipmentDiscountPercent = min(100, max(0, $shipmentDiscountPercent));
+        $shipmentAfter = $shipmentPrice - ($shipmentPrice * $shipmentDiscountPercent / 100);
+
         $data['order_number'] = 'AMC-' . date('Ymd') . '-' . strtoupper(uniqid());
         $data['status'] = 'pending';
-        $data['total_price'] = $data['service_price'] + ($data['shipment_price'] ?? 0);
+
+        // simpan harga setelah diskon sebagai service_price/shipment_price agar total konsisten
+        $data['service_price'] = $serviceAfter;
+        $data['shipment_price'] = $shipmentAfter;
+        $data['total_price'] = $serviceAfter + $shipmentAfter;
 
         $order = Order::create($data);
 

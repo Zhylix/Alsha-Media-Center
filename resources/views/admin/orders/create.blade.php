@@ -42,7 +42,12 @@
                 </div>
                 <div>
                     <label class="form-label">Harga Layanan *</label>
-                    <input type="number" name="service_price" required min="0" step="1000" class="form-input" placeholder="0">
+                    <input type="number" name="service_price" required min="0" step="1000" class="form-input" placeholder="0" id="service-price-input">
+                </div>
+                <div>
+                    <label class="form-label">Diskon Layanan % (opsional)</label>
+                    <input type="number" name="service_discount_percent" min="0" max="100" step="1" class="form-input" placeholder="0" id="service-discount-percent-input" inputmode="numeric">
+                    <p class="text-xs text-gray-500 mt-1">Masukkan angka persen diskon (contoh: 10 = 10%).</p>
                 </div>
             </div>
         </div>
@@ -53,7 +58,12 @@
             <div class="grid-2">
                 <div>
                     <label class="form-label">Biaya Pengiriman</label>
-                    <input type="number" name="shipment_price" min="0" step="1000" class="form-input" placeholder="0">
+                    <input type="number" name="shipment_price" min="0" step="1000" class="form-input" placeholder="0" id="shipment-price-input">
+                </div>
+                <div>
+                    <label class="form-label">Diskon Pengiriman % (opsional)</label>
+                    <input type="number" name="shipment_discount_percent" min="0" max="100" step="1" class="form-input" placeholder="0" id="shipment-discount-percent-input">
+                    <p class="text-xs text-gray-500 mt-1">Kosongkan/isi 0 jika tidak ada diskon.</p>
                 </div>
                 <div id="total-price-display" class="text-2xl font-bold text-red-600 mt-1">
                     Total: Rp 0
@@ -81,18 +91,30 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const servicePrice = document.querySelector('input[name="service_price"]');
+    const serviceDiscountPercent = document.querySelector('input[name="service_discount_percent"]');
     const shipmentPrice = document.querySelector('input[name="shipment_price"]');
+    const shipmentDiscountPercent = document.querySelector('input[name="shipment_discount_percent"]');
     const totalDisplay = document.getElementById('total-price-display');
-    
-    function updateTotal() {
-        const service = parseFloat(servicePrice.value) || 0;
-        const shipment = parseFloat(shipmentPrice.value) || 0;
-        const total = service + shipment;
-        totalDisplay.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+
+    function discounted(amount, percent) {
+        const p = parseFloat(percent.value) || 0;
+        const a = parseFloat(amount.value) || 0;
+        const safeP = Math.min(100, Math.max(0, p));
+        return a - (a * safeP / 100);
     }
-    
-    servicePrice.addEventListener('input', updateTotal);
-    shipmentPrice.addEventListener('input', updateTotal);
+
+    function updateTotal() {
+        const serviceAfter = discounted(servicePrice, serviceDiscountPercent);
+        const shipmentAfter = discounted(shipmentPrice, shipmentDiscountPercent);
+        const total = serviceAfter + shipmentAfter;
+        totalDisplay.textContent = `Total: Rp ${Math.round(total).toLocaleString('id-ID')}`;
+    }
+
+    [servicePrice, serviceDiscountPercent, shipmentPrice, shipmentDiscountPercent].forEach(el => {
+        if (el) el.addEventListener('input', updateTotal);
+    });
+
+    updateTotal();
 });
 </script>
 @endsection
