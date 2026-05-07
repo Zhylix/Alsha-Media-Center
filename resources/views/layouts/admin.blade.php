@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin') | Alsha Media Center Admin</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'><i class="fas fa-cog"></i></text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'><i class='fas fa-cog'"></i></text></svg>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
@@ -118,7 +118,7 @@
     <!-- Main Content -->
     <div class="flex-1 lg:ml-64 transition-all duration-150 w-full">
         <!-- Top Bar -->
-        <header class="sticky top-0 z-40 glass border-b border-red-500/20 px-6 py-4 flex items-center justify-between lg:pl-0 pl-0">
+        <header class="sticky top-0 z-40 glass border-b border-red-500/20 px-6 py-4 flex items-center justify-between lg:pl-0">
             <div class="flex items-center gap-4 lg:hidden">
                 <div id="hamburger" class="hamburger">
                     <span></span>

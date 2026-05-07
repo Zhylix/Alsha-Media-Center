@@ -44,16 +44,16 @@
                     <a href="{{ route('about') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('about') ? 'active text-red-600' : '' }}">Tentang Kami</a>
 
                     <!-- Services Dropdown -->
-    <div class="relative group">
+                    <div class="relative group">
                         <button class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all flex items-center gap-1 {{ request()->routeIs('services.*') ? 'active text-red-600' : '' }}">
                             Layanan <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div class="absolute top-full left-0 mt-2 w-52 glass rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl border border-red-500/20">
-                            <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-tools {{ request()->routeIs('services.index') ? 'text-red-600' : 'text-gray-500' }}"></i> Semua Layanan</a>
-                            <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all "><i class="fas fa-desktop {{ request()->routeIs('services.pc') ? 'text-red-600' : 'text-gray-500' }}"></i> Service PC</a>
-                            <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'text-red-600' : 'text-gray-500' }}"></i> Service Laptop</a>
-                            <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-print {{ request()->routeIs('services.printer') ? 'text-red-600' : 'text-gray-500' }}"></i> Service Printer</a>
-                            <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-700 hover:text-red-600 text-sm transition-all"><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'text-red-600' : 'text-gray-500' }}"></i> Jasa Installasi</a>
+                            <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.index') ? 'active text-red-600' : '' }}"><i class="fas fa-tools {{ request()->routeIs('services.index') ? 'active text-red-600' : '' }}"></i> Semua Layanan</a>
+                            <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.pc') ? 'active text-red-600' : '' }}"><i class="fas fa-desktop {{ request()->routeIs('services.pc') ? 'active text-red-600' : '' }}"></i> Service PC</a>
+                            <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.laptop') ? 'active text-red-600' : '' }}"><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'active text-red-600' : '' }}"></i> Service Laptop</a>
+                            <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.printer') ? 'active text-red-600' : '' }}"><i class="fas fa-print {{ request()->routeIs('services.printer') ? 'active text-red-600' : '' }}"></i> Service Printer</a>
+                            <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"></i> Jasa Installasi</a>
                         </div>
                     </div>
                     <a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
@@ -74,14 +74,43 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="md:hidden hidden glass border-t border-red-500/20">
             <div class="px-4 py-4 space-y-1">
-                <a href="{{ route('home') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-home text-red-500"></i> Beranda</a>
-                <a href="{{ route('about') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-building text-red-400"></i> Tentang Kami</a>
-                <a href="{{ route('services.index') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-tools text-red-500"></i> Semua Layanan</a>
-                <a href="{{ route('services.pc') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-desktop text-gray-500"></i> Service PC</a>
-                <a href="{{ route('services.laptop') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-laptop text-gray-500"></i> Service Laptop</a>
-                <a href="{{ route('services.printer') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-print text-gray-500"></i> Service Printer</a>
-                <a href="{{ route('services.software') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all pl-8"><i class="fas fa-compact-disc text-gray-500"></i> Jasa Installasi</a>
-                <a href="{{ route('order.index') }}" class="block px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 text-sm font-medium transition-all"><i class="fas fa-phone-alt text-red-500"></i> Hubungi Kami</a>
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('home') ? 'text-red-600' : '' }}"><i class="fas fa-tools hover:text-red-600 transition-all {{ request()->routeIs('home') ? 'active text-red-600' : '' }}"></i> Beranda </a>
+                <a href="{{ route('about') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('about') ? 'text-red-600' : '' }}"><i class="fas fa-tools hover:text-red-600 transition-all {{ request()->routeIs('about') ? 'active text-red-600' : '' }}"></i> Tentang Kami </a>               
+                <div id="mobileServicesDropdown">
+
+                    <button id="mobileServicesBtn"
+                        type="button"
+                        class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:text-red-600 text-gray-500 hover:bg-gray-100 text-sm font-medium transition-all {{ request()->routeIs('services.*') ? 'active text-red-600' : 'x' }}">
+
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-tools {{ request()->routeIs('services.*') ? 'active text-red-600' : '' }}"></i>
+                            Layanan
+                        </span>
+
+                        <svg id="mobileServicesChevron"
+                            class="w-4 h-4 transition-transform duration-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <div id="mobileServicesMenu" class="hidden ml-4 mt-1 border-l border-gray-200 pl-3 space-y-1">
+
+                        <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.index') ? 'active text-red-600' : '' }}"><i class="fas fa-tools {{ request()->routeIs('services.index') ? 'active text-red-600' : '' }}"></i> Semua Layanan</a>
+                        <a href="{{ route('services.pc') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.pc') ? 'active text-red-600' : '' }}"><i class="fas fa-desktop {{ request()->routeIs('services.pc') ? 'active text-red-600' : '' }}"></i> Service PC</a>
+                        <a href="{{ route('services.laptop') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.laptop') ? 'active text-red-600' : '' }}"><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'active text-red-600' : '' }}"></i> Service Laptop</a>
+                        <a href="{{ route('services.printer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.printer') ? 'active text-red-600' : '' }}"><i class="fas fa-print {{ request()->routeIs('services.printer') ? 'active text-red-600' : '' }}"></i> Service Printer</a>
+                        <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"></i> Jasa Installasi</a>
+
+                    </div>
+                </div>
+                <a href="{{ route('order.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('order.index') ? 'active text-red-600' : '' }}"><i class="fas fa-tools {{ request()->routeIs('order.index') ? 'active text-red-600' : '' }}"></i> Hubungi Kami </a>    
             </div>
         </div>
     </nav>
@@ -200,106 +229,136 @@
     @stack('scripts')
 
 <script>
-// Mobile menu toggle (Turbo-friendly)
-(function () {
-    const mobileBtnSelector = '#mobileBtn';
-    const menuId = 'mobileMenu';
-
-    function getMenu() {
-        return document.getElementById(menuId);
-    }
-
-    function setMenuHidden(hidden) {
-        const menu = getMenu();
-        if (!menu) return;
-        menu.classList.toggle('hidden', hidden);
-    }
+(() => {
 
     function initMobileMenu() {
-        const btn = document.querySelector(mobileBtnSelector);
-        const menu = getMenu();
+        const btn = document.querySelector('#mobileBtn');
+        const menu = document.getElementById('mobileMenu');
+
         if (!btn || !menu) return;
 
-        // Reset state on every turbo:load so it never gets stuck
-        setMenuHidden(true);
+        menu.classList.add('hidden');
 
-        // Use onclick assignment so it can't stack multiple listeners across turbo visits
-        btn.onclick = function (e) {
+        btn.onclick = (e) => {
             e.stopPropagation();
-            const isHidden = menu.classList.contains('hidden');
-            setMenuHidden(!isHidden);
+            menu.classList.toggle('hidden');
         };
 
-        // Close menu when a link is tapped (mobile)
         menu.querySelectorAll('a').forEach(a => {
-            a.onclick = () => setMenuHidden(true);
+            a.onclick = () => menu.classList.add('hidden');
         });
     }
 
-    document.addEventListener('turbo:load', initMobileMenu);
+    function initMobileServicesDropdown() {
 
-    // When turbo caches/restores the DOM, keep it closed
-    document.addEventListener('turbo:before-cache', () => {
-        setMenuHidden(true);
-    });
-})();
+    const btn = document.getElementById('mobileServicesBtn');
+    const menu = document.getElementById('mobileServicesMenu');
+    const chevron = document.getElementById('mobileServicesChevron');
 
+    if (!btn || !menu) return;
 
-document.addEventListener("turbo:load", () => {
+    menu.classList.add('hidden');
 
+    btn.onclick = (e) => {
 
-    // Auto-dismiss toast
-    setTimeout(() => {
-        document.querySelectorAll('.toast-msg').forEach(el => {
+        e.stopPropagation();
+
+        const isHidden = menu.classList.contains('hidden');
+
+        menu.classList.toggle('hidden');
+
+        if (chevron) {
+            chevron.style.transform =
+                isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    };
+}
+
+    function initAnimations() {
+
+        // Toast
+        setTimeout(() => {
+            document.querySelectorAll('.toast-msg').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(100%)';
+                el.style.transition = 'all 0.4s ease';
+
+                setTimeout(() => el.remove(), 400);
+            });
+        }, 4000);
+
+        // Scroll animation
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    scrollObserver.unobserve(entry.target);
+                }
+
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('[data-animate]').forEach(el => {
+
             el.style.opacity = '0';
-            el.style.transform = 'translateX(100%)';
-            el.style.transition = 'all 0.4s ease';
-            setTimeout(() => el.remove(), 400);
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.7s ease';
+
+            scrollObserver.observe(el);
         });
-    }, 4000);
 
-    // Scroll animation
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
+        // Counter
+        function animateCounter(el, target) {
 
-    document.querySelectorAll('[data-animate]').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.7s ease';
-        observer.observe(el);
-    });
+            let current = 0;
+            const step = target / 60;
 
-    // Counter
-    function animateCounter(el, target) {
-        let current = 0;
-        const step = target / 60;
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) { current = target; clearInterval(timer); }
-            el.textContent = Math.floor(current).toLocaleString('id-ID');
-        }, 30);
+            const timer = setInterval(() => {
+
+                current += step;
+
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                el.textContent =
+                    Math.floor(current).toLocaleString('id-ID');
+
+            }, 30);
+        }
+
+        const counterObserver = new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    animateCounter(
+                        entry.target,
+                        parseInt(entry.target.dataset.counter)
+                    );
+
+                    counterObserver.unobserve(entry.target);
+                }
+
+            });
+
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-counter]')
+            .forEach(el => counterObserver.observe(el));
     }
 
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target, parseInt(entry.target.dataset.counter));
-                counterObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
+    document.addEventListener('turbo:load', () => {
+        initMobileMenu();
+        initMobileServicesDropdown();
+        initAnimations();
+    });
 
-    document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
-
-});
-
+})();
 </script>
 </body>
 </html>

@@ -56,13 +56,13 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                 <div class="flex flex-col sm:flex-row gap-4 mb-14">
                     <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20konsultasi..." 
                        target="_blank" 
-                       class="amc-btn-primary group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#C8000A] text-white font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:bg-[#A00008] hover:shadow-2xl hover:shadow-red-900/30 hover:-translate-y-0.5">
-                        <i class="fab fa-whatsapp text-base "></i>
+                       class="amc-btn-primary group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#C8000A] text-white font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:bg-[#A00008] hover:shadow-2xl hover:shadow-red-900/30 hover:-translate-y-0.5 rounded-sm">
+                        <i class="fab fa-whatsapp text-base rounded-sm "></i>
                         Chat WhatsApp
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
                     <a href="{{ route('services.index') }}" 
-                       class="inline-flex items-center justify-center gap-3 px-8 py-4 border border-gray-500 text-gray-700 font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:border-[#C8000A] hover:text-[#C8000A]">
+                       class="inline-flex items-center justify-center gap-3 px-8 py-4 border border-gray-500 text-gray-700 font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:border-[#C8000A] hover:text-[#C8000A] rounded-sm">
                         Lihat Layanan
                     </a>
                 </div>
@@ -146,7 +146,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <span class="block w-6 h-px bg-[#C8000A]"></span>
                     <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Paket Service</span>
                 </div>
-                <h2 class="text-4xl font-black text-gray-900 tracking-tight">Paket <span class="text-[#C8000A]">Service x</span></h2>
+                <h2 class="text-4xl font-black text-gray-900 tracking-tight">Paket <span class="text-[#C8000A]">Service</span></h2>
                 <p class="mt-4 text-gray-500">Kelola paket promo langsung dari admin panel. Setiap paket yang aktif akan tampil di halaman home dalam format card sederhana dan elegan.</p>
             </div>
             <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC%2C%20saya%20ingin%20mengetahui%20detail%20paket%20instal%20ulang%20Windows" target="_blank" class="btn-primary inline-flex items-center gap-3 px-6 py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-[0.15em]">
@@ -247,41 +247,74 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                 Semua Layanan <i class="fas fa-arrow-right text-xs"></i>
             </a>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($featuredServices as $service)
-            <div class="group bg-white border border-gray-100 p-8 transition-all duration-300 hover:border-[#C8000A]/20 hover:shadow-xl hover:shadow-red-900/5 hover:-translate-y-1 relative overflow-hidden">
-                <!-- Number watermark -->
-                <div class="absolute -right-4 -bottom-6 text-8xl font-black text-gray-50 select-none">{{ $loop->iteration }}</div>
+            <!-- Modern Service Card - SaaS Dashboard Style -->
+            <div class="group relative bg-white rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 border border-gray-300">
+                <!-- Hover Accent - Red Square -->
+                <div class="absolute -right-1 -top-1 w-3 h-3 bg-[#C8000A] opacity-0 group-hover:opacity-100 transition-opacity rounded-xl scale-0 group-hover:scale-100"></div>
                 
-                <!-- Category icon -->
-                <div class="w-12 h-12 bg-red-50 flex items-center justify-center mb-6 group-hover:bg-[#C8000A] transition-colors duration-300">
-                    @php
-                    $icons = ['laptop' => 'fa-laptop', 'printer' => 'fa-print', 'pc' => 'fa-desktop', 'software' => 'fa-compact-disc'];
-                    $icon = $icons[$service->category] ?? 'fa-wrench';
-                    @endphp
-                    <i class="fas {{ $icon }} text-[#C8000A] group-hover:text-white transition-colors duration-300"></i>
-                </div>
-
-                <!-- Badge -->
-                <div class="inline-block px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-black uppercase tracking-[0.15em] mb-3">
-                    {{ $service->category_label }}
-                </div>
-
-                <h3 class="text-xl font-black text-gray-900 mb-3 leading-tight">{{ $service->name }}</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">{{ $service->short_description ?? Str::limit($service->description, 100) }}</p>
-                
-                <div class="flex items-end justify-between pt-5 border-t border-gray-50">
-                    <div>
-                        <div class="text-[#C8000A] font-black text-lg">{{ $service->price_range }}</div>
-                        <div class="text-gray-400 text-xs mt-0.5">Est. {{ $service->estimated_days }} hari kerja</div>
+                <!-- TOP SECTION: Icon + Title + Desc -->
+                <div class="flex items-start gap-4 mb-4">
+                    <!-- Icon with red gradient -->
+                    <div class="w-12 h-12 bg-gradient-to-br from-[#C8000A] to-[#E0000A] flex items-center justify-center rounded-xl shadow-lg flex-shrink-0">
+                        @php
+                        $icons = ['laptop' => 'fa-laptop', 'printer' => 'fa-print', 'pc' => 'fa-desktop', 'software' => 'fa-compact-disc'];
+                        $icon = $icons[$service->category] ?? 'fa-wrench';
+                        @endphp
+                        <i class="fas {{ $icon }} text-white text-xl"></i>
                     </div>
-                    <a href="{{ route('services.show', $service->slug) }}" 
-                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors">
-                        Detail
-                        <i class="fas fa-arrow-right text-[10px]"></i>
-                    </a>
+                    
+                    <!-- Title & Description -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                            <h3 class="font-bold text-gray-900 text-base leading-tight">{{ $service->name }}</h3>
+                            
+                            @if($service->is_featured)
+                            <span class="flex-shrink-0 px-2.5 py-1 bg-red-100 text-[#C8000A] text-[10px] font-bold uppercase tracking-wide rounded-full">
+                                Populer
+                            </span>
+                            @endif
+                        </div>
+                        
+                        <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                            {{ $service->short_description ?? Str::limit($service->description, 100) }}
+                        </p>
+                    </div>
                 </div>
+                
+                <!-- Divider -->
+                <div class="h-px bg-gray-200 mb-4"></div>
+                
+                <!-- BOTTOM SECTION: Price + Time -->
+                <div class="flex items-center gap-3 mb-3">
+                    <!-- Price Box (Larger) -->
+                    <div class="bg-gray-50 rounded-xl px-4 py-2.5 shadow-sm flex-[2]">
+                        <div class="flex items-center gap-2 text-gray-400 text-[10px] uppercase font-semibold">
+                            <i class="fas fa-tag text-[8px] text-[#C8000A]"></i>
+                            Harga
+                        </div>
+                        <div class="text-gray-900 font-bold text-xs mt-0.5">{{ $service->price_range }}</div>
+                    </div>
+                    
+                    <!-- Time Box (Smaller) -->
+                    <div class="bg-gray-50 rounded-xl px-3 py-2.5 shadow-sm flex-1">
+                        <div class="flex items-center gap-1.5 text-gray-400 text-[9px] uppercase font-semibold">
+                            <i class="fas fa-clock text-[7px] text-[#C8000A]"></i>
+                            Estimasi
+                        </div>
+                        <div class="text-gray-900 font-bold text-xs mt-0.5">{{ $service->estimated_days }} hari</div>
+                    </div>
+                </div>
+                
+                <!-- Detail Button -->
+                <a href="{{ route('services.show', $service->slug) }}" 
+                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 w-full
+                bg-[#C8000A] text-white text-xs font-bold uppercase tracking-wide rounded-xl
+                hover:bg-[#A00008] transition-all shadow-md hover:shadow-lg">
+                    Detail 
+                    <i class="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                </a>
             </div>
             @endforeach
         </div>
@@ -325,8 +358,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     ['icon' => 'fa-shield-alt', 'title' => 'Garansi 30 Hari', 'desc' => 'Setiap perbaikan bergaransi penuh selama 30 hari untuk ketenangan pikiran Anda.'],
                     ['icon' => 'fa-gem', 'title' => 'Spare Part Original', 'desc' => 'Menggunakan komponen original berkualitas tinggi untuk hasil perbaikan terbaik.'],
                 ] as $item)
-                <div class="group p-7 border border-gray-100 hover:border-[#C8000A]/20 hover:shadow-lg hover:shadow-red-900/5 transition-all duration-300">
-                    <div class="w-10 h-10 bg-[#C8000A] flex items-center justify-center mb-5">
+                <div class="group p-7 border border-gray-100 hover:border-[#C8000A]/20 hover:shadow-lg hover:shadow-red-900/5 transition-all duration-300 rounded-lg">
+                    <div class="w-10 h-10 bg-[#C8000A] flex items-center justify-center mb-5 rounded-sm">
                         <i class="fas {{ $item['icon'] }} text-white text-sm"></i>
                     </div>
                     <h3 class="font-black text-gray-900 text-base mb-2">{{ $item['title'] }}</h3>
@@ -367,7 +400,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             ] as $step)
             <div class="relative z-10 text-center group">
                 <!-- Step circle -->
-                <div class="w-24 h-24 mx-auto bg-white flex items-center justify-center mb-6 group-hover:bg-gray-50 transition-colors shadow-2xl shadow-black/20">
+                <div class="w-16 h-16 mx-auto bg-white flex items-center justify-center mb-6 group-hover:bg-gray-50 transition-colors shadow-2xl shadow-black/20 rounded-sm">
                     <i class="fas {{ $step['icon'] }} text-[#C8000A] text-2xl"></i>
                 </div>
                 <div class="inline-block px-3 py-1 bg-white/10 text-white/80 text-xs font-black uppercase tracking-[0.2em] mb-4">{{ $step['step'] }}</div>
@@ -561,51 +594,144 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
     ];
 @endphp
 <script>
-    const storeData = @json($storeData);
+document.addEventListener('turbo:load', () => {
 
-    const map = L.map('map').setView([storeData.lat, storeData.lng], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    const icon = L.divIcon({ 
-        html: `<div style="background:#C8000A;width:40px;height:40px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,0,10,0.4);"><span style="color:white;font-size:18px;"><i class="fas fa-wrench"></i></span></div>`, 
-        className: '', 
-        iconSize: [40,40], 
-        iconAnchor: [20,40] 
+    const mapEl = document.getElementById('map');
+
+    if (!mapEl) return;
+
+    if (mapEl._leaflet_id) return;
+
+    window.storeData = @json($storeData);
+
+    const map = L.map(mapEl)
+        .setView(
+            [storeData.lat, storeData.lng],
+            16
+        );
+
+    L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            attribution: '© OpenStreetMap contributors'
+        }
+    ).addTo(map);
+
+    const icon = L.divIcon({
+        html: `
+        <div style="
+            background:#C8000A;
+            width:40px;
+            height:40px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 4px 20px rgba(200,0,10,0.4);
+        ">
+            <span style="color:white;font-size:18px;">
+                <i class="fas fa-wrench"></i>
+            </span>
+        </div>
+        `,
+        className: '',
+        iconSize: [40,40],
+        iconAnchor: [20,40]
     });
-    L.marker([storeData.lat, storeData.lng], { icon })
-        .addTo(map)
-        .bindPopup(`<div style="font-family:sans-serif;padding:6px;min-width:180px;"><strong style="color:#C8000A;">Alsha Media Center</strong><br><span style="color:#888;font-size:12px;">${storeData.address}, ${storeData.city}</span></div>`, { maxWidth: 250 })
-        .openPopup();
+
+    L.marker(
+        [storeData.lat, storeData.lng],
+        { icon }
+    )
+    .addTo(map)
+    .bindPopup(`
+        <div style="
+            font-family:sans-serif;
+            padding:6px;
+            min-width:180px;
+        ">
+            <strong style="color:#C8000A;">
+                Alsha Media Center
+            </strong>
+            <br>
+            <span style="
+                color:#888;
+                font-size:12px;
+            ">
+                ${storeData.address},
+                ${storeData.city}
+            </span>
+        </div>
+    `);
+
+});
 </script>
 @endif
 
 <script>
-// Counter animation
-function animateCounters() {
-    document.querySelectorAll('.stat-number[data-counter]').forEach(el => {
-        const target = parseInt(el.dataset.counter);
-        const duration = 1500;
-        const step = target / (duration / 16);
-        let current = 0;
-        const timer = setInterval(() => {
-            current = Math.min(current + step, target);
-            el.textContent = Math.round(current).toLocaleString();
-            if (current >= target) clearInterval(timer);
-        }, 16);
-    });
-}
+document.addEventListener('turbo:load', () => {
 
-// Intersection observer for counters
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-        if (e.isIntersecting) {
-            animateCounters();
-            observer.disconnect();
-        }
-    });
+    function animateCounters() {
+
+        document.querySelectorAll('.stat-number[data-counter]')
+            .forEach(el => {
+
+                if (el.dataset.animated) return;
+
+                el.dataset.animated = 'true';
+
+                const target =
+                    parseInt(el.dataset.counter);
+
+                const duration = 1500;
+
+                const step =
+                    target / (duration / 16);
+
+                let current = 0;
+
+                const timer = setInterval(() => {
+
+                    current =
+                        Math.min(current + step, target);
+
+                    el.textContent =
+                        Math.round(current)
+                        .toLocaleString();
+
+                    if (current >= target) {
+                        clearInterval(timer);
+                    }
+
+                }, 16);
+
+            });
+
+    }
+
+    const counterObserver =
+        new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    animateCounters();
+
+                    counterObserver.disconnect();
+
+                }
+
+            });
+
+        });
+
+    const firstStat =
+        document.querySelector('.stat-number');
+
+    if (firstStat) {
+        counterObserver.observe(firstStat);
+    }
+
 });
-const firstStat = document.querySelector('.stat-number');
-if (firstStat) observer.observe(firstStat);
 </script>
 @endpush
