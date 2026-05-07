@@ -11,9 +11,28 @@
             <p class="text-gray-600">Masukkan kode servis Anda untuk melihat status perbaikan terkini.</p>
         </div>
 
+        @if(session('success'))
+            <div class="toast-msg mb-6">
+                <div class="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-2xl text-white shadow-2xl">
+                    <span class="text-2xl"><i class="fas fa-check"></i></span>
+                    <span class="font-medium text-sm">{{ session('success') }}</span>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="toast-msg mb-6">
+                <div class="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl text-white shadow-2xl">
+                    <span class="text-2xl"><i class="fas fa-times"></i></span>
+                    <span class="font-medium text-sm">{{ session('error') }}</span>
+                </div>
+            </div>
+        @endif
+
         <div class="service-card p-8 rounded-2xl">
-            <form method="POST" action="{{ route('tracking.search') }}" class="space-y-5">
+            <form method="POST" action="{{ route('tracking.search') }}" class="space-y-5" data-turbo="false">
                 @csrf
+
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Kode Servis</label>
                     <div class="relative">
