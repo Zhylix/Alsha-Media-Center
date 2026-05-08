@@ -44,4 +44,11 @@ return [
         'token' => env('FONNTE_TOKEN'),
     ],
 
+    // Baileys WhatsApp Bot Service
+    'wa_bot' => [
+        'base_url' => env('WA_BOT_BASE_URL'), // example: http://127.0.0.1:3001
+        'api_key' => env('WA_BOT_API_KEY'),
+    ],
+
 ];
+

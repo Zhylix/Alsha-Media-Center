@@ -9,10 +9,11 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendOrderNotificationsJob;
-use Illuminate\Support\Facades\Http;
+use App\Traits\WhatsAppBot;
 
 class OrderController extends Controller
 {
+    use WhatsAppBot;
     public function index()
     {
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
@@ -66,9 +67,10 @@ class OrderController extends Controller
     {
         $store = StoreProfile::first();
         $order = Order::where('order_number', $orderNumber)->with('service')->firstOrFail();
-        
+
         return view('order-success', compact('store', 'order'));
     }
+
 
     public function tracking(Request $request)
     {
@@ -130,35 +132,6 @@ class OrderController extends Controller
         // Notify primary admin via Email
         if ($primaryAdmin && $primaryAdmin->email) {
             $this->sendEmailNotification($primaryAdmin->email, $order, $service);
-        }
-    }
-
-    /**
-     * Send WhatsApp message using Fonnte API (free Indonesian WhatsApp sender)
-     */
-    private function sendWhatsAppMessage(string $phone, string $message): void
-    {
-        try {
-            $phone = preg_replace('/\D/', '', $phone);
-            if (substr($phone, 0, 1) === '0') {
-                $phone = '62' . substr($phone, 1);
-            } elseif (substr($phone, 0, 2) !== '62') {
-                $phone = '62' . $phone;
-            }
-
-            // Using Fonnte API (free for Indonesian users)
-            $token = config('services.fonnte.token');
-            
-            if ($token) {
-                Http::withHeaders([
-                    'Authorization' => $token,
-                ])->post('https://api.fonnte.com/send', [
-                    'target' => $phone,
-                    'message' => $message,
-                ]);
-            }
-        } catch (\Exception $e) {
-            \Log::error('WhatsApp notification failed: ' . $e->getMessage());
         }
     }
 

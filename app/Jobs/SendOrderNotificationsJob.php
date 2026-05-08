@@ -9,16 +9,15 @@ use App\Models\StoreProfile;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Traits\WhatsAppBot;
 
 class SendOrderNotificationsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, WhatsAppBot;
 
     public function __construct(
         public readonly int $orderId,
@@ -57,46 +56,6 @@ class SendOrderNotificationsJob implements ShouldQueue
 
         if ($primaryAdmin?->email) {
             $this->sendEmailNotification($primaryAdmin->email, $order, $service);
-        }
-    }
-
-    private function httpClient(): PendingRequest
-    {
-        // Timeout penting supaya request tidak menggantung terlalu lama.
-        return Http::timeout(10)->connectTimeout(5)->withHeaders([
-            'Authorization' => config('services.fonnte.token'),
-        ]);
-    }
-
-    private function normalizePhone(string $phone): string
-    {
-        $phone = preg_replace('/\D/', '', $phone);
-
-        if (substr($phone, 0, 1) === '0') {
-            return '62' . substr($phone, 1);
-        }
-
-        if (substr($phone, 0, 2) !== '62') {
-            return '62' . $phone;
-        }
-
-        return $phone;
-    }
-
-    private function sendWhatsAppMessage(string $phone, string $message): void
-    {
-        try {
-            $token = config('services.fonnte.token');
-            if (!$token) {
-                return;
-            }
-
-            $this->httpClient()->post('https://api.fonnte.com/send', [
-                'target' => $this->normalizePhone($phone),
-                'message' => $message,
-            ]);
-        } catch (\Throwable $e) {
-            Log::error('WhatsApp notification failed: ' . $e->getMessage());
         }
     }
 

@@ -100,3 +100,10 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         });
     });
 });
+
+// WA Bot Testing Routes (Development only)
+Route::prefix('test-wa-bot')->name('test-wa-bot.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\WaBotTestController::class, 'form'])->name('form');
+    Route::get('/health', [\App\Http\Controllers\WaBotTestController::class, 'healthCheck'])->name('health');
+    Route::post('/send', [\App\Http\Controllers\WaBotTestController::class, 'sendTest'])->name('send');
+});

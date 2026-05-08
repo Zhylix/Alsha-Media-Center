@@ -7,9 +7,12 @@ use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Traits\WhatsAppBot;
 
 class AdminOrderController extends Controller
 {
+    use WhatsAppBot;
+
     public function index(Request $request)
     {
         $query = Order::with('service');
@@ -40,6 +43,7 @@ class AdminOrderController extends Controller
     {
         $data = $request->validate([
             'status' => 'required|in:pending,diterima,ditolak,confirmed,in_progress,completed,cancelled',
+
             'service_id' => 'nullable|exists:services,id',
             'service_price' => 'nullable|numeric|min:0',
             'service_discount_percent' => 'nullable|numeric|min:0|max:100',
@@ -72,6 +76,7 @@ class AdminOrderController extends Controller
 
 
         // Update timestamps based on status
+        $previousStatus = $order->status;
         if ($data['status'] === 'diterima' && !$order->confirmed_at) {
             $data['confirmed_at'] = now();
         }
@@ -81,6 +86,7 @@ class AdminOrderController extends Controller
         if ($data['status'] === 'completed' && !$order->completed_at) {
             $data['completed_at'] = now();
         }
+
 
         // Hitung ulang total dengan diskon jika ada
         $servicePrice = isset($data['service_price']) && $data['service_price'] !== '' ? (float) $data['service_price'] : (float) $order->service_price;
@@ -99,9 +105,12 @@ class AdminOrderController extends Controller
 
         $order->update(array_filter($data));
 
+        // Send notification to customer only when status actually changes
+        if (array_key_exists('status', $data) && ($data['status'] ?? null) !== null && ($data['status'] ?? null) !== $previousStatus) {
+            $this->notifyCustomer($order, $data['status'] ?? null, $hasPricingInput ? true : false);
+        }
 
-        // Send notification to customer
-        $this->notifyCustomer($order);
+
 
         return redirect()->route('admin.orders.show', $order)->with('success', 'Status pesanan berhasil diperbarui!');
     }
@@ -120,6 +129,8 @@ class AdminOrderController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
+        // Store previous status untuk check apakah benar-benar berubah
+        $previousStatus = $order->status;
 
         $updateData = [
             'status' => 'diterima',
@@ -170,16 +181,16 @@ class AdminOrderController extends Controller
             $updateData['shipment_discount_percent'] = $data['shipment_discount_percent'];
         }
 
-
         if (!empty($data['notes'])) {
             $updateData['notes'] = $data['notes'];
         }
 
-
         $order->update(array_filter($updateData));
 
-        // Notify customer
-        $this->notifyCustomer($order);
+        // Notify customer only when status actually changes
+        if ($previousStatus !== 'diterima') {
+            $this->notifyCustomer($order, 'diterima', true);
+        }
 
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan telah diterima! Pelanggan akan mendapat notifikasi.');
     }
@@ -198,8 +209,9 @@ class AdminOrderController extends Controller
             'notes' => $data['notes'] ?? 'Maaf, pesanan Anda tidak dapat kami proses pada saat ini.',
         ]);
 
-        // Notify customer
-        $this->notifyCustomer($order);
+        // Notify customer (guard supaya tidak dobel)
+        $this->notifyCustomer($order, 'ditolak', false);
+
 
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan telah ditolak! Pelanggan akan mendapat notifikasi.');
     }
@@ -263,8 +275,10 @@ class AdminOrderController extends Controller
     /**
      * Notify customer about order status changes
      */
-    private function notifyCustomer(Order $order): void
+    private function notifyCustomer(Order $order, ?string $forcedStatus = null, bool $hasPricingInput = false): void
     {
+        $status = $forcedStatus ?? $order->status;
+
         $statusMessages = [
             'pending' => 'Pesanan Anda sedang menunggu konfirmasi.',
             'diterima' => 'Selamat! Pesanan Anda telah kami terima dan akan segera diproses.',
@@ -275,8 +289,9 @@ class AdminOrderController extends Controller
             'cancelled' => 'Pesanan Anda telah dibatalkan.',
         ];
 
-        $statusLabel = $order->status_badge['label'] ?? ucfirst($order->status);
-        $message = $statusMessages[$order->status] ?? 'Status pesanan Anda telah diperbarui.';
+        $statusLabel = $order->status_badge['label'] ?? ucfirst($status);
+        $message = $statusMessages[$status] ?? 'Status pesanan Anda telah diperbarui.';
+
 
         $whatsappMessage = "🔧 *Status Pesanan AMC - {$order->order_number}*\n\n";
         $whatsappMessage .= "━━━━━━━━━━━━━━━━━━━━━━\n";
@@ -301,33 +316,9 @@ class AdminOrderController extends Controller
         }
     }
 
-    private function sendWhatsAppMessage(string $phone, string $message): void
+    private function sendEmailNotification(Order $order): void
     {
-        try {
-            $phone = preg_replace('/\D/', '', $phone);
-            if (substr($phone, 0, 1) === '0') {
-                $phone = '62' . substr($phone, 1);
-            } elseif (substr($phone, 0, 2) !== '62') {
-                $phone = '62' . $phone;
-            }
 
-            $token = config('services.fonnte.token');
-            
-            if ($token) {
-                \Illuminate\Support\Facades\Http::withHeaders([
-                    'Authorization' => $token,
-                ])->post('https://api.fonnte.com/send', [
-                    'target' => $phone,
-                    'message' => $message,
-                ]);
-            }
-        } catch (\Exception $e) {
-            \Log::error('WhatsApp notification failed: ' . $e->getMessage());
-        }
-    }
-
-private function sendEmailNotification(Order $order): void
-    {
         try {
             $statusLabel = $order->status_badge['label'] ?? ucfirst($order->status);
             $notes = $order->notes ? "<p><strong>Catatan:</strong><br>{$order->notes}</p>" : '';
