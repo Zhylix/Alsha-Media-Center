@@ -89,8 +89,8 @@
                                 @error('logo') <p class="text-sm text-red-600 mt-2">{{ $message }}</p> @enderror
                             </div>
                             
-                            {{-- Current Logo --}}
-                            @if($store && $store->logo)
+{{-- Current Logo --}}
+                            @if(isset($store) && isset($store->logo) && $store->logo)
                             <div class="space-y-4">
                                 <h4 class="text-lg font-bold text-gray-900">Logo Saat Ini</h4>
                                 <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
@@ -120,7 +120,7 @@
                                         <input type="file" id="hero-upload" name="hero_image" accept="image/*" class="hidden" onchange="previewHero(this)">
                                     </div>
                                 </div>
-                                @if($store && $store->hero_image)
+@if($store && isset($store->hero_image) && !empty($store->hero_image))
                                 <div class="space-y-4">
                                     <h4 class="text-lg font-bold text-gray-900">Hero Saat Ini</h4>
                                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
@@ -191,7 +191,7 @@
                         <div class="p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
                             <h4 class="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900">Preview Sosial Media</h4>
                             <div class="flex gap-4 justify-center">
-                                @if($store && $store->instagram)
+@if($store && isset($store->instagram) && !empty($store->instagram))
                                 <a href="https://instagram.com/{{ ltrim($store->instagram, '@') }}" target="_blank" 
                                    class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
                                     <i class="fab fa-instagram text-sm"></i>

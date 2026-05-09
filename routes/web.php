@@ -74,6 +74,9 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         // Stats CRUD
         Route::resource('stats', AdminStatsController::class)->except(['show']);
 
+        // Spareparts CRUD
+        Route::resource('spareparts', \App\Http\Controllers\Admin\AdminSparepartController::class);
+
 // Orders management
         Route::resource('orders', AdminOrderController::class);
         Route::post('orders/{order}/accept', [AdminOrderController::class, 'accept'])->name('orders.accept');

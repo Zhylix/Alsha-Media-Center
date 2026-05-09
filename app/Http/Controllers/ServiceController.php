@@ -50,6 +50,20 @@ public function index()
         $store   = StoreProfile::first();
         $service = Service::where('slug', $slug)->where('is_active', true)->firstOrFail();
         $related = Service::where('category', $service->category)->where('id', '!=', $service->id)->where('is_active', true)->take(3)->get();
-        return view('services.show', compact('store', 'service', 'related'));
+
+        // Sparepart for this service category
+        $spareparts = \App\Models\Sparepart::query()
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->whereHas('sparepartCategory', function ($q) use ($service) {
+                $q->where('service_category', $service->category);
+            })
+            ->with('sparepartCategory')
+            ->orderBy('sort_order')
+            ->latest('id')
+            ->get();
+
+        return view('services.show', compact('store', 'service', 'related', 'spareparts'));
     }
+
 }

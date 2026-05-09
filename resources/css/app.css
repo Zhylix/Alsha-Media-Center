@@ -238,7 +238,20 @@
 .sidebar-overlay-open {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
 }
+
+
+/* Pastikan overlay tidak mengganggu interaksi saat sidebar tidak open */
+.sidebar-overlay {
+    pointer-events: none;
+}
+
+.sidebar-overlay.sidebar-overlay-open {
+    pointer-events: auto;
+}
+
+
 
 .hamburger {
     display: flex;

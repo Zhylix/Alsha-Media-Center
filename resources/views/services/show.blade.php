@@ -11,12 +11,112 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-        <span class="badge badge-{{ $service->category === 'laptop' ? 'blue' : ($service->category === 'printer' ? 'purple' : 'green') }} mb-4 inline-block">{{ $service->category_label }}</span>
+                <span class="badge badge-{{ $service->category === 'laptop' ? 'blue' : ($service->category === 'printer' ? 'purple' : 'green') }} mb-4 inline-block">{{ $service->category_label }}</span>
                 <h1 class="text-4xl font-black text-gray-900 mb-4">{{ $service->name }}</h1>
                 <p class="text-gray-600 text-lg mb-6">{{ $service->short_description }}</p>
                 <div class="flex flex-wrap gap-4">
                     <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, saya ingin tanya tentang {{ $service->name }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fab fa-whatsapp"></i> Tanya via WhatsApp</a>
                 </div>
+
+                {{-- Sparepart Section (dynamic) - placed under WhatsApp button as requested --}}
+                <section class="service-card p-6 sm:p-8 rounded-2xl mt-6" data-animate>
+                    <div class="flex items-start justify-between gap-6 flex-col lg:flex-row">
+                        <div>
+                            <h2 class="text-2xl font-black text-gray-900 mb-2">Sparepart untuk {{ $service->category_label }}</h2>
+                            <p class="text-gray-600 leading-relaxed text-sm">
+                                Pilih sparepart (opsional) untuk estimasi total harga.
+                            </p>
+                        </div>
+                        <div class="w-full lg:w-80">
+                            <div class="bg-gray-50 rounded-xl p-4 border border-red-600/10">
+                                <div class="flex items-center justify-between text-gray-600 text-sm">
+                                    <span>Harga Jasa</span>
+                                    <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-gray-600 text-sm mt-2">
+                                    <span>Harga Sparepart</span>
+                                    <span id="selectedSparepartPrice" class="font-semibold text-gray-900">Rp 0</span>
+                                </div>
+                                <div class="h-px bg-red-600/10 my-3"></div>
+                                <div class="flex items-center justify-between text-gray-900">
+                                    <span class="text-sm font-black">Total</span>
+                                    <span id="selectedTotalPrice" class="text-red-600 font-black text-lg">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500 mt-2">Total dihitung realtime (jasa + sparepart).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 space-y-6" id="sparepartContainer" data-service-category="{{ $service->category }}">
+                        @php
+                            $spareparts = $spareparts ?? collect();
+                            $grouped = $spareparts->groupBy(function($sp) {
+                                return $sp->sparepartCategory->part_type ?? 'Lainnya';
+                            });
+                        @endphp
+
+                        @if($grouped->count() === 0)
+                            <div class="text-gray-500 text-sm">
+                                Belum ada data sparepart untuk kategori ini.
+                            </div>
+                        @else
+                            @foreach($grouped as $partType => $items)
+                                <div>
+                                    <h3 class="text-base font-black text-gray-900 mb-3">{{ $partType }}</h3>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        @foreach($items->sortBy('sort_order') as $spare)
+                                            @php
+                                                $isDisabled = false;
+                                                $price = (float) ($spare->price ?? 0);
+                                            @endphp
+
+                                            <button
+                                                type="button"
+                                                class="sparepart-option group text-left rounded-2xl border p-4 transition-all duration-200
+                                                       {{ $isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-red-400 hover:shadow-sm hover:translate-y-[-1px]' }}"
+                                                data-sparepart-id="{{ $spare->id }}"
+                                                data-sparepart-name="{{ $spare->name }}"
+                                                data-sparepart-price="{{ $price }}"
+                                                data-service-price="{{ (float) $service->price_start }}"
+                                                data-sparepart-stock="{{ $spare->stock ?? 0 }}"
+                                                data-part-type="{{ $partType }}"
+                                                {{ $isDisabled ? 'disabled' : '' }}
+                                            >
+                                                <div class="flex items-start gap-3">
+                                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#C8000A] to-[#E0000A] flex items-center justify-center flex-shrink-0">
+                                                        @if($spare->image)
+                                                            <img src="{{ asset('storage/'.$spare->image) }}" alt="{{ $spare->name }}" class="w-full h-full object-cover rounded-xl" onerror="this.style.display='none'">
+                                                        @else
+                                                            <i class="fas fa-box-open text-white"></i>
+                                                        @endif
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <p class="text-sm font-black text-gray-900 truncate">{{ $spare->name }}</p>
+                                                        <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ Str::limit($spare->description ?? '', 80) }}</p>
+                                                        <p class="text-red-600 font-bold text-sm mt-2">Rp {{ number_format($spare->price, 0, ',', '.') }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-3 flex items-center justify-between">
+                                                    <span class="text-[11px] font-semibold text-gray-500">Stok: {{ $spare->stock ?? 0 }}</span>
+                                                    <span class="hidden sparepart-check text-xs font-black text-[#C8000A]">
+                                                        <i class="fas fa-check-circle"></i> Selected
+                                                    </span>
+                                                </div>
+
+                                                <input type="hidden" name="selected_sparepart_id" value="">
+                                            </button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            <div class="mt-4 text-gray-500 text-xs">
+                                Sparepart dipilih secara single untuk estimasi total. (Struktur ini mudah dikembangkan ke multiple selection.)
+                            </div>
+                        @endif
+                    </div>
+                </section>
             </div>
             <div class="service-card p-8 rounded-2xl">
                 <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}</div>
@@ -59,6 +159,7 @@
                 <p class="text-gray-900 font-semibold text-sm">Teknisi Berpengalaman</p>
             </div>
         </div>
+
     </div>
 </section>
 
@@ -84,14 +185,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($related as $service)
-            <!-- Modern Service Card - SaaS Dashboard Style -->
             <div class="group relative bg-white rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 border border-gray-300">
-                <!-- Hover Accent - Red Square -->
                 <div class="absolute -right-1 -top-1 w-3 h-3 bg-[#C8000A] opacity-0 group-hover:opacity-100 transition-opacity rounded-xl scale-0 group-hover:scale-100"></div>
 
-                <!-- TOP SECTION: Icon + Title + Desc -->
                 <div class="flex items-start gap-4 mb-4">
-                    <!-- Icon with red gradient -->
                     <div class="w-12 h-12 bg-gradient-to-br from-[#C8000A] to-[#E0000A] flex items-center justify-center rounded-xl shadow-lg flex-shrink-0">
                         @php
                         $icons = ['laptop' => 'fa-laptop', 'printer' => 'fa-print', 'pc' => 'fa-desktop', 'software' => 'fa-compact-disc'];
@@ -100,7 +197,6 @@
                         <i class="fas {{ $icon }} text-white text-xl"></i>
                     </div>
 
-                    <!-- Title & Description -->
                     <div class="flex-1 min-w-0">
                         <div class="flex items-start justify-between gap-2">
                             <h3 class="font-bold text-gray-900 text-base leading-tight">{{ $service->name }}</h3>
@@ -118,12 +214,9 @@
                     </div>
                 </div>
 
-                <!-- Divider -->
                 <div class="h-px bg-gray-200 mb-4"></div>
 
-                <!-- BOTTOM SECTION: Price + Time -->
                 <div class="flex items-center gap-3 mb-3">
-                    <!-- Price Box (Larger) -->
                     <div class="bg-gray-50 rounded-xl px-4 py-2.5 shadow-sm flex-[2]">
                         <div class="flex items-center gap-2 text-gray-400 text-[10px] uppercase font-semibold">
                             <i class="fas fa-tag text-[8px] text-[#C8000A]"></i>
@@ -132,7 +225,6 @@
                         <div class="text-gray-900 font-bold text-xs mt-0.5">{{ $service->price_range }}</div>
                     </div>
 
-                    <!-- Time Box (Smaller) -->
                     <div class="bg-gray-50 rounded-xl px-3 py-2.5 shadow-sm flex-1">
                         <div class="flex items-center gap-1.5 text-gray-400 text-[9px] uppercase font-semibold">
                             <i class="fas fa-clock text-[7px] text-[#C8000A]"></i>
@@ -142,7 +234,6 @@
                     </div>
                 </div>
 
-                <!-- Detail Button -->
                 <a href="{{ route('services.show', $service->slug) }}"
                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 w-full
                           bg-[#C8000A] text-white text-xs font-bold uppercase tracking-wide rounded-xl
@@ -156,4 +247,50 @@
     </div>
 </section>
 @endif
+
+@push('scripts')
+<script>
+    (function(){
+        const options = document.querySelectorAll('.sparepart-option');
+        const selectedSparepartPriceEl = document.getElementById('selectedSparepartPrice');
+        const selectedTotalPriceEl = document.getElementById('selectedTotalPrice');
+
+        const formatRp = (n) => {
+            try {
+                return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n));
+            } catch (e) {
+                return 'Rp ' + Math.round(n);
+            }
+        };
+
+        let selected = null;
+
+        function clearSelection(){
+            options.forEach(btn => {
+                btn.classList.remove('border-[#C8000A]', 'bg-red-50', 'shadow-sm');
+                btn.querySelector('.sparepart-check')?.classList.add('hidden');
+            });
+        }
+
+        options.forEach(btn => {
+            btn.addEventListener('click', function(){
+                if (btn.disabled) return;
+
+                clearSelection();
+                btn.classList.add('border-[#C8000A]', 'bg-red-50', 'shadow-sm');
+                btn.querySelector('.sparepart-check')?.classList.remove('hidden');
+
+                const sparePrice = parseFloat(btn.dataset.sparepartPrice || '0');
+                const servicePrice = parseFloat(btn.dataset.servicePrice || '0');
+                const total = servicePrice + sparePrice;
+
+                selectedSparepartPriceEl.textContent = formatRp(sparePrice);
+                selectedTotalPriceEl.textContent = formatRp(total);
+                selected = btn.dataset.sparepartId;
+            });
+        });
+    })();
+</script>
+@endpush
 @endsection
+
