@@ -10,10 +10,10 @@
 
         <div>
             <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
-                Nama Sparepart <span class="text-[#C8000A]">*</span>
+                Nama Sparepart <span class="text-[#C8000A]">*</span>    
             </label>
             <input type="text" name="name" value="{{ old('name') }}" required
-                   class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+                   class="form-input px-4 py-3.5 rounded-xl text-sm w-full" placeholder="Contoh: Ram DDR4">
             @error('name')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
         </div>
 
@@ -27,15 +27,27 @@
 
         <div>
             <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Deskripsi <span class="text-[#C8000A]">*</span></label>
-            <textarea name="description" rows="4" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full resize-none">{{ old('description') }}</textarea>
+            <textarea name="description" rows="4" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full resize-none" placeholder="Contoh: Masukkan deskripsi RAM DDR4 seperti kapasitas, kecepatan, merk, dan kondisi barang"  >{{ old('description') }}</textarea>
             @error('description')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Harga (Rp) <span class="text-[#C8000A]">*</span></label>
-                <input type="number" name="price" value="{{ old('price') }}" step="1" min="0" required
+
+                {{-- input tampilan (format Rupiah). Yang dikirim ke backend adalah input hidden priceValue (angka murni) --}}
+                <input type="text"
+                       id="priceInput"
+                       name="priceDisplay"
+                       value="{{ old('price') ? 'Rp ' . number_format((float) old('price'), 0, ',', '.') : '' }}"
+                       inputmode="numeric"
+                       placeholder="Contoh: 1000000"
+                       required
                        class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+
+                <input type="hidden" name="price" id="priceValue"
+                       value="{{ old('price') }}">
+
                 @error('price')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
             </div>
 
@@ -164,6 +176,79 @@
         const spareCatIdEl = document.getElementById('sparepartCategoryId');
         const newPartTypeContainer = document.getElementById('newPartTypeContainer');
         const newPartTypeInput = document.getElementById('newPartTypeInput');
+
+        // ========= Harga Rupiah (format tampilan) -> angka murni (hidden) =========
+        const priceInput = document.getElementById('priceInput');
+        const priceValueEl = document.getElementById('priceValue');
+
+        function formatRupiah(value){
+            if (!value) return '';
+
+            let numberString = value.toString().replace(/[^,\d]/g, '');
+            let split = numberString.split(',');
+            let sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+
+            return 'Rp ' + rupiah;
+        }
+
+        function syncPriceHiddenFromInput(){
+            if(!priceInput || !priceValueEl) return;
+
+            // Ambil digit saja dari value tampilan
+            const raw = String(priceInput.value || '')
+            .replace(/[^0-9,]/g, '')
+            .replace(',', '.');
+            if(raw === ''){
+                priceValueEl.value = '';
+                return;
+            }
+
+            // raw dianggap bilangan bulat (admin ketik angka saja)
+            const asNumber = Number(raw);
+            if(!Number.isFinite(asNumber)){
+                priceValueEl.value = '';
+                return;
+            }
+
+            // backend validate numeric|min:0 (angka bulat aman)
+            priceValueEl.value = String(asNumber);
+            priceInput.value = formatRupiah(asNumber);
+        }
+
+        if(priceInput){
+            // init saat page load (mis. old('price'))
+            if(priceValueEl && priceValueEl.value){
+                const initNum = Number(priceValueEl.value);
+                if(Number.isFinite(initNum)) priceInput.value = formatRupiah(initNum);
+            }else{
+                // pastikan tampilan kosong
+                priceInput.value = '';
+            }
+
+            priceInput.addEventListener('input', function(e){
+                let rawValue = e.target.value
+                    .replace(/[^0-9,]/g, '');
+
+                // hanya boleh 1 koma
+                const parts = rawValue.split(',');
+                if(parts.length > 2){
+                    rawValue = parts[0] + ',' + parts[1];
+                }
+
+                priceValueEl.value = rawValue.replace(',', '.');
+                e.target.value = formatRupiah(rawValue);
+            });
+        }
+
 
         function setHiddenSpareCategoryId(){
             const sc = serviceSel.value;
