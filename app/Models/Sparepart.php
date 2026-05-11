@@ -11,6 +11,7 @@ class Sparepart extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'image',
         'description',
         'price',

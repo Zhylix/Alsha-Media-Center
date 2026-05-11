@@ -105,8 +105,7 @@ class AdminSparepartController extends Controller
             }
         }
 
-        // Jika form multi-step mengirim service_category + part_type dari step 1,
-        // kita turunkan ke sparepart_category_id sebelum validasi.
+ 
         $serviceCategory = $request->input('service_category');
         $partType = $request->input('part_type');
 
@@ -165,7 +164,13 @@ class AdminSparepartController extends Controller
         $validated['is_active'] = $request->has('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
+        // slug diperlukan karena kolom slug tidak punya default value di DB
+        if (empty($validated['slug'] ?? null)) {
+            $validated['slug'] = Str::slug($validated['name'] ?? $request->input('name'));
+        }
+
         Sparepart::create($validated);
+
 
         return redirect()->route('admin.spareparts.index')->with('success', 'Sparepart berhasil ditambahkan!');
     }

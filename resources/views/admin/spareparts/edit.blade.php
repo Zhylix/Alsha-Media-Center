@@ -59,7 +59,8 @@
         </div>
 
         <div class="flex items-center gap-3">
-            <input type="checkbox" name="is_active" id="is_active" {{ (old('is_active', $sparepart->is_active) ? 'checked' : '') }} class="h-5 w-5">
+            <input type="hidden" name="is_active" value="0">
+            <input type="checkbox" name="is_active" id="is_active" value="1" {{ filter_var(old('is_active', $sparepart->is_active), FILTER_VALIDATE_BOOL) ? 'checked' : '' }} class="h-5 w-5">
             <label for="is_active" class="text-sm text-gray-700 font-semibold">Aktif (tampil di user)</label>
         </div>
 
