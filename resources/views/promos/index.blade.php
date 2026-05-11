@@ -2,7 +2,7 @@
 @section('title', 'Promo Spesial | Alsha Media Center')
 
 @section('content')
-
+{{ dd($daysLeft) }}
 <!-- ===================== HERO ===================== -->
 <section class="relative py-36 bg-white overflow-hidden">
     <!-- Diagonal right panel -->
@@ -107,7 +107,7 @@
                             @endphp
                             @if($daysLeft >= 0)
                             <div class="text-right">
-                                <p class="text-xs font-black text-[#C8000A]">{{ $daysLeft }} hari</p>
+                                <p class="text-xs font-black text-[#C8000A]">{{ (int) $daysLeft }} hari</p>
                                 <p class="text-[10px] text-gray-400">tersisa</p>
                             </div>
                             @endif

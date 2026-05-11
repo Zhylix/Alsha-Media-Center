@@ -28,11 +28,29 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Mulai (Rp) *</label>
-                    <input type="number" name="price_start" value="{{ old('price_start', $service->price_start) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
+                    <input type="text"
+                    id="priceStartInput"
+                    value="{{ old('price_start', $service->price_start) ? 'Rp ' . number_format(old('price_start', $service->price_start), 0, ',', '.') : '' }}"
+                    class="form-input w-full px-4 py-3 rounded-xl text-sm"
+                    placeholder="Rp 75.000">
+
+                <input type="hidden"
+                    name="price_start"
+                    id="priceStartValue"
+                    value="{{ old('price_start', $service->price_start) }}">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Maksimal (Rp)</label>
-                    <input type="number" name="price_end" value="{{ old('price_end', $service->price_end) }}" class="form-input w-full px-4 py-3 rounded-xl text-sm">
+                    <input type="text"
+                    id="priceEndInput"
+                    value="{{ old('price_end', $service->price_end) ? 'Rp ' . number_format(old('price_end', $service->price_end), 0, ',', '.') : '' }}"
+                    class="form-input w-full px-4 py-3 rounded-xl text-sm"
+                    placeholder="Kosongkan jika harga tetap">
+
+                <input type="hidden"
+                    name="price_end"
+                    id="priceEndValue"
+                    value="{{ old('price_end', $service->price_end) }}">
                 </div>
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Deskripsi Singkat</label>
@@ -64,4 +82,57 @@
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+(function(){
+
+    function formatRupiah(value){
+        if (!value) return '';
+
+        let numberString = value.toString().replace(/[^,\d]/g, '');
+        let split = numberString.split(',');
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined
+            ? rupiah + ',' + split[1]
+            : rupiah;
+
+        return 'Rp ' + rupiah;
+    }
+
+    function setupRupiah(inputId, hiddenId){
+        const input = document.getElementById(inputId);
+        const hidden = document.getElementById(hiddenId);
+
+        if(!input || !hidden) return;
+
+        input.addEventListener('input', function(e){
+
+            let rawValue = e.target.value
+                .replace(/[^0-9,]/g, '');
+
+            const parts = rawValue.split(',');
+            if(parts.length > 2){
+                rawValue = parts[0] + ',' + parts[1];
+            }
+
+            hidden.value = rawValue.replace(',', '.');
+
+            e.target.value = formatRupiah(rawValue);
+        });
+    }
+
+    setupRupiah('priceStartInput', 'priceStartValue');
+    setupRupiah('priceEndInput', 'priceEndValue');
+
+})();
+</script>
+@endpush
 @endsection
