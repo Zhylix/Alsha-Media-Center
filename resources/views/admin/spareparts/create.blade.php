@@ -52,10 +52,13 @@
             $partTypesByService = $categories->groupBy('service_category');
         @endphp
 
-        {{-- Display cascading selection, but store sparepart_category_id as hidden --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {{-- Step 1: Kategori Service --}}
+        <div id="step1" class="space-y-3">
             <div>
-                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Kategori Service <span class="text-[#C8000A]">*</span></label>
+
+                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                    Kategori Service <span class="text-[#C8000A]">*</span>
+                </label>
                 <select name="service_category" id="serviceCategorySelect" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
                     <option value="">-- Pilih service --</option>
                     @foreach($serviceTypes as $sc)
@@ -73,24 +76,57 @@
                 @error('service_category')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
             </div>
 
-            <div>
-                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Jenis Sparepart <span class="text-[#C8000A]">*</span></label>
-                <select name="part_type" id="partTypeSelect" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
-                    <option value="">-- Pilih jenis --</option>
-                    @if(old('service_category'))
-                        @foreach($partTypesByService->get(old('service_category'), collect())->pluck('part_type')->unique()->values() as $pt)
-                            <option value="{{ $pt }}" {{ old('part_type') === $pt ? 'selected' : '' }}>{{ $pt }}</option>
-                        @endforeach
-                    @endif
-                </select>
-                @error('part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+            <button type="button" id="toStep2" class="btn-primary px-6 py-3 rounded-xl text-white font-bold">
+                Lanjut
+            </button>
+
+            {{-- Step 2: Jenis Sparepart di bawah Kategori (tetap tampil sebagai langkah 2) --}}
+            <div class="hidden" id="jenisPreview" aria-hidden="true"></div>
+        </div>
+
+        {{-- Step 2: Jenis Sparepart (final submit) --}}
+            <div id="step2" class="space-y-3 hidden">
+                <div class="rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700 font-semibold">
+                    Jenis Sparepart
+            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                Jenis Sparepart <span class="text-[#C8000A]">*</span>
+            </label>
+
+            <select name="part_type" id="partTypeSelect" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+                <option value="">-- Pilih jenis --</option>
+                @if(old('service_category'))
+                    @foreach($partTypesByService->get(old('service_category'), collect())->pluck('part_type')->unique()->values() as $pt)
+                        <option value="{{ $pt }}" {{ old('part_type') === $pt ? 'selected' : '' }}>{{ $pt }}</option>
+                    @endforeach
+                @endif
+                <option value="__new__">+ Tambah jenis baru...</option>
+            </select>
+            @error('part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+
+            {{-- Input untuk jenis sparepart baru --}}
+            <div id="newPartTypeContainer" class="hidden">
+                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                    Jenis Sparepart Baru <span class="text-[#C8000A]">*</span>
+                </label>
+                <input type="text" name="new_part_type" id="newPartTypeInput" 
+                       class="form-input px-4 py-3.5 rounded-xl text-sm w-full" 
+                       placeholder="Contoh: SSD NVMe, RAM DDR5, dll.">
+                @error('new_part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+            </div>
+
+            {{-- hidden untuk menyimpan kombinasi service + part_type --}}
+            <input type="hidden" name="sparepart_category_id" id="sparepartCategoryId" value="" required>
+            @error('sparepart_category_id')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+
+            <p class="text-[11px] text-gray-500 mt-1">Sparepart dipilih berdasarkan kombinasi service + jenis.</p>
+
+            <div class="flex items-center gap-3">
+                <button type="button" id="backToStep1" class="btn-outline px-6 py-3 rounded-xl text-red-600 font-bold">
+                    Kembali
+                </button>
             </div>
         </div>
 
-        {{-- hidden untuk menyimpan kombinasi service + part_type --}}
-        <input type="hidden" name="sparepart_category_id" id="sparepartCategoryId" value="{{ old('sparepart_category_id') }}" required>
-        @error('sparepart_category_id')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
-        <p class="text-[11px] text-gray-500 mt-1">Sparepart dipilih berdasarkan kombinasi service + jenis.</p>
 
         <div class="flex items-center gap-3">
             <input type="checkbox" name="is_active" id="is_active" {{ old('is_active') ? 'checked' : '' }} class="h-5 w-5">
@@ -125,12 +161,27 @@
         const serviceSel = document.getElementById('serviceCategorySelect');
         const partSel = document.getElementById('partTypeSelect');
         const spareCatIdEl = document.getElementById('sparepartCategoryId');
+        const newPartTypeContainer = document.getElementById('newPartTypeContainer');
+        const newPartTypeInput = document.getElementById('newPartTypeInput');
 
         function setHiddenSpareCategoryId(){
             const sc = serviceSel.value;
             const pt = partSel.value;
-            const match = categories.find(c => c.service_category === sc && c.part_type === pt);
-            spareCatIdEl.value = match ? match.id : '';
+            
+            if (pt === '__new__') {
+                // Jika memilih tambah jenis baru, kosongkan sparepart_category_id
+                spareCatIdEl.value = '';
+                newPartTypeContainer.classList.remove('hidden');
+                newPartTypeInput.required = true;
+                newPartTypeInput.focus();
+            } else {
+                // Jika memilih jenis yang sudah ada
+                const match = categories.find(c => c.service_category === sc && c.part_type === pt);
+                spareCatIdEl.value = match ? match.id : '';
+                newPartTypeContainer.classList.add('hidden');
+                newPartTypeInput.required = false;
+                newPartTypeInput.value = '';
+            }
         }
 
         function refreshPartTypes(){
@@ -138,9 +189,13 @@
             const pts = [...new Set(categories.filter(c => c.service_category === sc).map(c => c.part_type))];
 
             partSel.innerHTML = '<option value="">-- Pilih jenis --</option>' +
-                pts.map(pt => `<option value="${pt}">${pt}</option>`).join('');
+                pts.map(pt => `<option value="${pt}">${pt}</option>`).join('') +
+                '<option value="__new__">+ Tambah jenis baru...</option>';
 
             spareCatIdEl.value = '';
+            newPartTypeContainer.classList.add('hidden');
+            newPartTypeInput.required = false;
+            newPartTypeInput.value = '';
         }
 
         if(serviceSel){
@@ -156,28 +211,97 @@
         }
 
         // init from old() values
-        if(serviceSel.value){
+        const oldService = @json(old('service_category'));
+        const oldPart = @json(old('part_type'));
+        const oldNewPart = @json(old('new_part_type'));
+        
+        if(oldService){
+            serviceSel.value = oldService;
             refreshPartTypes();
-            // attempt to re-set old selected part_type
-            const oldPart = @json(old('part_type'));
-            if(oldPart){
-                partSel.value = oldPart;
-            }
-            setHiddenSpareCategoryId();
         }
-        if(!serviceSel.value){
-            // nothing
+        
+        if(oldNewPart){
+            // Jika ada new_part_type dari old data, set ke __new__ dan tampilkan input
+            partSel.value = '__new__';
+            newPartTypeInput.value = oldNewPart;
+            newPartTypeContainer.classList.remove('hidden');
+            newPartTypeInput.required = true;
+        } else if(oldPart){
+            partSel.value = oldPart;
         }
-        // If no service old value, but sparepart_category_id exists, derive service/part
-        if((!serviceSel.value || !partSel.value) && spareCatIdEl.value){
+        
+        // jika sparepart_category_id sudah terisi (mis. submit gagal lalu balikan)
+        if(spareCatIdEl && spareCatIdEl.value && !oldNewPart){
             const match = categories.find(c => c.id == spareCatIdEl.value);
             if(match){
                 serviceSel.value = match.service_category;
                 refreshPartTypes();
                 partSel.value = match.part_type;
-                setHiddenSpareCategoryId();
             }
         }
+        setHiddenSpareCategoryId();
+
+        // jika step 2 sudah valid terpilih, tampilkan step 2
+        const step1El = document.getElementById('step1');
+        const step2El = document.getElementById('step2');
+        if(step1El && step2El){
+            if(serviceSel.value && (partSel.value || (partSel.value === '__new__' && newPartTypeInput.value.trim()))){
+                step1El.classList.add('hidden');
+                step2El.classList.remove('hidden');
+            }
+        }
+
+        // step navigation
+        const toStep2Btn = document.getElementById('toStep2');
+        const backToStep1Btn = document.getElementById('backToStep1');
+
+        if(toStep2Btn){
+            toStep2Btn.addEventListener('click', function(){
+                if(!serviceSel.value){
+                    serviceSel.reportValidity && serviceSel.reportValidity();
+                    return;
+                }
+                // isi part type list berdasarkan kategori
+                refreshPartTypes();
+                // pindah step
+                if(step1El && step2El){
+                    step1El.classList.add('hidden');
+                    step2El.classList.remove('hidden');
+                }
+                // reset hidden id
+                spareCatIdEl.value = '';
+                // focus ke part type select
+                partSel.focus();
+            });
+        }
+
+        if(backToStep1Btn){
+            backToStep1Btn.addEventListener('click', function(){
+                if(step1El && step2El){
+                    step2El.classList.add('hidden');
+                    step1El.classList.remove('hidden');
+                }
+                // saat kembali ke step 1, reset jenis
+                partSel.value = '';
+                spareCatIdEl.value = '';
+            });
+        }
+
+        // Form submit validation
+        const form = document.querySelector('form');
+        if(form){
+            form.addEventListener('submit', function(e){
+                if(partSel.value === '__new__'){
+                    if(!newPartTypeInput.value.trim()){
+                        e.preventDefault();
+                        newPartTypeInput.reportValidity && newPartTypeInput.reportValidity();
+                        newPartTypeInput.focus();
+                        return false;
+                    }
+                }
+            });
+        }
+
     })();
 </script>
 @endpush

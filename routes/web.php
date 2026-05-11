@@ -77,6 +77,9 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         // Spareparts CRUD
         Route::resource('spareparts', \App\Http\Controllers\Admin\AdminSparepartController::class);
 
+        // Sparepart Categories
+        Route::post('sparepart-categories', [\App\Http\Controllers\Admin\AdminSparepartCategoryController::class, 'store'])->name('sparepart-categories.store');
+
 // Orders management
         Route::resource('orders', AdminOrderController::class);
         Route::post('orders/{order}/accept', [AdminOrderController::class, 'accept'])->name('orders.accept');

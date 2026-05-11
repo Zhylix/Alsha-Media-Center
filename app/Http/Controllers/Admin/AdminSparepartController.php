@@ -49,8 +49,19 @@ class AdminSparepartController extends Controller
                 $query->where('is_active', (int) $request->input('status'));
             }
         }
+        
+        $connection = $query->getModel()->getConnection();
+        $hasSortOrder = $connection->getSchemaBuilder()->hasColumn('spareparts', 'sort_order');
 
-        $spareparts = $query->orderBy('sort_order')->latest()->paginate(15)->withQueryString();
+        if ($hasSortOrder) {
+            $spareparts = $query->orderBy('sort_order')->latest()->paginate(15)->withQueryString();
+        } else {
+            $spareparts = $query->latest()->paginate(15)->withQueryString();
+        }
+
+
+
+
 
         $categories = SparepartCategory::where('is_active', true)->orderBy('service_category')->orderBy('part_type')->get();
         $serviceCategories = $categories->pluck('service_category')->unique()->values()->all();
@@ -60,6 +71,7 @@ class AdminSparepartController extends Controller
             'spareparts' => $spareparts,
             'serviceCategories' => $serviceCategories,
             'partTypes' => $partTypes,
+            'categories' => $categories,
             'filters' => $request->only(['search', 'service_category', 'part_type', 'status']),
         ]);
     }
@@ -72,6 +84,68 @@ class AdminSparepartController extends Controller
 
     public function store(Request $request)
     {
+        // Handle new part type creation
+        if ($request->filled('new_part_type') && $request->filled('service_category')) {
+            // Check if this combination already exists
+            $existing = SparepartCategory::where('service_category', $request->input('service_category'))
+                ->where('part_type', $request->input('new_part_type'))
+                ->first();
+
+            if (!$existing) {
+                // Create new category
+                $newCategory = SparepartCategory::create([
+                    'service_category' => $request->input('service_category'),
+                    'part_type' => $request->input('new_part_type'),
+                    'is_active' => true,
+                    'sort_order' => 0,
+                ]);
+                $request->merge(['sparepart_category_id' => $newCategory->id]);
+            } else {
+                $request->merge(['sparepart_category_id' => $existing->id]);
+            }
+        }
+
+        // Jika form multi-step mengirim service_category + part_type dari step 1,
+        // kita turunkan ke sparepart_category_id sebelum validasi.
+        $serviceCategory = $request->input('service_category');
+        $partType = $request->input('part_type');
+
+        // Jika step 2 mengirim kombinasi service + part_type, turunkan ke sparepart_category_id.
+        if ($request->filled(['service_category', 'part_type']) && !$request->filled('sparepart_category_id')) {
+            $match = SparepartCategory::where('service_category', $serviceCategory)
+                ->where('part_type', $partType)
+                ->first();
+
+            if ($match) {
+                $request->merge(['sparepart_category_id' => $match->id]);
+            }
+        }
+
+        // Jika data belum lengkap, coba ambil dari session (step 1).
+        // (Untuk kasus: step 2 cuma kirim part_type)
+        if (!$request->filled('service_category') && $request->session()->has('sparepart_step1.service_category')) {
+            $request->merge([
+                'service_category' => $request->session()->get('sparepart_step1.service_category'),
+            ]);
+        }
+
+        if (!$request->filled('part_type') && $request->session()->has('sparepart_step1.part_type')) {
+            $request->merge([
+                'part_type' => $request->session()->get('sparepart_step1.part_type'),
+            ]);
+        }
+
+        if ($request->filled(['service_category', 'part_type']) && !$request->filled('sparepart_category_id')) {
+            $match = SparepartCategory::where('service_category', $request->input('service_category'))
+                ->where('part_type', $request->input('part_type'))
+                ->first();
+
+            if ($match) {
+                $request->merge(['sparepart_category_id' => $match->id]);
+            }
+        }
+
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'required|image|max:2048',
@@ -81,7 +155,9 @@ class AdminSparepartController extends Controller
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
+            'new_part_type' => 'nullable|string|max:255',
         ]);
+
 
         $path = $request->file('image')->store('spareparts', 'public');
 

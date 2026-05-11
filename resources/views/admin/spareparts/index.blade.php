@@ -50,6 +50,61 @@
     </a>
 </div>
 
+<!-- Manage Sparepart Categories -->
+<div class="service-card p-6 rounded-2xl mb-6">
+    <h3 class="text-lg font-bold text-gray-900 mb-4">Kelola Kategori Sparepart</h3>
+    <p class="text-sm text-gray-600 mb-4">Tambahkan kategori service dan jenis sparepart untuk mengorganisir sparepart.</p>
+
+    <form id="addCategoryForm" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                Kategori Service <span class="text-[#C8000A]">*</span>
+            </label>
+            <select name="service_category" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+                <option value="">-- Pilih kategori --</option>
+                <option value="pc">PC / Komputer</option>
+                <option value="laptop">Laptop</option>
+                <option value="printer">Printer</option>
+                <option value="software">Installasi Software</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                Jenis Sparepart <span class="text-[#C8000A]">*</span>
+            </label>
+            <input type="text" name="part_type" placeholder="Contoh: RAM, SSD, Keyboard" required
+                   class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+        </div>
+
+        <div class="flex items-end">
+            <button type="submit" class="btn-primary px-6 py-3.5 rounded-xl text-white font-bold text-sm w-full">
+                <i class="fas fa-plus mr-2"></i> Tambah Kategori
+            </button>
+        </div>
+    </form>
+
+    <!-- Existing Categories List -->
+    <div class="mt-6">
+        <h4 class="text-sm font-semibold text-gray-900 mb-3">Kategori yang Ada:</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            @forelse($categories as $category)
+                <div class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg">
+                    <div>
+                        <span class="text-sm font-medium text-gray-900">{{ $category->service_category_label }}</span>
+                        <span class="text-xs text-gray-500"> - {{ $category->part_type }}</span>
+                    </div>
+                    <span class="badge badge-{{ $category->is_active ? 'green' : 'gray' }} text-xs">
+                        {{ $category->is_active ? 'Aktif' : 'Nonaktif' }}
+                    </span>
+                </div>
+            @empty
+                <p class="text-sm text-gray-500 col-span-full">Belum ada kategori sparepart.</p>
+            @endforelse
+        </div>
+    </div>
+</div>
+
 <div class="service-card rounded-2xl overflow-hidden">
     <div class="overflow-x-auto">
         <table class="admin-table w-full">
@@ -124,5 +179,76 @@
         </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addCategoryForm = document.getElementById('addCategoryForm');
+    
+    addCategoryForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Disable button
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+        
+        fetch('{{ route("admin.sparepart-categories.store") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reset form
+                addCategoryForm.reset();
+                
+                // Show success message
+                showNotification(data.success, 'success');
+                
+                // Reload page to update categories list
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else if (data.error) {
+                showNotification(data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Terjadi kesalahan saat menyimpan kategori.', 'error');
+        })
+        .finally(() => {
+            // Re-enable button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        });
+    });
+    
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-xl text-sm font-semibold z-50 ${
+            type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'
+        }`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+});
+</script>
+@endpush
 @endsection
 
