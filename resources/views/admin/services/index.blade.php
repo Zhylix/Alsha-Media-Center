@@ -29,14 +29,22 @@
                             {{ $service->category_label }}
                         </span>
                     </td>
-                    <td class="text-red-600 font-semibold text-sm">Rp {{ number_format($service->price_start, 0, ',', '.') }}</td>
+                    <td class="text-red-600 font-semibold text-sm">
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+                            <span>Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
+
+                            <span class="w-4 h-px bg-[#C8000A]"></span>
+
+                            <span>Rp {{ number_format($service->price_end, 0, ',', '.') }}</span>
+                        </div>
+                    </td>
                     <td>
                         <span class="badge badge-{{ $service->is_active ? 'green' : 'gray' }}">
                             {{ $service->is_active ? 'Aktif' : 'Nonaktif' }}
                         </span>
                     </td>
                     <td>
-@if($service->is_featured)<span class="badge badge-red"><i class="fas fa-star text-red-600"></i> Ya</span>@else<span class="text-gray-500 text-xs">-</span>@endif
+                        @if($service->is_featured)<span class="badge badge-red"><i class="fas fa-star text-red-600"></i> Ya</span>@else<span class="text-gray-500 text-xs">-</span>@endif
                     </td>
                     <td>
                         <div class="flex items-center gap-2">
@@ -50,7 +58,7 @@
                 </tr>
                 @endforeach
                 @if($services->isEmpty())
-                <tr><td colspan="6" class="text-center text-gray-500 py-10">Belum ada layanan. <a href="{{ route('admin.services.create') }}" class="text-red-600">Tambah sekarang</a></td></tr>
+                    <tr><td colspan="6" class="text-center text-gray-500 py-10">Belum ada layanan. <a href="{{ route('admin.services.create') }}" class="text-red-600">Tambah sekarang</a></td></tr>
                 @endif
             </tbody>
         </table>

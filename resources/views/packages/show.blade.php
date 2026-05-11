@@ -63,13 +63,17 @@
                             </div>
 
                             @php
-                                $daysLeft = $promo->end_date ? now()->diffInDays($promo->end_date, false) : null;
+                                $daysLeft = $promo->end_date?->isFuture()
+                                    ? floor(now()->diffInDays($promo->end_date, false))
+                                    : null;
                             @endphp
-                            @if($daysLeft !== null && $daysLeft >= 0)
-                                <div class="text-right">
-                                    <p class="text-xs font-black text-[#C8000A]">{{ $daysLeft }} hari</p>
-                                    <p class="text-[10px] text-gray-400">tersisa</p>
-                                </div>
+                            @if(!is_null($daysLeft))
+                            <div class="text-right">
+                                <p class="text-xs font-black text-[#C8000A]">
+                                    {{ $daysLeft }} hari
+                                </p>
+                                <p class="text-[10px] text-gray-400">tersisa</p>
+                            </div>
                             @endif
                         </div>
                     </div>

@@ -5,7 +5,7 @@
 @section('content')
 
 @php
-$heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_image) : asset('images/image.png');
+$heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_image) : asset('hero/image.png');
 @endphp
 
 <!-- ===================== HERO ===================== -->
@@ -193,17 +193,17 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                             <span class="text-gray-400">— jadwal berlaku sesuai tanggal yang tertera</span>
                         </div>
 
-                        @if($promo->end_date)
                         @php
-                            $daysLeft = now()->diffInDays($promo->end_date, false);
+                            $daysLeft = $promo->end_date?->isFuture()
+                                ? floor(now()->diffInDays($promo->end_date, false))
+                                : null;
                         @endphp
-                        @if($daysLeft >= 0)
+                        @if(!is_null($daysLeft))
                         <div class="flex items-center gap-3">
                             <span class="text-[#C8000A]"><i class="fas fa-hourglass-half"></i></span>
                             <span class="font-semibold">{{ $daysLeft }} hari</span>
                             <span class="text-gray-400">tersisa</span>
                         </div>
-                        @endif
                         @endif
                     </div>
 

@@ -22,8 +22,8 @@
         {{-- Tabs Navigation --}}
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="flex border-b border-gray-200" id="tabs-nav">
-@php
-                    $store ??= (object) [];
+                @php
+                    $store = $store ?? (object) [];
                     $tabs = [
                         ['id' => 'basic', 'icon' => 'fa-store', 'title' => 'Info Dasar', 'complete' => !empty($store->store_name ?? '')],
                         ['id' => 'branding', 'icon' => 'fa-image', 'title' => 'Branding', 'complete' => !empty($store->logo ?? '')],
@@ -89,13 +89,17 @@
                                 @error('logo') <p class="text-sm text-red-600 mt-2">{{ $message }}</p> @enderror
                             </div>
                             
-{{-- Current Logo --}}
+                            {{-- Current Logo --}}
                             @if(isset($store) && isset($store->logo) && $store->logo)
                             <div class="space-y-4">
                                 <h4 class="text-lg font-bold text-gray-900">Logo Saat Ini</h4>
                                 <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
-                                    <img src="{{ asset('storage/' . $store->logo) }}" alt="Logo Saat Ini" 
-                                         class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
+                                    <div id="logo-preview-container">
+                                        @if(!empty($store->logo))
+                                            <img src="{{ asset('storage/' . $store->logo) }}"
+                                                class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
+                                        @endif
+                                    </div>
                                     <div class="text-center mt-4">
                                         <button type="button" onclick="confirmDelete('logo')" 
                                                 class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-md">
@@ -120,12 +124,16 @@
                                         <input type="file" id="hero-upload" name="hero_image" accept="image/*" class="hidden" onchange="previewHero(this)">
                                     </div>
                                 </div>
-@if($store && isset($store->hero_image) && !empty($store->hero_image))
+                                @if(!empty($store->hero_image))
                                 <div class="space-y-4">
                                     <h4 class="text-lg font-bold text-gray-900">Hero Saat Ini</h4>
                                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
-                                        <img src="{{ asset('storage/' . $store->hero_image) }}" alt="Hero" 
-                                             class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
+                                        <div id="hero-preview-container">
+                                            @if(!empty($store->hero_image))
+                                                <img src="{{ asset('storage/' . $store->hero_image) }}"
+                                                    class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
+                                            @endif
+                                        </div>
                                         <div class="text-center mt-4">
                                             <button type="button" onclick="confirmDelete('hero')" 
                                                     class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-md">
@@ -197,15 +205,15 @@
                                     <i class="fab fa-instagram text-sm"></i>
                                 </a>
                                 @endif
-                                @if($store && $store->facebook)
-                                <a href="https://facebook.com/{{ $store->facebook }}" target="_blank" 
-                                   class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
+                                @if(isset($store->facebook) && !empty($store->facebook))
+                                <a href="{{ str_contains($store->facebook, 'facebook.com') ? 'https://' . ltrim($store->facebook, 'https://') : 'https://facebook.com/' . $store->facebook }}" target="_blank" 
+                                class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
                                     <i class="fab fa-facebook-f text-sm"></i>
                                 </a>
                                 @endif
-                                @if($store && $store->whatsapp)
+                                @if(isset($store->whatsapp) && !empty($store->whatsapp))
                                 <a href="https://wa.me/{{ preg_replace('/\D/', '', $store->whatsapp) }}" target="_blank" 
-                                   class="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
+                                class="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
                                     <i class="fab fa-whatsapp text-sm"></i>
                                 </a>
                                 @endif
@@ -222,8 +230,10 @@
                         <div class="space-y-6">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Link Embed Maps (Peta di Website) *</label>
-                                <input type="url" name="google_maps_link" value="{{ old('google_maps_link', $store->google_maps_link ?? '') }}" 
+                                <input type="url" name="google_maps_link" value="{{ old('google_maps_link', $store->google_maps_link ?? '') }}"
+
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+
                                        placeholder="https://www.google.com/maps/embed?pb=...">
                                 <p class="mt-2 text-xs text-gray-500">Salin dari tab "Embed peta" di Google Maps → Share</p>
                             </div>
@@ -235,12 +245,11 @@
                                 <p class="mt-2 text-xs text-gray-500">Salin link pendek dari tab "Kirim tautan" di Google Maps</p>
                             </div>
                         </div>
-
-                        @if($store && $store->google_maps_link)
+                        @if(isset($store->google_maps_link) && !empty($store->google_maps_link))
                         <div class="border-t pt-6">
                             <h4 class="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900">Preview Peta</h4>
                             <div class="rounded-2xl border-4 border-red-500/20 overflow-hidden shadow-2xl max-h-96">
-                                <iframe src="{{ $store->google_maps_link }}" width="100%" height="400" style="border:0; border-radius: 1rem;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <iframe src="{{ $store->google_maps_link ?? '' }}" width="100%" height="400" style="border:0; border-radius: 1rem;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
                         </div>
                         @endif
@@ -463,6 +472,194 @@ if (window.Turbo) {
 }
 
 document.addEventListener('DOMContentLoaded', initStoreTabs);
+=======
+let progressFields = ['store_name', 'description', 'address', 'city', 'phone', 'email', 'open_days', 'open_hours'];
+
+function setTabActive(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+    document.querySelectorAll('#tabs-nav button').forEach(b => {
+        b.classList.remove('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
+        b.classList.add('hover:bg-red-50');
+    });
+
+    const tabEl = document.getElementById(tabId);
+    if (tabEl) tabEl.classList.remove('hidden');
+
+    const btn = document.querySelector(`#tabs-nav button[data-tab="${tabId}"]`);
+    if (btn) {
+        btn.classList.add('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
+        btn.classList.remove('hover:bg-red-50');
+    }
+}
+
+
+// Tab switching
+document.querySelectorAll('#tabs-nav button[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        setTabActive(tabId);
+        updateProgress();
+    });
+});
+
+// Active tab init
+setTabActive('basic');
+
+
+// Image previews
+function previewLogo(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            let previewContainer = document.getElementById('logo-preview-container');
+
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = `
+                <img src="${e.target.result}" 
+                     class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
+            `;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function previewHero(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            let previewContainer = document.getElementById('hero-preview-container');
+
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = `
+                <img src="${e.target.result}" 
+                     class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
+            `;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Delete confirmations
+function confirmDelete(type) {
+    if (confirm(`Yakin ingin menghapus ${type === 'logo' ? 'logo' : 'gambar hero'}?`)) {
+        document.getElementById(`delete-${type}-form`).submit();
+    }
+}
+
+function resetForm() {
+    location.reload();
+}
+
+// Progress calculation
+function updateProgress() {
+    let complete = 0;
+    progressFields.forEach(field => {
+        const input = document.querySelector(`[name="${field}"]`);
+        if (input && input.value.trim()) complete++;
+    });
+    
+    const percent = Math.round((complete / progressFields.length) * 100);
+    document.getElementById('progress-percent').textContent = `${percent}%`;
+    document.getElementById('progress-bar').style.width = `${percent}%`;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+    updateProgress();
+
+    document.querySelectorAll('input, textarea').forEach(el => {
+        el.addEventListener('input', updateProgress);
+    });
+    // default active styling already handled by setTabActive('basic')
+});
+
+// Form validation
+document.getElementById('store-form').addEventListener('submit', function(e) {
+
+    const required = document.querySelectorAll('[required]');
+    let valid = true;
+    let firstInvalid = null;
+
+    required.forEach(field => {
+
+        const value = field.value?.trim();
+
+        if (!value) {
+
+            field.classList.add('border-red-500');
+
+            if (!firstInvalid) {
+                firstInvalid = field;
+            }
+
+            valid = false;
+
+        } else {
+
+            field.classList.remove('border-red-500');
+
+        }
+
+    });
+
+    if (!valid) {
+
+        e.preventDefault();
+
+        alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
+
+        if (firstInvalid) {
+
+            const tab = firstInvalid.closest('.tab-content');
+
+            if (tab) {
+                setTabActive(tab.id);
+            }
+
+            firstInvalid.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            firstInvalid.focus();
+        }
+
+        return;
+    }
+
+    // loading button
+    const btn = document.getElementById('save-btn');
+
+    btn.disabled = true;
+
+    btn.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i>
+        Menyimpan...
+    `;
+});
+
 </script>
+
+@if ($errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const firstError = document.querySelector('.text-red-600');
+
+    if (firstError) {
+        const tab = firstError.closest('.tab-content');
+
+        if (tab) {
+            setTabActive(tab.id);
+        }
+    }
+});
+</script>
+@endif
 @endpush
 @endsection
