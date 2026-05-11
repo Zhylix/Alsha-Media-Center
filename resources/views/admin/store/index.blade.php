@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('admin.store.update') }}" enctype="multipart/form-data" id="store-form" class="space-y-6">
+    <form method="POST" action="{{ route('admin.store.update') }}" enctype="multipart/form-data" id="store-form" class="space-y-6" data-turbo="false">
         @csrf @method('PUT')
         
         {{-- Tabs Navigation --}}
@@ -34,7 +34,7 @@
                 @endphp
                 @foreach($tabs as $tab)
                 <button type="button" data-tab="{{ $tab['id'] }}" 
-                        class="flex-1 py-4 px-6 text-sm font-semibold border-b-2 transition-all duration-200 hover:bg-red-50 @if($loop->first) bg-white border-red-500 text-red-700 shadow-sm @else text-gray-600 border-transparent hover:border-red-200 hover:text-red-700 @endif items-center gap-2">
+                        class="flex-1 py-4 px-6 text-sm font-semibold border-b-2 transition-all duration-200 hover:bg-red-50 text-gray-600 border-transparent hover:border-red-200 hover:text-red-700 items-center gap-2">
                     <i class="fas {{ $tab['icon'] }} text-xs"></i>
                     {{ $tab['title'] }}
                 </button>
@@ -304,108 +304,165 @@
 
 @push('scripts')
 <script>
-let formData = @json($store ?? (object) []);
-let progressFields = ['store_name', 'description', 'address', 'city', 'phone', 'email', 'open_days', 'open_hours'];
+function initStoreTabs() {
 
-// Tab switching
-document.querySelectorAll('[data-tab]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const tabId = e.target.dataset.tab;
-        
-        // Hide all tabs
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-        document.querySelectorAll('#tabs-nav button').forEach(b => {
-            b.classList.remove('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
-            b.classList.add('hover:bg-red-50');
+    // =========================
+    // TAB FUNCTION
+    // =========================
+    function activateTab(tabId) {
+
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
         });
-        
-        // Show selected
-        document.getElementById(tabId).classList.remove('hidden');
-        e.target.classList.add('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
-        e.target.classList.remove('hover:bg-red-50');
-        
-        updateProgress();
-    });
-});
 
-// Image previews
-function previewLogo(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Replace current logo preview or show new
-            let preview = document.querySelector('#branding img[src*="storage"]') || 
-                         document.createElement('img');
-            preview.src = e.target.result;
-            preview.className = 'w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4';
-            // Insert if new
-            if (!preview.parentNode.querySelector('img')) {
-                document.querySelector('#branding .space-y-4:last-child').querySelector('.bg-gradient-to-br').appendChild(preview);
+        document.querySelectorAll('#tabs-nav button').forEach(btn => {
+            btn.classList.remove(
+                'bg-white',
+                'border-red-500',
+                'text-red-700',
+                'shadow-sm'
+            );
+            // Add default classes
+            btn.classList.add(
+                'text-gray-600',
+                'border-transparent',
+                'hover:bg-red-50',
+                'hover:border-red-200',
+                'hover:text-red-700'
+            );
+        });
+
+        const activeTab = document.getElementById(tabId);
+
+        if (activeTab) {
+            activeTab.classList.remove('hidden');
+        }
+
+        const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+
+        if (activeBtn) {
+            activeBtn.classList.remove(
+                'text-gray-600',
+                'border-transparent',
+                'hover:bg-red-50',
+                'hover:border-red-200',
+                'hover:text-red-700'
+            );
+            activeBtn.classList.add(
+                'bg-white',
+                'border-red-500',
+                'text-red-700',
+                'shadow-sm'
+            );
+        }
+    }
+
+    // =========================
+    // TAB CLICK - EVENT DELEGATION
+    // =========================
+    const tabsNav = document.getElementById('tabs-nav');
+
+    if (tabsNav) {
+        tabsNav.addEventListener('click', function (e) {
+            const btn = e.target.closest('button[data-tab]');
+
+            if (!btn) {
+                return;
             }
-        }
-        reader.readAsDataURL(input.files[0]);
+
+            e.preventDefault();
+            const tabId = btn.dataset.tab;
+
+            if (!tabId) {
+                return;
+            }
+
+            localStorage.setItem('activeStoreTab', tabId);
+            window.location.hash = tabId;
+            activateTab(tabId);
+        });
+    }
+
+    // =========================
+    // INIT TAB
+    // =========================
+    const hashTab = window.location.hash.replace('#', '');
+    const storedTab = localStorage.getItem('activeStoreTab');
+    const initialTab = hashTab && document.getElementById(hashTab)
+        ? hashTab
+        : (storedTab && document.getElementById(storedTab)
+            ? storedTab
+            : 'basic');
+
+    activateTab(initialTab);
+
+    if (initialTab !== 'basic') {
+        window.location.hash = initialTab;
+    }
+
+    // =========================
+    // FORM SUBMIT
+    // =========================
+    const form = document.getElementById('store-form');
+
+    if (form) {
+
+        form.addEventListener('submit', function (e) {
+
+            // RESET ERROR
+            document.querySelectorAll('[required]').forEach(field => {
+                field.classList.remove('border-red-500');
+            });
+
+            let valid = true;
+
+            // VALIDASI SEMUA FIELD REQUIRED
+            document.querySelectorAll('[required]').forEach(field => {
+
+                if (!field.value.trim()) {
+
+                    field.classList.add('border-red-500');
+
+                    valid = false;
+
+                    // buka tab field error
+                    const tabContent = field.closest('.tab-content');
+
+                    if (tabContent) {
+                        activateTab(tabContent.id);
+                    }
+
+                }
+
+            });
+
+            if (!valid) {
+                e.preventDefault();
+                alert('Mohon lengkapi semua field wajib.');
+                return false;
+            }
+
+            // disable button biar ga double submit
+            const btn = document.getElementById('save-btn');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Menyimpan...
+                `;
+            }
+
+        });
+
     }
 }
 
-function previewHero(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            let preview = document.querySelector('#branding img[src*="hero"]') || document.createElement('img');
-            preview.src = e.target.result;
-            preview.className = 'w-64 h-40 mx-auto object-cover rounded-xl shadow-lg';
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
+if (window.Turbo) {
+    document.addEventListener('turbo:load', initStoreTabs);
 }
 
-// Delete confirmations
-function confirmDelete(type) {
-    if (confirm(`Yakin ingin menghapus ${type === 'logo' ? 'logo' : 'gambar hero'}?`)) {
-        document.getElementById(`delete-${type}-form`).submit();
-    }
-}
-
-function resetForm() {
-    location.reload();
-}
-
-// Progress calculation
-function updateProgress() {
-    let complete = 0;
-    progressFields.forEach(field => {
-        const input = document.querySelector(`[name="${field}"]`);
-        if (input && input.value.trim()) complete++;
-    });
-    
-    const percent = Math.round((complete / progressFields.length) * 100);
-    document.getElementById('progress-percent').textContent = `${percent}%`;
-    document.getElementById('progress-bar').style.width = `${percent}%`;
-}
-
-// Init
-document.addEventListener('DOMContentLoaded', updateProgress);
-
-// Form validation
-document.getElementById('store-form').addEventListener('submit', function(e) {
-    const required = document.querySelectorAll('[required]');
-    let valid = true;
-    
-    required.forEach(field => {
-        if (!field.value.trim()) {
-            field.classList.add('border-red-500');
-            valid = false;
-        } else {
-            field.classList.remove('border-red-500');
-        }
-    });
-    
-    if (!valid) {
-        e.preventDefault();
-        alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
-        document.querySelector('#basic').scrollIntoView({ behavior: 'smooth' });
-    }
-});
+document.addEventListener('DOMContentLoaded', initStoreTabs);
 </script>
 @endpush
 @endsection
