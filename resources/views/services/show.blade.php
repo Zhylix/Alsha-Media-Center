@@ -121,17 +121,20 @@
             <div class="service-card p-8 rounded-2xl">
                 <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}</div>
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between py-3 border-b border-red-600/10">
-                        <span class="text-gray-600 text-sm">Harga</span>
-                        <span class="text-red-600 font-bold">{{ $service->price_range }}</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 text-sm">Harga Jasa</span>
+                        <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex items-center justify-between py-3 border-b border-red-600/10">
-                        <span class="text-gray-600 text-sm">Estimasi Waktu</span>
-                        <span class="text-gray-900 font-semibold">{{ $service->estimated_days }} hari kerja</span>
+                        <span class="text-gray-600 text-sm">Harga Sparepart</span>
+                        <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_end, 0, ',', '.') }}</span>
                     </div>
-                    <div class="flex items-center justify-between py-3">
-                        <span class="text-gray-600 text-sm">Garansi</span>
-                        <span class="text-red-600 font-semibold">30 Hari</span>
+                    <div>
+                        <div class="flex items-center justify-between py-3">
+                            <span class="text-lg text-black font-semibold">Total Harga</span>
+                            <span class="text-red-600 font-semibold text-lg">Rp {{ number_format($service->price_start + $service->price_end, 0, ',', '.') }}</span>
+                        </div>
+                        <span class="text-sm text-gray-500">Total dihitung realtime (jasa + sparepart).</span>
                     </div>
                 </div>
             </div>

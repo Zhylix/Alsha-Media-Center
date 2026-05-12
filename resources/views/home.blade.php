@@ -112,8 +112,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             @if($stats_items->count() > 0)
                 <div class="grid grid-cols-2 md:grid-cols-{{ min($stats_items->count(), 4) }} lg:grid-cols-{{ $stats_items->count() }} gap-4 lg:gap-6 justify-items-center">
                     @foreach($stats_items as $stat)
-                        <div class="group bg-white border border-gray-100 p-4 md:p-5 lg:p-6 text-center shadow-sm hover:shadow-md hover:border-red-100 transition-all duration-300 max-w-xs w-full mx-auto">
-                            <div class="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-[#C8000A] flex items-center justify-center mb-3 md:mb-4 mx-auto">
+                        <div class="group bg-white border border-gray-300 p-4 md:p-5 lg:p-6 text-center shadow-sm hover:shadow-md hover:border-red-100 transition-all duration-300 max-w-xs w-full mx-auto rounded-sm">
+                            <div class="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-[#C8000A] flex items-center justify-center mb-3 md:mb-4 mx-auto rounded-xs">
                                 <i class="{{ $stat->icon }} text-white text-xs md:text-sm lg:text-base"></i>
                             </div>
                             <div class="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 stat-number lg:mb-1" data-counter="{{ $stat->value }}">0</div>
@@ -157,7 +157,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
         @if($activePromos->count() > 0)
         <div class="grid gap-8 xl:grid-cols-3">
             @foreach($activePromos as $promo)
-            <div class="group bg-white border border-gray-200 rounded-[2rem] overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col">
+            <div class="group bg-white border border-gray-300 rounded-[2rem] overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col">
                 <div class="h-56 overflow-hidden bg-gray-100 flex items-center justify-center">
                     @if($promo->image)
                     <img src="{{ asset('storage/' . $promo->image) }}" alt="{{ $promo->title }}" class="w-full h-full object-cover" />
@@ -277,10 +277,12 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                             @endif
                         </div>
                         
-                        <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
-                            {{ $service->short_description ?? Str::limit($service->description, 100) }}
-                        </p>
                     </div>
+                </div>
+                <div class="px-2 mb-3">
+                    <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                        {{ $service->short_description ?? Str::limit($service->description, 100) }}
+                    </p>
                 </div>
                 
                 <!-- Divider -->

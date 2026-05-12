@@ -78,7 +78,7 @@
         </div>
 
         <div class="flex items-end">
-            <button type="submit" class="btn-primary px-6 py-3.5 rounded-xl text-white font-bold text-sm w-full">
+            <button type="32" class="btn-primary px-6 py-3.5 rounded-xl text-white font-bold text-sm w-full">
                 <i class="fas fa-plus mr-2"></i> Tambah Kategori
             </button>
         </div>
@@ -251,4 +251,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 @endsection
-

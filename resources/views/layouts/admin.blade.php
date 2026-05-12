@@ -56,13 +56,6 @@
             <a href="{{ route('admin.services.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.services.*') && !request()->routeIs('admin.service-tickets.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-tools text-red-500"></i></span> Layanan / Jasa
             </a>
-            <a href="{{ route('admin.service-tickets.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.service-tickets.*') ? 'active' : '' }}">
-                <span class="text-lg"><i class="fas fa-clipboard-list text-red-500"></i></span> Servis Masuk
-                @php $pendingTicketCount = \App\Models\ServiceTicket::where('status','pending')->count(); @endphp
-                @if($pendingTicketCount > 0)
-                <span class="ml-auto badge badge-red">{{ $pendingTicketCount }}</span>
-                @endif
-            </a>
             <a href="{{ route('admin.orders.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-shopping-cart text-red-500"></i></span> Pesanan
                 @php $pendingCount = \App\Models\Order::where('status','pending')->count(); @endphp
@@ -71,7 +64,7 @@
                 @endif
             </a>
             <a href="{{ route('admin.promos.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.promos.*') ? 'active' : '' }}">
-                <span class="text-lg"><i class="fas fa-bullhorn text-red-500"></i></span> Promo
+                <span class="text-lg"><i class="fas fa-bullhorn text-red-500"></i></span> Paket
             </a>
             <a href="{{ route('admin.spareparts.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.spareparts.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-box text-red-500"></i></span> Spareparts
@@ -130,7 +123,7 @@
                     <span></span>
                 </div>
             </div>
-            <div>
+            <div class="px-6">
                 <h1 class="text-lg font-bold text-gray-900">@yield('page-title', 'Dashboard')</h1>
                 <p class="text-xs text-gray-500">@yield('page-subtitle', 'Selamat datang di panel admin Alsha Media Center')</p>
             </div>

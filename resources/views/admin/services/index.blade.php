@@ -14,9 +14,11 @@
 <div class="service-card rounded-2xl overflow-hidden">
     <div class="overflow-x-auto">
         <table class="admin-table w-full">
-            <thead><tr>
-                <th>Nama Layanan</th><th>Kategori</th><th>Harga Mulai</th><th>Status</th><th>Featured</th><th>Aksi</th>
-            </tr></thead>
+            <thead>
+                <tr>
+                    <th>Nama Layanan</th><th>Kategori</th><th>Harga Mulai</th><th>Status</th><th>Featured</th><th>Aksi</th>
+                </tr>
+            </thead>
             <tbody>
                 @foreach($services as $service)
                 <tr>
@@ -33,7 +35,7 @@
                         <div class="flex items-center gap-2 whitespace-nowrap">
                             <span>Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
 
-                            <span class="w-4 h-px bg-[#C8000A]"></span>
+                            <span class="w-6 h-0.5 bg-[#C8000A]"></span>
 
                             <span>Rp {{ number_format($service->price_end, 0, ',', '.') }}</span>
                         </div>

@@ -311,27 +311,239 @@
 <form id="delete-logo-form" action="{{ route('admin.store.logo.delete') }}" method="POST" class="hidden">@csrf @method('DELETE')</form>
 <form id="delete-hero-form" action="{{ route('admin.store.hero.delete') }}" method="POST" class="hidden">@csrf @method('DELETE')</form>
 
+let progressFields = ['store_name', 'description', 'address', 'city', 'phone', 'email', 'open_days', 'open_hours'];
+
+function setTabActive(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+    document.querySelectorAll('#tabs-nav button').forEach(b => {
+        b.classList.remove('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
+        b.classList.add('hover:bg-red-50');
+    });
+
+    const tabEl = document.getElementById(tabId);
+    if (tabEl) tabEl.classList.remove('hidden');
+
+    const btn = document.querySelector(`#tabs-nav button[data-tab="${tabId}"]`);
+    if (btn) {
+        btn.classList.add('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
+        btn.classList.remove('hover:bg-red-50');
+    }
+}
+
+
+// Tab switching
+document.querySelectorAll('#tabs-nav button[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        setTabActive(tabId);
+        updateProgress();
+    });
+});
+
+// Active tab init
+setTabActive('basic');
+
+
+// Image previews
+function previewLogo(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            let previewContainer = document.getElementById('logo-preview-container');
+
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = `
+                <img src="${e.target.result}" 
+                     class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
+            `;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function previewHero(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            let previewContainer = document.getElementById('hero-preview-container');
+
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = `
+                <img src="${e.target.result}" 
+                     class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
+            `;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Delete confirmations
+function confirmDelete(type) {
+    if (confirm(`Yakin ingin menghapus ${type === 'logo' ? 'logo' : 'gambar hero'}?`)) {
+        document.getElementById(`delete-${type}-form`).submit();
+    }
+}
+
+function resetForm() {
+    location.reload();
+}
+
+// Progress calculation
+function updateProgress() {
+    let complete = 0;
+    progressFields.forEach(field => {
+        const input = document.querySelector(`[name="${field}"]`);
+        if (input && input.value.trim()) complete++;
+    });
+    
+    const percent = Math.round((complete / progressFields.length) * 100);
+    document.getElementById('progress-percent').textContent = `${percent}%`;
+    document.getElementById('progress-bar').style.width = `${percent}%`;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+    updateProgress();
+
+    document.querySelectorAll('input, textarea').forEach(el => {
+        el.addEventListener('input', updateProgress);
+    });
+    // default active styling already handled by setTabActive('basic')
+});
+
+// Form validation
+document.getElementById('store-form').addEventListener('submit', function(e) {
+
+    const required = document.querySelectorAll('[required]');
+    let valid = true;
+    let firstInvalid = null;
+
+    required.forEach(field => {
+
+        const value = field.value?.trim();
+
+        if (!value) {
+
+            field.classList.add('border-red-500');
+
+            if (!firstInvalid) {
+                firstInvalid = field;
+            }
+
+            valid = false;
+
+        } else {
+
+            field.classList.remove('border-red-500');
+
+        }
+
+    });
+
+    if (!valid) {
+
+        e.preventDefault();
+
+        alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
+
+        if (firstInvalid) {
+
+            const tab = firstInvalid.closest('.tab-content');
+
+            if (tab) {
+                setTabActive(tab.id);
+            }
+
+            firstInvalid.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            firstInvalid.focus();
+        }
+
+        return;
+    }
+
+    // loading button
+    const btn = document.getElementById('save-btn');
+
+    btn.disabled = true;
+
+    btn.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i>
+        Menyimpan...
+    `;
+});
+
+</script>
+
+@if ($errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const firstError = document.querySelector('.text-red-600');
+
+    if (firstError) {
+        const tab = firstError.closest('.tab-content');
+
+        if (tab) {
+            setTabActive(tab.id);
+        }
+    }
+});
+</script>
+@endif
 @push('scripts')
 <script>
-function initStoreTabs() {
+(() => {
+    'use strict';
 
-    // =========================
-    // TAB FUNCTION
-    // =========================
-    function activateTab(tabId) {
 
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.add('hidden');
-        });
+    /**
+     * Guard untuk mencegah init ganda (Turbo + DOMContentLoaded).
+     */
+    if (window.__storeProfileInitDone === true) return;
+    window.__storeProfileInitDone = true;
 
-        document.querySelectorAll('#tabs-nav button').forEach(btn => {
-            btn.classList.remove(
-                'bg-white',
-                'border-red-500',
-                'text-red-700',
-                'shadow-sm'
-            );
-            // Add default classes
+    const STORE_TAB_STORAGE_KEY = 'activeStoreTab';
+
+    // Field yang menghitung progress bar
+    const progressFields = [
+        'store_name',
+        'description',
+        'address',
+        'city',
+        'phone',
+        'email',
+        'open_days',
+        'open_hours',
+    ];
+
+    /**
+     * Ambil elemen secara aman.
+     */
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+    /**
+     * Aktifkan tab berdasarkan id.
+     */
+    function setTabActive(tabId) {
+        if (!tabId) return;
+
+        const contents = $$('.tab-content');
+        contents.forEach(tab => tab.classList.add('hidden'));
+
+        const buttons = $$('#tabs-nav button[data-tab]');
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
+            // restore style default (sesuaikan dengan HTML blade)
             btn.classList.add(
                 'text-gray-600',
                 'border-transparent',
@@ -341,14 +553,10 @@ function initStoreTabs() {
             );
         });
 
-        const activeTab = document.getElementById(tabId);
+        const activeTabEl = document.getElementById(tabId);
+        if (activeTabEl) activeTabEl.classList.remove('hidden');
 
-        if (activeTab) {
-            activeTab.classList.remove('hidden');
-        }
-
-        const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
-
+        const activeBtn = $(`#tabs-nav button[data-tab="${tabId}"]`);
         if (activeBtn) {
             activeBtn.classList.remove(
                 'text-gray-600',
@@ -357,122 +565,244 @@ function initStoreTabs() {
                 'hover:border-red-200',
                 'hover:text-red-700'
             );
-            activeBtn.classList.add(
-                'bg-white',
-                'border-red-500',
-                'text-red-700',
-                'shadow-sm'
-            );
+            activeBtn.classList.add('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
         }
     }
 
-    // =========================
-    // TAB CLICK - EVENT DELEGATION
-    // =========================
-    const tabsNav = document.getElementById('tabs-nav');
+    /**
+     * Update progress bar realtime.
+     */
+    function updateProgress() {
+        const progressPercentEl = $('#progress-percent');
+        const progressBarEl = $('#progress-bar');
+        if (!progressPercentEl || !progressBarEl) return;
 
-    if (tabsNav) {
-        tabsNav.addEventListener('click', function (e) {
+        const complete = progressFields.reduce((acc, name) => {
+            const input = $(`[name="${name}"]`);
+            if (input && String(input.value || '').trim()) return acc + 1;
+            return acc;
+        }, 0);
+
+        const percent = Math.round((complete / progressFields.length) * 100);
+        progressPercentEl.textContent = `${percent}%`;
+        progressBarEl.style.width = `${percent}%`;
+    }
+
+    /**
+     * Preview upload logo.
+     * Dipanggil lewat inline onchange="previewLogo(this)".
+     */
+    window.previewLogo = function previewLogo(input) {
+        try {
+            if (!input?.files?.[0]) return;
+
+            const previewContainer = $('#logo-preview-container');
+            if (!previewContainer) return;
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                const dataUrl = e?.target?.result;
+                if (!dataUrl) return;
+                previewContainer.innerHTML = `
+                    <img src="${dataUrl}" class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
+                `;
+            };
+            reader.readAsDataURL(input.files[0]);
+        } catch (err) {
+            // Silent fail agar tidak memutus halaman
+            console.error('previewLogo error:', err);
+        }
+    };
+
+    /**
+     * Preview upload hero.
+     * Dipanggil lewat inline onchange="previewHero(this)".
+     */
+    window.previewHero = function previewHero(input) {
+        try {
+            if (!input?.files?.[0]) return;
+
+            const previewContainer = $('#hero-preview-container');
+            if (!previewContainer) return;
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                const dataUrl = e?.target?.result;
+                if (!dataUrl) return;
+                previewContainer.innerHTML = `
+                    <img src="${dataUrl}" class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
+                `;
+            };
+            reader.readAsDataURL(input.files[0]);
+        } catch (err) {
+            console.error('previewHero error:', err);
+        }
+    };
+
+    /**
+     * Delete confirmation.
+     * Dipanggil lewat inline onclick="confirmDelete('logo')".
+     */
+    window.confirmDelete = function confirmDelete(type) {
+        const form = document.getElementById(`delete-${type}-form`);
+        if (!form) return;
+
+        const label = type === 'logo' ? 'logo' : 'gambar hero';
+        if (!confirm(`Yakin ingin menghapus ${label}?`)) return;
+
+        form.submit();
+    };
+
+    /**
+     * Reset form.
+     */
+    window.resetForm = function resetForm() {
+        location.reload();
+    };
+
+    /**
+     * Ambil id tab yang harus aktif.
+     * - Prefer error tab (jika ada)
+     * - Lalu hash
+     * - Lalu localStorage
+     * - Default: basic
+     */
+    function resolveInitialTab() {
+        // 1) Tab dari error server-side (jika ada)
+        const firstErrorEl = document.querySelector('.text-red-600');
+        if (firstErrorEl) {
+            const tab = firstErrorEl.closest('.tab-content');
+            if (tab?.id) return tab.id;
+        }
+
+        // 2) Hash
+        const hashTab = window.location.hash?.replace('#', '');
+        if (hashTab && document.getElementById(hashTab)) return hashTab;
+
+        // 3) localStorage
+        const stored = localStorage.getItem(STORE_TAB_STORAGE_KEY);
+        if (stored && document.getElementById(stored)) return stored;
+
+        return 'basic';
+    }
+
+    /**
+     * Init event handler.
+     */
+    function init() {
+        const storeForm = $('#store-form');
+        const tabsNav = $('#tabs-nav');
+        if (!storeForm || !tabsNav) return;
+
+        // Aktifkan tab awal
+        const initialTab = resolveInitialTab();
+        setTabActive(initialTab);
+
+        // Simpan ke storage saat berubah
+        tabsNav.addEventListener('click', (e) => {
             const btn = e.target.closest('button[data-tab]');
+            if (!btn) return;
 
-            if (!btn) {
-                return;
-            }
+            const tabId = btn.dataset.tab;
+            if (!tabId) return;
 
             e.preventDefault();
-            const tabId = btn.dataset.tab;
 
-            if (!tabId) {
-                return;
-            }
-
-            localStorage.setItem('activeStoreTab', tabId);
+            setTabActive(tabId);
+            localStorage.setItem(STORE_TAB_STORAGE_KEY, tabId);
             window.location.hash = tabId;
-            activateTab(tabId);
+
+            // progress update
+            updateProgress();
+        }, { passive: false });
+
+        // Progress realtime
+        // Gunakan event delegation pada form biar tidak perlu binding per input
+        storeForm.addEventListener('input', (e) => {
+            const t = e.target;
+            if (!t) return;
+            if (t.matches('input, textarea')) updateProgress();
         });
-    }
+        storeForm.addEventListener('change', (e) => {
+            const t = e.target;
+            if (!t) return;
+            if (t.matches('input, textarea')) updateProgress();
+        });
 
-    // =========================
-    // INIT TAB
-    // =========================
-    const hashTab = window.location.hash.replace('#', '');
-    const storedTab = localStorage.getItem('activeStoreTab');
-    const initialTab = hashTab && document.getElementById(hashTab)
-        ? hashTab
-        : (storedTab && document.getElementById(storedTab)
-            ? storedTab
-            : 'basic');
+        // Validasi + buka tab error + loading state
+        storeForm.addEventListener('submit', (e) => {
+            // reset style error
+            $$('.required-error-guard').forEach(el => el.classList.remove('required-error-guard'));
 
-    activateTab(initialTab);
-
-    if (initialTab !== 'basic') {
-        window.location.hash = initialTab;
-    }
-
-    // =========================
-    // FORM SUBMIT
-    // =========================
-    const form = document.getElementById('store-form');
-
-    if (form) {
-
-        form.addEventListener('submit', function (e) {
-
-            // RESET ERROR
-            document.querySelectorAll('[required]').forEach(field => {
-                field.classList.remove('border-red-500');
-            });
-
+            const requiredFields = $$('[required]', storeForm);
             let valid = true;
+            let firstInvalid = null;
 
-            // VALIDASI SEMUA FIELD REQUIRED
-            document.querySelectorAll('[required]').forEach(field => {
-
-                if (!field.value.trim()) {
-
-                    field.classList.add('border-red-500');
-
+            requiredFields.forEach(field => {
+                const val = String(field.value || '').trim();
+                if (!val) {
                     valid = false;
-
-                    // buka tab field error
-                    const tabContent = field.closest('.tab-content');
-
-                    if (tabContent) {
-                        activateTab(tabContent.id);
-                    }
-
+                    field.classList.add('border-red-500');
+                    if (!firstInvalid) firstInvalid = field;
+                } else {
+                    field.classList.remove('border-red-500');
                 }
-
             });
 
             if (!valid) {
                 e.preventDefault();
-                alert('Mohon lengkapi semua field wajib.');
-                return false;
+
+                if (firstInvalid) {
+                    const tab = firstInvalid.closest('.tab-content');
+                    if (tab?.id) setTabActive(tab.id);
+
+                    // scroll + fokus biar user langsung ke field
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus({ preventScroll: true });
+                }
+
+                alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
+                return;
             }
 
-            // disable button biar ga double submit
-            const btn = document.getElementById('save-btn');
-
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = `
+            // Loading state submit
+            const saveBtn = $('#save-btn');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = `
                     <i class="fas fa-spinner fa-spin"></i>
                     Menyimpan...
                 `;
             }
-
         });
 
+        // set initial progress
+        updateProgress();
+
+        // kalau ada hash tab, simpan
+        const hashTab = window.location.hash?.replace('#', '');
+        if (hashTab) localStorage.setItem(STORE_TAB_STORAGE_KEY, hashTab);
+
+        // sync style active tab saat load pertama
+        setTabActive(initialTab);
     }
-}
 
-if (window.Turbo) {
-    document.addEventListener('turbo:load', initStoreTabs);
-}
+    let turboBusy = false;
+    function initOncePerVisit() {
+        if (turboBusy) return;
+        turboBusy = true;
+        try {
+            init();
+        } finally {
+            turboBusy = false;
+        }
+    }
 
-document.addEventListener('DOMContentLoaded', initStoreTabs);
-=======
+    document.addEventListener('turbo:load', initOncePerVisit);
+    document.addEventListener('DOMContentLoaded', initOncePerVisit);
+})();
+</script>
+@endpush
 let progressFields = ['store_name', 'description', 'address', 'city', 'phone', 'email', 'open_days', 'open_hours'];
 
 function setTabActive(tabId) {
