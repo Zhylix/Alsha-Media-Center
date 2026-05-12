@@ -31,10 +31,10 @@
 <section class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
 
-        @if($promos->count() > 0)
+        @if($pakets->count() > 0)
         <div class="flex items-center justify-between mb-10">
             <p class="text-sm text-gray-400 font-medium">
-                Menampilkan <strong class="text-gray-800">{{ $promos->count() }}</strong> paket aktif
+                Menampilkan <strong class="text-gray-800">{{ $pakets->count() }}</strong> paket aktif
             </p>
             <div class="flex items-center gap-2 text-xs text-[#C8000A] font-black uppercase tracking-wider">
                 <i class="fas fa-fire"></i> Segera berakhir
@@ -42,29 +42,29 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($promos as $promo)
+            @foreach($pakets as $paket)
             <div class="group bg-white border border-gray-100 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-gray-200/80 hover:border-gray-200 flex flex-col h-full relative">
 
                 <div class="h-1 w-full bg-gray-100 group-hover:bg-[#C8000A] transition-colors duration-300"></div>
 
                 <div class="relative aspect-[16/9] overflow-hidden bg-gray-50">
-                    @if($promo->image)
-                    <img src="{{ asset('storage/' . $promo->image) }}" alt="{{ $promo->title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    @if($paket->image)
+                    <img src="{{ asset('storage/' . $paket->image) }}" alt="{{ $paket->title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     @else
                     <div class="w-full h-full bg-[#C8000A] flex items-center justify-center">
                         <i class="fas fa-tags text-white/20 text-6xl"></i>
                     </div>
                     @endif
 
-                    @if($promo->discount_info)
+                    @if($paket->discount_info)
                     <div class="absolute top-4 left-4">
                         <div class="px-3 py-1.5 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider shadow-lg">
-                            {{ $promo->discount_info }}
+                            {{ $paket->discount_info }}
                         </div>
                     </div>
                     @endif
 
-                    @if($promo->end_date && $promo->end_date->isFuture())
+                    @if($paket->end_date && $paket->end_date->isFuture())
                     <div class="absolute top-4 right-4">
                         <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-gray-800 text-[10px] font-black uppercase tracking-wider shadow-sm">
                             <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
@@ -73,15 +73,15 @@
                     </div>
                     @endif
 
-                    <a href="/paket/{{ $promo->slug }}" class="absolute inset-0 z-10" aria-label="Lihat detail paket"></a>
+                    <a href="/paket/{{ $paket->slug }}" class="absolute inset-0 z-10" aria-label="Lihat detail paket"></a>
                 </div>
 
                 <div class="p-7 flex flex-col flex-grow">
                     <h2 class="text-xl font-black text-gray-900 mb-3 leading-tight group-hover:text-[#C8000A] transition-colors">
-                        {{ $promo->title }}
+                        {{ $paket->title }}
                     </h2>
 
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">{{ $promo->description }}</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">{{ $paket->description }}</p>
 
                     <div class="mt-auto space-y-4">
                         <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100">
@@ -91,13 +91,13 @@
                                 </div>
                                 <div>
                                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.12em]">Berlaku Hingga</p>
-                                    <p class="text-sm font-black text-gray-900">{{ $promo->end_date?->format('d M Y') }}</p>
+                                    <p class="text-sm font-black text-gray-900">{{ $paket->end_date?->format('d M Y') }}</p>
                                 </div>
                             </div>
 
                             @php
-                                $daysLeft = $promo->end_date?->isFuture()
-                                    ? floor(now()->diffInDays($promo->end_date, false))
+                                $daysLeft = $paket->end_date?->isFuture()
+                                    ? floor(now()->diffInDays($paket->end_date, false))
                                     : null;
                             @endphp
                             @if(!is_null($daysLeft))
@@ -110,7 +110,7 @@
                             @endif
                         </div>
 
-                        <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($promo->title) }}"
+                        <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($paket->title) }}"
                            target="_blank"
                            class="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors">
                             <i class="fab fa-whatsapp text-base"></i>

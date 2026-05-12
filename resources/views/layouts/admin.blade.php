@@ -63,7 +63,11 @@
                 <span class="ml-auto badge badge-red">{{ $pendingCount }}</span>
                 @endif
             </a>
+<<<<<<< HEAD
             <a href="{{ route('admin.promos.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.promos.*') ? 'active' : '' }}">
+=======
+            <a href="{{ route('admin.pakets.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.pakets.*') ? 'active' : '' }}">
+>>>>>>> ffe3b36 (feat: dropdown for sparepart create)
                 <span class="text-lg"><i class="fas fa-bullhorn text-red-500"></i></span> Paket
             </a>
             <a href="{{ route('admin.spareparts.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('admin.spareparts.*') ? 'active' : '' }}">

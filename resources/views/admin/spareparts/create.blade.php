@@ -64,10 +64,9 @@
             $partTypesByService = $categories->groupBy('service_category');
         @endphp
 
-        {{-- Step 1: Kategori Service --}}
-        <div id="step1" class="space-y-3">
+        {{-- Dropdown Service + Jenis Sparepart tampil bersamaan (tanpa step) --}}
+        <div class="space-y-3">
             <div>
-
                 <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                     Kategori Service <span class="text-[#C8000A]">*</span>
                 </label>
@@ -88,56 +87,51 @@
                 @error('service_category')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
             </div>
 
-            <button type="button" id="toStep2" class="btn-primary px-6 py-3 rounded-xl text-white font-bold">
-                Lanjut
-            </button>
-
-            {{-- Step 2: Jenis Sparepart di bawah Kategori (tetap tampil sebagai langkah 2) --}}
-            <div class="hidden" id="jenisPreview" aria-hidden="true"></div>
-        </div>
-
-        {{-- Step 2: Jenis Sparepart (final submit) --}}
-            <div id="step2" class="space-y-3 hidden">
+            <div class="space-y-3">
                 <div class="rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700 font-semibold">
                     Jenis Sparepart
-            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
-                Jenis Sparepart <span class="text-[#C8000A]">*</span>
-            </label>
+                    <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                        Jenis Sparepart <span class="text-[#C8000A]">*</span>
+                    </label>
 
-            <select name="part_type" id="partTypeSelect" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
-                <option value="">-- Pilih jenis --</option>
-                @if(old('service_category'))
-                    @foreach($partTypesByService->get(old('service_category'), collect())->pluck('part_type')->unique()->values() as $pt)
-                        <option value="{{ $pt }}" {{ old('part_type') === $pt ? 'selected' : '' }}>{{ $pt }}</option>
-                    @endforeach
-                @endif
-                <option value="__new__">+ Tambah jenis baru...</option>
-            </select>
-            @error('part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+                    <select name="part_type" id="partTypeSelect" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+                        <option value="">-- Pilih jenis --</option>
+                        @if(old('service_category'))
+                            @foreach($partTypesByService->get(old('service_category'), collect())->pluck('part_type')->unique()->values() as $pt)
+                                <option value="{{ $pt }}" {{ old('part_type') === $pt ? 'selected' : '' }}>{{ $pt }}</option>
+                            @endforeach
+                        @endif
+                        <option value="__new__">+ Tambah jenis baru...</option>
+                    </select>
+                    @error('part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
 
-            {{-- Input untuk jenis sparepart baru --}}
-            <div id="newPartTypeContainer" class="hidden">
-                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
-                    Jenis Sparepart Baru <span class="text-[#C8000A]">*</span>
-                </label>
-                <input type="text" name="new_part_type" id="newPartTypeInput" 
-                       class="form-input px-4 py-3.5 rounded-xl text-sm w-full" 
-                       placeholder="Contoh: SSD NVMe, RAM DDR5, dll.">
-                @error('new_part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+                    {{-- Input untuk jenis sparepart baru --}}
+                    <div id="newPartTypeContainer" class="hidden">
+                        <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                            Jenis Sparepart Baru <span class="text-[#C8000A]">*</span>
+                        </label>
+                        <input type="text" name="new_part_type" id="newPartTypeInput" 
+                               class="form-input px-4 py-3.5 rounded-xl text-sm w-full" 
+                               placeholder="Contoh: SSD NVMe, RAM DDR5, dll.">
+                        @error('new_part_type')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+                    </div>
+
+                    {{-- hidden untuk menyimpan kombinasi service + part_type --}}
+                    <input type="hidden" name="sparepart_category_id" id="sparepartCategoryId" value="" required>
+                    @error('sparepart_category_id')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+
+                    <p class="text-[11px] text-gray-500 mt-1">Sparepart dipilih berdasarkan kombinasi service + jenis.</p>
+
+                    <div class="flex items-center gap-3">
+                        {{-- tombol kembali dihapus karena tidak pakai step --}}
+                    </div>
+                </div>
             </div>
 
-            {{-- hidden untuk menyimpan kombinasi service + part_type --}}
-            <input type="hidden" name="sparepart_category_id" id="sparepartCategoryId" value="" required>
-            @error('sparepart_category_id')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
-
-            <p class="text-[11px] text-gray-500 mt-1">Sparepart dipilih berdasarkan kombinasi service + jenis.</p>
-
-            <div class="flex items-center gap-3">
-                <button type="button" id="backToStep1" class="btn-outline px-6 py-3 rounded-xl text-red-600 font-bold">
-                    Kembali
-                </button>
-            </div>
+            {{-- penutup konten step (dibuat untuk menjaga struktur lama) --}}
         </div>
+
+        {{-- End dropdown service + jenis --}}
 
 
         <div class="flex items-center gap-3">
@@ -327,51 +321,7 @@
         }
         setHiddenSpareCategoryId();
 
-        // jika step 2 sudah valid terpilih, tampilkan step 2
-        const step1El = document.getElementById('step1');
-        const step2El = document.getElementById('step2');
-        if(step1El && step2El){
-            if(serviceSel.value && (partSel.value || (partSel.value === '__new__' && newPartTypeInput.value.trim()))){
-                step1El.classList.add('hidden');
-                step2El.classList.remove('hidden');
-            }
-        }
 
-        // step navigation
-        const toStep2Btn = document.getElementById('toStep2');
-        const backToStep1Btn = document.getElementById('backToStep1');
-
-        if(toStep2Btn){
-            toStep2Btn.addEventListener('click', function(){
-                if(!serviceSel.value){
-                    serviceSel.reportValidity && serviceSel.reportValidity();
-                    return;
-                }
-                // isi part type list berdasarkan kategori
-                refreshPartTypes();
-                // pindah step
-                if(step1El && step2El){
-                    step1El.classList.add('hidden');
-                    step2El.classList.remove('hidden');
-                }
-                // reset hidden id
-                spareCatIdEl.value = '';
-                // focus ke part type select
-                partSel.focus();
-            });
-        }
-
-        if(backToStep1Btn){
-            backToStep1Btn.addEventListener('click', function(){
-                if(step1El && step2El){
-                    step2El.classList.add('hidden');
-                    step1El.classList.remove('hidden');
-                }
-                // saat kembali ke step 1, reset jenis
-                partSel.value = '';
-                spareCatIdEl.value = '';
-            });
-        }
 
         // Form submit validation
         const form = document.querySelector('form');

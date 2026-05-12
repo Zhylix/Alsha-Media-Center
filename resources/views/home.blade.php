@@ -137,7 +137,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
 
 <!-- ===================== PAKET -->
-@if($activePromos->count() > 0 && ($laptopServices->count() > 0 || $printerServices->count() > 0 || $pcServices->count() > 0))
+@if($activePakets->count() > 0 && ($laptopServices->count() > 0 || $printerServices->count() > 0 || $pcServices->count() > 0))
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-14">
@@ -147,20 +147,20 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Paket Service</span>
                 </div>
                 <h2 class="text-4xl font-black text-gray-900 tracking-tight">Paket <span class="text-[#C8000A]">Service</span></h2>
-                <p class="mt-4 text-gray-500">Kelola paket promo langsung dari admin panel. Setiap paket yang aktif akan tampil di halaman home dalam format card sederhana dan elegan.</p>
+                <p class="mt-4 text-gray-500">Kelola paket penawaran langsung dari admin panel. Setiap paket yang aktif akan tampil di halaman home dalam format card sederhana dan elegan.</p>
             </div>
             <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC%2C%20saya%20ingin%20mengetahui%20detail%20paket%20instal%20ulang%20Windows" target="_blank" class="btn-primary inline-flex items-center gap-3 px-6 py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-[0.15em]">
                 <i class="fab fa-whatsapp"></i> Hubungi WhatsApp
             </a>
         </div>
 
-        @if($activePromos->count() > 0)
+        @if($activePakets->count() > 0)
         <div class="grid gap-8 xl:grid-cols-3">
-            @foreach($activePromos as $promo)
-            <div class="group bg-white border border-gray-300 rounded-[2rem] overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col">
+            @foreach($activePakets as $paket)
+            <div class="group bg-white border border-gray-200 rounded-[2rem] overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col">
                 <div class="h-56 overflow-hidden bg-gray-100 flex items-center justify-center">
-                    @if($promo->image)
-                    <img src="{{ asset('storage/' . $promo->image) }}" alt="{{ $promo->title }}" class="w-full h-full object-cover" />
+                    @if($paket->image)
+                    <img src="{{ asset('storage/' . $paket->image) }}" alt="{{ $paket->title }}" class="w-full h-full object-cover" />
                     @else
                     <div class="text-center">
                         <i class="fas fa-image text-gray-300 text-4xl mb-2"></i>
@@ -171,19 +171,19 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                 <div class="px-8 py-10 flex-1 flex flex-col">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between 2gap-3 mb-5">
                         <span class="text-xs font-black uppercase tracking-[0.3em] text-[#C8000A]">Paket</span>
-                        @if($promo->discount_info)
-                        <span class="inline-flex items-center gap-2 rounded-full bg-[#FFF1F1] px-4 py-2 text-xs font-bold text-[#C8000A] uppercase">{{ $promo->discount_info }}</span>
+                        @if($paket->discount_info)
+                        <span class="inline-flex items-center gap-2 rounded-full bg-[#FFF1F1] px-4 py-2 text-xs font-bold text-[#C8000A] uppercase">{{ $paket->discount_info }}</span>
                         @endif
                     </div>
 
-                    <h3 class="text-2xl font-black text-gray-900 mb-4">{{ $promo->title }}</h3>
-                    <p class="text-gray-600 mb-6 leading-relaxed">{{ \Illuminate\Support\Str::limit($promo->description, 160) }}</p>
+                    <h3 class="text-2xl font-black text-gray-900 mb-4">{{ $paket->title }}</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">{{ \Illuminate\Support\Str::limit($paket->description, 160) }}</p>
 
                     <div class="space-y-3 text-sm text-gray-500">
-                        @if($promo->start_date && $promo->end_date)
+                        @if($paket->start_date && $paket->end_date)
                         <div class="flex items-center gap-3">
                             <span class="text-[#C8000A]"><i class="fas fa-calendar-alt"></i></span>
-                            <span>{{ $promo->start_date->format('d M Y') }} - {{ $promo->end_date->format('d M Y') }}</span>
+                            <span>{{ $paket->start_date->format('d M Y') }} - {{ $paket->end_date->format('d M Y') }}</span>
                         </div>
                         @endif
 
@@ -194,8 +194,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                         </div>
 
                         @php
-                            $daysLeft = $promo->end_date?->isFuture()
-                                ? floor(now()->diffInDays($promo->end_date, false))
+                            $daysLeft = $paket->end_date?->isFuture()
+                                ? floor(now()->diffInDays($paket->end_date, false))
                                 : null;
                         @endphp
                         @if(!is_null($daysLeft))
@@ -208,7 +208,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     </div>
 
                     <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-3">
-                        <a href="/paket/{{ $promo->slug }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors rounded-xl w-full">
+                        <a href="/paket/{{ $paket->slug }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors rounded-xl w-full">
                             Lihat Detail Paket
                             <i class="fas fa-arrow-right text-[10px]"></i>
                         </a>
@@ -222,7 +222,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
             <i class="fas fa-box-open text-5xl md:text-6xl lg:text-7xl text-gray-300 mb-6 md:mb-8"></i>
             <p class="text-xl md:text-2xl lg:text-3xl font-black text-gray-500 mb-3 md:mb-4">Belum ada paket aktif</p>
             <span class="text-base md:text-lg text-gray-400 block mb-6 md:mb-8 lg:mb-12">Tambahkan atau aktifkan paket melalui admin panel agar tampil di halaman home.</span>
-            <a href="{{ route('admin.promos.index') }}" class="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 font-bold text-sm uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all">
+            <a href="{{ route('admin.pakets.index') }}" class="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 font-bold text-sm uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all">
                 <i class="fas fa-cog"></i> Kelola Paket Admin
             </a>
         </div>

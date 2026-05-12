@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $promo->title . ' | Paket Spesial - Alsha Media Center')
+@section('title', $paket->title . ' | Paket Spesial - Alsha Media Center')
 
 @section('content')
 
@@ -9,21 +9,21 @@
             <div class="lg:w-1/2 w-full">
                 <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm">
                     <div class="aspect-[16/10] bg-gray-100 relative">
-                        @if($promo->image)
-                            <img src="{{ asset('storage/' . $promo->image) }}" alt="{{ $promo->title }}" class="w-full h-full object-cover">
+                        @if($paket->image)
+                            <img src="{{ asset('storage/' . $paket->image) }}" alt="{{ $paket->title }}" class="w-full h-full object-cover">
                         @else
                             <div class="absolute inset-0 bg-[#C8000A] flex items-center justify-center">
                                 <i class="fas fa-tags text-white/20 text-7xl"></i>
                             </div>
                         @endif
-                        @if($promo->discount_info)
+                        @if($paket->discount_info)
                             <div class="absolute top-5 left-5">
                                 <div class="px-4 py-2 rounded-full bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider shadow-lg">
-                                    {{ $promo->discount_info }}
+                                    {{ $paket->discount_info }}
                                 </div>
                             </div>
                         @endif
-                        @if($promo->end_date && $promo->end_date->isFuture())
+                        @if($paket->end_date && $paket->end_date->isFuture())
                             <div class="absolute top-5 right-5">
                                 <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 text-gray-800 text-[10px] font-black uppercase tracking-wider shadow-sm">
                                     <span class="w-2 h-2 bg-green-500 rounded-full"></span>
@@ -46,9 +46,9 @@
                     <h1 class="text-4xl font-black text-gray-900 leading-tight mb-4">
                         Paket <span class="text-[#C8000A]">Spesial</span>
                     </h1>
-                    <h2 class="text-2xl font-black text-gray-900 mb-4">{{ $promo->title }}</h2>
+                    <h2 class="text-2xl font-black text-gray-900 mb-4">{{ $paket->title }}</h2>
 
-                    <p class="text-gray-600 text-base leading-relaxed mb-8">{{ $promo->description }}</p>
+                    <p class="text-gray-600 text-base leading-relaxed mb-8">{{ $paket->description }}</p>
 
                     <div class="space-y-4 mb-8">
                         <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-2xl">
@@ -58,13 +58,13 @@
                                 </div>
                                 <div>
                                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.12em]">Berlaku Hingga</p>
-                                    <p class="text-sm font-black text-gray-900">{{ $promo->end_date?->format('d M Y') }}</p>
+                                    <p class="text-sm font-black text-gray-900">{{ $paket->end_date?->format('d M Y') }}</p>
                                 </div>
                             </div>
 
                             @php
-                                $daysLeft = $promo->end_date?->isFuture()
-                                    ? floor(now()->diffInDays($promo->end_date, false))
+                                $daysLeft = $paket->end_date?->isFuture()
+                                    ? floor(now()->diffInDays($paket->end_date, false))
                                     : null;
                             @endphp
                             @if(!is_null($daysLeft))
@@ -78,7 +78,7 @@
                         </div>
                     </div>
 
-                    <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($promo->title) }}"
+                    <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($paket->title) }}"
                        target="_blank"
                        class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors rounded-2xl">
                         <i class="fab fa-whatsapp text-base"></i>

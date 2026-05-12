@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AdminServiceTicketController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
-use App\Http\Controllers\Admin\AdminPromoController;
+use App\Http\Controllers\Admin\AdminPaketController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminStoreController;
 use App\Http\Controllers\Admin\AdminStatsController;
@@ -47,9 +47,9 @@ Route::post('/pesanan/tracking', [OrderController::class, 'tracking'])->name('or
 // Backward compatibility - renamed to avoid conflict
 Route::get('/order/success/{orderNumber}', [OrderController::class, 'success'])->name('order-success'); // was 'order.success'
 
-// Packages (converted from promos)
-Route::get('/paket', [\App\Http\Controllers\PromoController::class, 'index']);
-Route::get('/paket/{slug}', [\App\Http\Controllers\PromoController::class, 'show']);
+// Packages (Paket)
+Route::get('/paket', [\App\Http\Controllers\PaketController::class, 'index']);
+Route::get('/paket/{slug}', [\App\Http\Controllers\PaketController::class, 'show']);
 
 
 // ADMIN AUTH
@@ -68,8 +68,8 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         // Service Tickets CRUD (Repair Tracking)
         Route::resource('service-tickets', AdminServiceTicketController::class);
 
-        // Promos CRUD
-        Route::resource('promos', AdminPromoController::class);
+        // Pakets CRUD
+        Route::resource('pakets', AdminPaketController::class);
 
         // Stats CRUD
         Route::resource('stats', AdminStatsController::class)->except(['show']);
