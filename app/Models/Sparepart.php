@@ -19,7 +19,9 @@ class Sparepart extends Model
         'stock',
         'is_active',
         'sort_order',
+        'service_price',
     ];
+
 
     protected $casts = [
         'price' => 'decimal:0',

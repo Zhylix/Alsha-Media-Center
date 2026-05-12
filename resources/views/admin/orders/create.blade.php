@@ -32,11 +32,11 @@
             <h3 class="section-title"><i class="fas fa-tools"></i> Layanan *</h3>
             <div class="grid-2">
                 <div>
-                    <label class="form-label">Pilih Layanan</label>
-                    <select name="service_id" required class="form-input">
+                        <label class="form-label">Pilih Layanan</label>
+                    <select name="service_id" required class="form-input" id="serviceSelect">
                         <option value="">-- Pilih Layanan --</option>
                         @foreach($services as $service)
-                            <option value="{{ $service->id }}">{{ $service->name }} (Rp {{ number_format($service->price, 0, ',', '.') }})</option>
+                            <option value="{{ $service->id }}" data-price="{{ $service->price_start }}">{{ $service->name }} (Rp {{ number_format($service->price_start, 0, ',', '.') }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const shipmentPrice = document.querySelector('input[name="shipment_price"]');
     const shipmentDiscountPercent = document.querySelector('input[name="shipment_discount_percent"]');
     const totalDisplay = document.getElementById('total-price-display');
+    const serviceSelect = document.getElementById('serviceSelect');
 
     function discounted(amount, percent) {
         const p = parseFloat(percent.value) || 0;
@@ -113,6 +114,18 @@ document.addEventListener('DOMContentLoaded', function() {
     [servicePrice, serviceDiscountPercent, shipmentPrice, shipmentDiscountPercent].forEach(el => {
         if (el) el.addEventListener('input', updateTotal);
     });
+
+    // Auto-fill harga layanan saat admin memilih service
+    if (serviceSelect && servicePrice) {
+        serviceSelect.addEventListener('change', function(){
+            const selected = serviceSelect.options[serviceSelect.selectedIndex];
+            const price = selected?.dataset?.price;
+            if (price !== undefined) {
+                servicePrice.value = price;
+                updateTotal();
+            }
+        });
+    }
 
     updateTotal();
 });

@@ -31,7 +31,10 @@
                             <div class="bg-gray-50 rounded-xl p-4 border border-red-600/10">
                                 <div class="flex items-center justify-between text-gray-600 text-sm">
                                     <span>Harga Jasa</span>
-                                    <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
+                                    <span class="font-semibold text-gray-900" data-service-price="{{ (float) $service->price_start }}">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
+                                    <span class="hidden" data-service-price-fallback="{{ (float) $service->price_start }}"></span>
+
+
                                 </div>
                                 <div class="flex items-center justify-between text-gray-600 text-sm mt-2">
                                     <span>Harga Sparepart</span>
@@ -77,6 +80,7 @@
                                                 data-sparepart-id="{{ $spare->id }}"
                                                 data-sparepart-name="{{ $spare->name }}"
                                                 data-sparepart-price="{{ $price }}"
+                                                data-sparepart-service-price="{{ (float) ($spare->service_price ?? $service->price_start) }}"
                                                 data-service-price="{{ (float) $service->price_start }}"
                                                 data-sparepart-stock="{{ $spare->stock ?? 0 }}"
                                                 data-part-type="{{ $partType }}"
@@ -93,9 +97,11 @@
                                                     <div class="flex-1 min-w-0">
                                                         <p class="text-sm font-black text-gray-900 truncate">{{ $spare->name }}</p>
                                                         <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ Str::limit($spare->description ?? '', 80) }}</p>
-                                                        <p class="text-red-600 font-bold text-sm mt-2">Rp {{ number_format($spare->price, 0, ',', '.') }}</p>
+                                                <p class="text-red-600 font-bold text-sm mt-2">Rp {{ number_format($spare->price, 0, ',', '.') }}</p>
+                                                    <p class="text-gray-600 text-xs mt-1">Harga Jasa: Rp {{ number_format($spare->service_price ?? $service->price_start, 0, ',', '.') }}</p>
                                                     </div>
                                                 </div>
+
 
                                                 <div class="mt-3 flex items-center justify-between">
                                                     <span class="text-[11px] font-semibold text-gray-500">Stok: {{ $spare->stock ?? 0 }}</span>
@@ -258,6 +264,13 @@
         const selectedSparepartPriceEl = document.getElementById('selectedSparepartPrice');
         const selectedTotalPriceEl = document.getElementById('selectedTotalPrice');
 
+        // Ambil base price (harga jasa) dari badge ringkasan kiri.
+        // Kita pakai elemen harga jasa yang sudah ada di dalam template ini.
+        const servicePriceTextEl = document.querySelector('[data-service-price]');
+        const baseServicePrice = servicePriceTextEl
+            ? parseFloat(servicePriceTextEl.textContent.replace(/[^0-9]/g, '') || '0')
+            : 0;
+
         const formatRp = (n) => {
             try {
                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n));
@@ -279,17 +292,29 @@
             btn.addEventListener('click', function(){
                 if (btn.disabled) return;
 
+                const spareId = btn.dataset.sparepartId || '';
+
+                // toggle: klik lagi pada card yang sudah terpilih => kembali ke mode tanpa sparepart
+                if (selected && selected === spareId) {
+                    clearSelection();
+                    selectedSparepartPriceEl.textContent = formatRp(0);
+                    selectedTotalPriceEl.textContent = formatRp(baseServicePrice);
+                    selected = null;
+                    return;
+                }
+
                 clearSelection();
                 btn.classList.add('border-[#C8000A]', 'bg-red-50', 'shadow-sm');
                 btn.querySelector('.sparepart-check')?.classList.remove('hidden');
 
                 const sparePrice = parseFloat(btn.dataset.sparepartPrice || '0');
-                const servicePrice = parseFloat(btn.dataset.servicePrice || '0');
-                const total = servicePrice + sparePrice;
+                const spareServicePrice = parseFloat(btn.dataset.sparepartServicePrice || 'NaN');
+                const effectiveServicePrice = Number.isFinite(spareServicePrice) ? spareServicePrice : baseServicePrice;
+                const total = effectiveServicePrice + sparePrice;
 
                 selectedSparepartPriceEl.textContent = formatRp(sparePrice);
                 selectedTotalPriceEl.textContent = formatRp(total);
-                selected = btn.dataset.sparepartId;
+                selected = spareId;
             });
         });
     })();

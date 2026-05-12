@@ -35,6 +35,10 @@
             <div>
                 <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Harga (Rp) <span class="text-[#C8000A]">*</span></label>
 
+                <div class="mt-3 text-[11px] text-gray-500">
+                    Harga yang ditampilkan di user adalah <strong>harga sparepart</strong>.
+                </div>
+
                 {{-- input tampilan (format Rupiah). Yang dikirim ke backend adalah input hidden priceValue (angka murni) --}}
                 <input type="text"
                        id="priceInput"
@@ -52,10 +56,30 @@
             </div>
 
             <div>
-                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Stok <span class="text-[#C8000A]">*</span></label>
-                <input type="number" name="stock" value="{{ old('stock') }}" step="1" min="0" required
-                       class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
-                @error('stock')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                    Harga Jasa (Rp)
+                </label>
+
+                <input type="text"
+                       id="servicePriceInput"
+                       name="service_price_display"
+                       value="{{ old('service_price') ? 'Rp ' . number_format((float) old('service_price'), 0, ',', '.') : '' }}"
+                       inputmode="numeric"
+                       placeholder="Contoh: 50000"
+                       class="form-input px-4 py-3.5 rounded-xl text-sm w-full"
+                >
+                <input type="hidden" name="service_price" id="servicePriceValue" value="{{ old('service_price') }}">
+
+                <p class="text-[11px] text-gray-500 mt-2">
+                    Ini harga jasa yang dipakai user saat estimasi total (jasa per sparepart).
+                </p>
+
+                <div class="mt-4">
+                    <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Stok <span class="text-[#C8000A]">*</span></label>
+                    <input type="number" name="stock" value="{{ old('stock') }}" step="1" min="0" required
+                           class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+                    @error('stock')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+                </div>
             </div>
         </div>
 
@@ -171,91 +195,79 @@
         const newPartTypeContainer = document.getElementById('newPartTypeContainer');
         const newPartTypeInput = document.getElementById('newPartTypeInput');
 
-        // ========= Harga Rupiah (format tampilan) -> angka murni (hidden) =========
+        // ========= Helper: format rupiah -> tampilan =========
+        function formatRupiahNumber(n){
+            const num = Number(n);
+            if(!Number.isFinite(num)) return '';
+            try {
+                return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(num));
+            } catch (e) {
+                return 'Rp ' + String(Math.round(num));
+            }
+        }
+
+        function parseNumberFromRpInput(value){
+            if(value === null || value === undefined) return '';
+            const raw = String(value)
+                .replace(/[^0-9,]/g, '')
+                .replace(',', '.');
+            if(raw === '') return '';
+            const asNumber = Number(raw);
+            if(!Number.isFinite(asNumber)) return '';
+            return String(Math.round(asNumber));
+        }
+
+        // ========= Harga: price =========
         const priceInput = document.getElementById('priceInput');
         const priceValueEl = document.getElementById('priceValue');
 
-        function formatRupiah(value){
-            if (!value) return '';
-
-            let numberString = value.toString().replace(/[^,\d]/g, '');
-            let split = numberString.split(',');
-            let sisa = split[0].length % 3;
-            let rupiah = split[0].substr(0, sisa);
-            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            if (ribuan) {
-                let separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-
-            return 'Rp ' + rupiah;
-        }
-
-        function syncPriceHiddenFromInput(){
-            if(!priceInput || !priceValueEl) return;
-
-            // Ambil digit saja dari value tampilan
-            const raw = String(priceInput.value || '')
-            .replace(/[^0-9,]/g, '')
-            .replace(',', '.');
-            if(raw === ''){
-                priceValueEl.value = '';
-                return;
-            }
-
-            // raw dianggap bilangan bulat (admin ketik angka saja)
-            const asNumber = Number(raw);
-            if(!Number.isFinite(asNumber)){
-                priceValueEl.value = '';
-                return;
-            }
-
-            // backend validate numeric|min:0 (angka bulat aman)
-            priceValueEl.value = String(asNumber);
-            priceInput.value = formatRupiah(asNumber);
-        }
-
-        if(priceInput){
-            // init saat page load (mis. old('price'))
-            if(priceValueEl && priceValueEl.value){
-                const initNum = Number(priceValueEl.value);
-                if(Number.isFinite(initNum)) priceInput.value = formatRupiah(initNum);
-            }else{
-                // pastikan tampilan kosong
-                priceInput.value = '';
+        if(priceInput && priceValueEl){
+            // init
+            const init = priceValueEl.value;
+            if(init !== ''){
+                priceInput.value = formatRupiahNumber(init);
             }
 
             priceInput.addEventListener('input', function(e){
-                let rawValue = e.target.value
-                    .replace(/[^0-9,]/g, '');
-
-                // hanya boleh 1 koma
-                const parts = rawValue.split(',');
-                if(parts.length > 2){
-                    rawValue = parts[0] + ',' + parts[1];
+                const parsed = parseNumberFromRpInput(e.target.value);
+                priceValueEl.value = parsed;
+                if(parsed !== ''){
+                    e.target.value = formatRupiahNumber(parsed);
                 }
-
-                priceValueEl.value = rawValue.replace(',', '.');
-                e.target.value = formatRupiah(rawValue);
             });
         }
 
+        // ========= Harga Jasa: service_price =========
+        const servicePriceInput = document.getElementById('servicePriceInput');
+        const servicePriceValueEl = document.getElementById('servicePriceValue');
+
+        if(servicePriceInput && servicePriceValueEl){
+            // init
+            const init = servicePriceValueEl.value;
+            if(init !== ''){
+                servicePriceInput.value = formatRupiahNumber(init);
+            } else {
+                servicePriceInput.value = '';
+            }
+
+            servicePriceInput.addEventListener('input', function(e){
+                const parsed = parseNumberFromRpInput(e.target.value);
+                servicePriceValueEl.value = parsed;
+                if(parsed !== ''){
+                    e.target.value = formatRupiahNumber(parsed);
+                }
+            });
+        }
 
         function setHiddenSpareCategoryId(){
             const sc = serviceSel.value;
             const pt = partSel.value;
-            
-            if (pt === '__new__') {
-                // Jika memilih tambah jenis baru, kosongkan sparepart_category_id
+
+            if(pt === '__new__'){
                 spareCatIdEl.value = '';
                 newPartTypeContainer.classList.remove('hidden');
                 newPartTypeInput.required = true;
-                newPartTypeInput.focus();
             } else {
-                // Jika memilih jenis yang sudah ada
                 const match = categories.find(c => c.service_category === sc && c.part_type === pt);
                 spareCatIdEl.value = match ? match.id : '';
                 newPartTypeContainer.classList.add('hidden');
@@ -294,14 +306,13 @@
         const oldService = @json(old('service_category'));
         const oldPart = @json(old('part_type'));
         const oldNewPart = @json(old('new_part_type'));
-        
+
         if(oldService){
             serviceSel.value = oldService;
             refreshPartTypes();
         }
-        
+
         if(oldNewPart){
-            // Jika ada new_part_type dari old data, set ke __new__ dan tampilkan input
             partSel.value = '__new__';
             newPartTypeInput.value = oldNewPart;
             newPartTypeContainer.classList.remove('hidden');
@@ -309,19 +320,18 @@
         } else if(oldPart){
             partSel.value = oldPart;
         }
-        
+
         // jika sparepart_category_id sudah terisi (mis. submit gagal lalu balikan)
         if(spareCatIdEl && spareCatIdEl.value && !oldNewPart){
-            const match = categories.find(c => c.id == spareCatIdEl.value);
+            const match = categories.find(c => String(c.id) == String(spareCatIdEl.value));
             if(match){
                 serviceSel.value = match.service_category;
                 refreshPartTypes();
                 partSel.value = match.part_type;
             }
         }
+
         setHiddenSpareCategoryId();
-
-
 
         // Form submit validation
         const form = document.querySelector('form');

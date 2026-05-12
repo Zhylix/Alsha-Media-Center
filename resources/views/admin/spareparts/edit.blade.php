@@ -40,11 +40,18 @@
             </div>
 
             <div>
+                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Harga Jasa (Rp)</label>
+                <input type="number" name="service_price" value="{{ old('service_price', $sparepart->service_price ?? 0) }}" step="1" min="0" class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
+                @error('service_price')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
+            </div>
+
+            <div>
                 <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Stok <span class="text-[#C8000A]">*</span></label>
                 <input type="number" name="stock" value="{{ old('stock', $sparepart->stock) }}" step="1" min="0" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
                 @error('stock')<p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>@enderror
             </div>
         </div>
+
 
         <div>
             <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Kategori Service + Jenis <span class="text-[#C8000A]">*</span></label>
