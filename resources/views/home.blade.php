@@ -137,7 +137,7 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
 
 
 <!-- ===================== PAKET -->
-@if($activePakets->count() > 0 && ($laptopServices->count() > 0 || $printerServices->count() > 0 || $pcServices->count() > 0))
+@if($activePakets->count() > 0)
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-14">
