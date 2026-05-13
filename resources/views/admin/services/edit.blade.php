@@ -29,16 +29,17 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Jasa (Rp) *</label>
                     <input type="text"
-                    id="priceStartInput"
-                    value="{{ old('price_start', $service->price_start) ? 'Rp ' . number_format((float) old('price_start', $service->price_start), 2, ',', '.') : '' }}"
+                    id="servicePriceInput"
+                    value="{{ old('service_price', $service->price_start) ? 'Rp ' . number_format((float) old('service_price', $service->price_start), 2, ',', '.') : '' }}"
                     class="form-input w-full px-4 py-3 rounded-xl text-sm"
                     placeholder="Rp 75.000">
 
                 <input type="hidden"
-                    name="price_start"
-                    id="priceStartValue"
-                    value="{{ old('price_start', $service->price_start) }}">
+                    name="service_price"
+                    id="servicePriceValue"
+                    value="{{ old('service_price', $service->price_start) }}">
                 </div>
+
 
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Maksimal (Rp)</label>
@@ -88,49 +89,35 @@
 (function(){
 
     function formatRupiah(value){
-        if (!value && value !== 0) return '';
+        if(!value) return '';
 
-        const num = Number(value);
-        if(!Number.isFinite(num)) return '';
-
-        try {
-            return 'Rp ' + num.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        } catch (e) {
-            const parts = num.toFixed(2).split('.');
-            const intPart = parts[0];
-            const frac = parts[1];
-            const withDots = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            return 'Rp ' + withDots + ',' + frac;
-        }
+        return 'Rp ' + Number(value).toLocaleString('id-ID');
     }
 
-    function parseDecimalFromRpInput(value){
-        if(value === null || value === undefined) return '';
-        const raw = String(value)
-            .replace(/[^0-9,\.]/g, '')
-            .replace(/\.(?=.*\.)/g, '')
-            .replace(',', '.');
-        if(raw === '' || raw === '.') return '';
-        const n = Number(raw);
-        if(!Number.isFinite(n)) return '';
-        return n.toString();
+    function parseRupiah(value){
+        return value.replace(/[^\d]/g, '');
     }
 
     function setupRupiah(inputId, hiddenId){
+
         const input = document.getElementById(inputId);
         const hidden = document.getElementById(hiddenId);
 
         if(!input || !hidden) return;
 
-        input.addEventListener('input', function(e){
-            const parsed = parseDecimalFromRpInput(e.target.value);
-            hidden.value = parsed;
-            e.target.value = parsed !== '' ? formatRupiah(parsed) : '';
+        input.addEventListener('input', function(){
+
+            const raw = parseRupiah(input.value);
+
+            hidden.value = raw;
+
+            input.value = raw
+                ? formatRupiah(raw)
+                : '';
         });
     }
 
-    setupRupiah('priceStartInput', 'priceStartValue');
-
+    setupRupiah('servicePriceInput', 'servicePriceValue');
     setupRupiah('priceEndInput', 'priceEndValue');
 
 })();
