@@ -58,7 +58,7 @@
             <select name="sparepart_category_id" required class="form-input px-4 py-3.5 rounded-xl text-sm w-full">
                 @foreach($categories as $cat)
                     <option value="{{ $cat->id }}" {{ (string) old('sparepart_category_id', $sparepart->sparepart_category_id) === (string) $cat->id ? 'selected' : '' }}>
-                        {{ $cat->getServiceCategoryLabelAttribute }} + {{ $cat->part_type }}
+                        {{ $cat->serviceCategoryLabel }} + {{ $cat->part_type }}
                     </option>
                 @endforeach
             </select>

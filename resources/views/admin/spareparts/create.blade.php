@@ -56,24 +56,6 @@
             </div>
 
             <div>
-                <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
-                    Harga Jasa (Rp)
-                </label>
-
-                <input type="text"
-                       id="servicePriceInput"
-                       name="service_price_display"
-                       value="{{ old('service_price') ? 'Rp ' . number_format((float) old('service_price'), 0, ',', '.') : '' }}"
-                       inputmode="numeric"
-                       placeholder="Contoh: 50000"
-                       class="form-input px-4 py-3.5 rounded-xl text-sm w-full"
-                >
-                <input type="hidden" name="service_price" id="servicePriceValue" value="{{ old('service_price') }}">
-
-                <p class="text-[11px] text-gray-500 mt-2">
-                    Ini harga jasa yang dipakai user saat estimasi total (jasa per sparepart).
-                </p>
-
                 <div class="mt-4">
                     <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">Stok <span class="text-[#C8000A]">*</span></label>
                     <input type="number" name="stock" value="{{ old('stock') }}" step="1" min="0" required
@@ -237,27 +219,7 @@
             });
         }
 
-        // ========= Harga Jasa: service_price =========
-        const servicePriceInput = document.getElementById('servicePriceInput');
-        const servicePriceValueEl = document.getElementById('servicePriceValue');
 
-        if(servicePriceInput && servicePriceValueEl){
-            // init
-            const init = servicePriceValueEl.value;
-            if(init !== ''){
-                servicePriceInput.value = formatRupiahNumber(init);
-            } else {
-                servicePriceInput.value = '';
-            }
-
-            servicePriceInput.addEventListener('input', function(e){
-                const parsed = parseNumberFromRpInput(e.target.value);
-                servicePriceValueEl.value = parsed;
-                if(parsed !== ''){
-                    e.target.value = formatRupiahNumber(parsed);
-                }
-            });
-        }
 
         function setHiddenSpareCategoryId(){
             const sc = serviceSel.value;

@@ -150,8 +150,8 @@ class AdminSparepartController extends Controller
             'image' => 'required|image|max:2048',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'service_price' => 'nullable|numeric|min:0',
             'sparepart_category_id' => 'required|exists:sparepart_categories,id',
+
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
@@ -190,8 +190,8 @@ class AdminSparepartController extends Controller
             'image' => 'nullable|image|max:2048',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'service_price' => 'nullable|numeric|min:0',
             'sparepart_category_id' => 'required|exists:sparepart_categories,id',
+
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',

@@ -29,12 +29,12 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">
-                        Harga Mulai (Rp) *
+                        Harga Jasa (Rp) *
                     </label>
 
                     <input type="text"
                         id="priceStartInput"
-                        value="{{ old('price_start') ? 'Rp ' . number_format(old('price_start'), 0, ',', '.') : '' }}"
+                        value="{{ old('price_start') ? 'Rp ' . number_format((float) old('price_start'), 2, ',', '.') : '' }}"
                         class="form-input w-full px-4 py-3 rounded-xl text-sm"
                         placeholder="Rp 75.000">
 
@@ -43,6 +43,7 @@
                         id="priceStartValue"
                         value="{{ old('price_start') }}">
                 </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Maksimal (Rp)</label>
                     <input type="text"
@@ -91,24 +92,32 @@
 (function(){
 
     function formatRupiah(value){
-        if (!value) return '';
+        if (!value && value !== 0) return '';
 
-        let numberString = value.toString().replace(/[^,\d]/g, '');
-        let split = numberString.split(',');
-        let sisa = split[0].length % 3;
-        let rupiah = split[0].substr(0, sisa);
-        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        const num = Number(value);
+        if(!Number.isFinite(num)) return '';
 
-        if (ribuan) {
-            let separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
+        try {
+            return 'Rp ' + num.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } catch (e) {
+            const parts = num.toFixed(2).split('.');
+            const intPart = parts[0];
+            const frac = parts[1];
+            const withDots = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return 'Rp ' + withDots + ',' + frac;
         }
+    }
 
-        rupiah = split[1] != undefined
-            ? rupiah + ',' + split[1]
-            : rupiah;
-
-        return 'Rp ' + rupiah;
+    function parseDecimalFromRpInput(value){
+        if(value === null || value === undefined) return '';
+        const raw = String(value)
+            .replace(/[^0-9,\.]/g, '')
+            .replace(/\.(?=.*\.)/g, '')
+            .replace(',', '.');
+        if(raw === '' || raw === '.') return '';
+        const n = Number(raw);
+        if(!Number.isFinite(n)) return '';
+        return n.toString();
     }
 
     function setupRupiah(inputId, hiddenId){
@@ -118,20 +127,12 @@
         if(!input || !hidden) return;
 
         input.addEventListener('input', function(e){
-
-            let rawValue = e.target.value
-                .replace(/[^0-9,]/g, '');
-
-            const parts = rawValue.split(',');
-            if(parts.length > 2){
-                rawValue = parts[0] + ',' + parts[1];
-            }
-
-            hidden.value = rawValue.replace(',', '.');
-
-            e.target.value = formatRupiah(rawValue);
+            const parsed = parseDecimalFromRpInput(e.target.value);
+            hidden.value = parsed;
+            e.target.value = parsed !== '' ? formatRupiah(parsed) : '';
         });
     }
+
 
     setupRupiah('priceStartInput', 'priceStartValue');
     setupRupiah('priceEndInput', 'priceEndValue');
