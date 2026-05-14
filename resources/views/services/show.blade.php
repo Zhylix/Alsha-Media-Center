@@ -29,7 +29,8 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 space-y-6" id="sparepartContainer" data-service-category="{{ $service->category }}">
+                    <div class="mt-6 space-y-6" id="sparepartContainer" data-service-category="{{ $service->category }}" data-service-price-jasa="{{ (float) ($service->price_jasa ?? $service->price_start) }}">
+                        <input type="hidden" id="servicePriceJasaValue" value="{{ (float) ($service->price_jasa ?? $service->price_start) }}">
                         @php
                             $spareparts = $spareparts ?? collect();
                             $grouped = $spareparts->groupBy(function($sp) {
@@ -103,21 +104,21 @@
                     </div>
                 </section>
             </div>
-            <div class="service-card p-8 rounded-2xl">
+                <div class="service-card p-8 rounded-2xl">
                 <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}</div>
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between" data-service-price>
                         <span class="text-gray-600 text-sm">Harga Jasa</span>
-<span class="font-semibold text-gray-900">Rp {{ number_format(old('service_price', $service->price_start), 0, ',', '.') }}</span>
+                        <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_jasa ?? $service->price_start, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex items-center justify-between py-3 border-b border-red-600/10">
                         <span class="text-gray-600 text-sm">Harga Sparepart</span>
-                        <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_end, 0, ',', '.') }}</span>
+                        <span class="font-semibold text-gray-900" id="selectedSparepartPrice">Rp 0</span>
                     </div>
                     <div>
                         <div class="flex items-center justify-between py-3">
                             <span class="text-lg text-black font-semibold">Total Harga</span>
-                            <span class="text-red-600 font-semibold text-lg">Rp {{ number_format($service->price_start + $service->price_end, 0, ',', '.') }}</span>
+                            <span class="text-red-600 font-semibold text-lg" id="selectedTotalPrice">Rp {{ number_format((float) ($service->price_jasa ?? $service->price_start), 0, ',', '.') }}</span>
                         </div>
                         <span class="text-sm text-gray-500">Total dihitung realtime (jasa + sparepart).</span>
                     </div>
@@ -243,12 +244,7 @@
         const selectedSparepartPriceEl = document.getElementById('selectedSparepartPrice');
         const selectedTotalPriceEl = document.getElementById('selectedTotalPrice');
 
-        // Ambil base price (harga jasa) dari badge ringkasan kiri.
-        // Kita pakai elemen harga jasa yang sudah ada di dalam template ini.
-        const servicePriceTextEl = document.querySelector('[data-service-price]');
-        const baseServicePrice = servicePriceTextEl
-            ? parseFloat(servicePriceTextEl.textContent.replace(/[^0-9]/g, '') || '0')
-            : 0;
+        const baseServicePrice = parseFloat(document.getElementById('servicePriceJasaValue')?.value || '0');
 
         const formatRp = (n) => {
             try {
@@ -288,8 +284,10 @@
 
                 const sparePrice = parseFloat(btn.dataset.sparepartPrice || '0');
                 const spareServicePrice = parseFloat(btn.dataset.sparepartServicePrice || 'NaN');
-                const effectiveServicePrice = Number.isFinite(spareServicePrice) ? spareServicePrice : baseServicePrice;
-                const total = effectiveServicePrice + sparePrice;
+
+                // Requirements: harga jasa selalu dari services.price_jasa
+                const jasaPrice = baseServicePrice;
+                const total = jasaPrice + sparePrice;
 
                 selectedSparepartPriceEl.textContent = formatRp(sparePrice);
                 selectedTotalPriceEl.textContent = formatRp(total);
