@@ -31,7 +31,7 @@
             <div>
                 <div class="inline-flex items-center gap-2.5 mb-8">
                     <span class="block w-6 h-px bg-[#C8000A]"></span>
-                    <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Formulir Pesanan</span>
+                    <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Formulir Pemesanan</span>
                 </div>
                 
                 @if(session('success'))

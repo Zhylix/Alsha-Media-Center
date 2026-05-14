@@ -15,10 +15,8 @@ class ServiceTicketController extends Controller
 
     public function search(Request $request)
     {
-        // Debug: pastikan form POST benar-benar masuk ke controller
         Log::info('Tracking search called', [
             'code_raw' => $request->input('code'),
-            'code_validated' => null,
             'ip' => $request->ip(),
             'user_agent' => substr((string) $request->userAgent(), 0, 200),
         ]);
@@ -29,19 +27,25 @@ class ServiceTicketController extends Controller
 
         $code = strtoupper(trim((string) $request->input('code')));
 
-        // Debug after validation
         Log::info('Tracking search validated', [
             'code_validated' => $code,
         ]);
 
+        // 1) Primary: lookup as service ticket code
         $serviceTicket = ServiceTicket::where('service_code', $code)->first();
-
-        if (! $serviceTicket) {
-            return redirect()->route('tracking.index')
-                ->with('error', 'Kode servis tidak ditemukan. Periksa kembali kode yang Anda masukkan.');
+        if ($serviceTicket) {
+            return view('tracking.result', compact('serviceTicket'));
         }
 
-        return view('tracking.result', compact('serviceTicket'));
+        // 2) Fallback: lookup as order number (so AMC-... still works if user is using wrong tracking page)
+        $order = \App\Models\Order::where('order_number', $code)->with('service')->first();
+        if (! $order) {
+            return redirect()->route('tracking.index')
+                ->with('error', 'Kode tidak ditemukan. Periksa kembali kode yang Anda masukkan.');
+        }
+
+        return view('order-track', ['order' => $order]);
     }
+
 }
 

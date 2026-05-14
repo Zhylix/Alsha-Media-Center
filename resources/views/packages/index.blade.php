@@ -64,14 +64,13 @@
                     </div>
                     @endif
 
-                    @if($paket->end_date && $paket->end_date->isFuture())
                     <div class="absolute top-4 right-4">
                         <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-gray-800 text-[10px] font-black uppercase tracking-wider shadow-sm">
                             <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
                             Aktif
                         </div>
                     </div>
-                    @endif
+
 
                     <a href="/paket/{{ $paket->slug }}" class="absolute inset-0 z-10" aria-label="Lihat detail paket"></a>
                 </div>
@@ -87,30 +86,17 @@
                         <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 bg-white flex items-center justify-center border border-gray-200">
-                                    <i class="fas fa-calendar-alt text-[#C8000A] text-xs"></i>
+                                    <i class="fas fa-tag text-[#C8000A] text-xs"></i>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.12em]">Berlaku Hingga</p>
-                                    <p class="text-sm font-black text-gray-900">{{ $paket->end_date?->format('d M Y') }}</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.12em]">Harga Paket</p>
+                                    <p class="text-sm font-black text-gray-900">Rp {{ number_format((int)($paket->price ?? 0), 0, ',', '.') }}</p>
                                 </div>
                             </div>
-
-                            @php
-                                $daysLeft = $paket->end_date?->isFuture()
-                                    ? floor(now()->diffInDays($paket->end_date, false))
-                                    : null;
-                            @endphp
-                            @if(!is_null($daysLeft))
-                            <div class="text-right">
-                                <p class="text-xs font-black text-[#C8000A]">
-                                    {{ $daysLeft }} hari
-                                </p>
-                                <p class="text-[10px] text-gray-400">tersisa</p>
-                            </div>
-                            @endif
                         </div>
 
                         <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($paket->title) }}"
+
                            target="_blank"
                            class="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors">
                             <i class="fab fa-whatsapp text-base"></i>

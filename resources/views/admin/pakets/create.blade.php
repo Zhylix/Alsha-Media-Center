@@ -18,13 +18,11 @@
                     <input type="text" name="discount_info" value="{{ old('discount_info') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: Diskon 20% atau Gratis Ongkir">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Tanggal Mulai *</label>
-                    <input type="datetime-local" name="start_date" value="{{ old('start_date', now()->format('Y-m-d\TH:i')) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Paket *</label>
+                    <input type="number" name="price" step="1" min="0" value="{{ old('price', 0) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: 150000">
+                    <p class="text-gray-500 text-[10px] mt-1 italic">* Format angka Rupiah (tanpa desimal)</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Tanggal Berakhir *</label>
-                    <input type="datetime-local" name="end_date" value="{{ old('end_date', now()->addDays(7)->format('Y-m-d\TH:i')) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
-                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Urutan Tampilan</label>
                     <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="0">

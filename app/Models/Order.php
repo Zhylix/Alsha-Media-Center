@@ -10,17 +10,33 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_number', 'customer_name', 'customer_email', 'customer_phone',
-        'customer_address', 'service_id', 'shipment_option_id', 'payment_method_id',
-        'device_description', 'problem_description', 'service_price', 'shipment_price',
-        'total_price', 'status', 'payment_status', 'payment_proof', 'notes',
-        'confirmed_at', 'completed_at'
+        'order_number',
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+        'customer_address',
+        'service_id',
+        'shipment_option_id',
+        'payment_method_id',
+        'device_description',
+        'problem_description',
+        'service_price',
+        'sparepart_price',
+        'shipment_price',
+        'total_price',
+        'status',
+        'payment_status',
+        'payment_proof',
+        'notes',
+        'confirmed_at',
+        'completed_at',
     ];
 
     protected $casts = [
         'confirmed_at' => 'datetime',
         'completed_at' => 'datetime',
         'service_price' => 'decimal:0',
+        'sparepart_price' => 'decimal:0',
         'shipment_price' => 'decimal:0',
         'total_price' => 'decimal:0',
     ];
@@ -42,25 +58,25 @@ class Order extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
-            'pending'     => ['label' => 'Menunggu', 'color' => 'yellow'],
-            'diterima'    => ['label' => 'Diterima', 'color' => 'blue'],
-            'ditolak'     => ['label' => 'Ditolak', 'color' => 'red'],
-            'confirmed'  => ['label' => 'Dikonfirmasi', 'color' => 'blue'],
+        return match ($this->status) {
+            'pending' => ['label' => 'Menunggu', 'color' => 'yellow'],
+            'diterima' => ['label' => 'Diterima', 'color' => 'blue'],
+            'ditolak' => ['label' => 'Ditolak', 'color' => 'red'],
+            'confirmed' => ['label' => 'Dikonfirmasi', 'color' => 'blue'],
             'in_progress' => ['label' => 'Diproses', 'color' => 'purple'],
-            'completed'  => ['label' => 'Selesai', 'color' => 'green'],
-            'cancelled'  => ['label' => 'Dibatalkan', 'color' => 'red'],
-            default      => ['label' => ucfirst($this->status), 'color' => 'gray'],
+            'completed' => ['label' => 'Selesai', 'color' => 'green'],
+            'cancelled' => ['label' => 'Dibatalkan', 'color' => 'red'],
+            default => ['label' => ucfirst($this->status), 'color' => 'gray'],
         };
     }
 
     public function getPaymentBadgeAttribute()
     {
-        return match($this->payment_status) {
-            'unpaid'   => ['label' => 'Belum Dibayar', 'color' => 'red'],
-            'paid'    => ['label' => 'Sudah Dibayar', 'color' => 'green'],
+        return match ($this->payment_status) {
+            'unpaid' => ['label' => 'Belum Dibayar', 'color' => 'red'],
+            'paid' => ['label' => 'Sudah Dibayar', 'color' => 'green'],
             'refunded' => ['label' => 'Refund', 'color' => 'gray'],
-            default   => ['label' => ucfirst($this->payment_status), 'color' => 'gray'],
+            default => ['label' => ucfirst($this->payment_status), 'color' => 'gray'],
         };
     }
 
@@ -68,16 +84,17 @@ class Order extends Model
     {
         $today = now()->format('Ymd');
         $count = self::whereDate('created_at', today())->count() + 1;
-        
-        return "AMC-" . $today . "-" . str_pad($count, 3, '0', STR_PAD_LEFT);
+
+        return 'AMC-' . $today . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
     }
 
     public static function getAvailableStatuses(): array
     {
         return [
-            'pending'   => 'Menunggu',
+            'pending' => 'Menunggu',
             'diterima' => 'Diterima',
-            'ditolak'  => 'Ditolak',
+            'ditolak' => 'Ditolak',
         ];
     }
 }
+

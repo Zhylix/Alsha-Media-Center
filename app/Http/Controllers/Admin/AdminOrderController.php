@@ -70,7 +70,7 @@ class AdminOrderController extends Controller
 
             $data['service_price'] = $serviceAfter;
             $data['shipment_price'] = $shipmentAfter;
-            $data['total_price'] = $serviceAfter + $shipmentAfter;
+            $data['total_price'] = $serviceAfter + ($order->sparepart_price ?? 0) + $shipmentAfter;
         }
 
 
@@ -171,7 +171,7 @@ class AdminOrderController extends Controller
         // Selalu update total_price mengikuti service_price/shipment_price terbaru
         $newServicePrice = array_key_exists('service_price', $updateData) ? (float) $updateData['service_price'] : (float) $order->service_price;
         $newShipmentPrice = array_key_exists('shipment_price', $updateData) ? (float) $updateData['shipment_price'] : (float) $order->shipment_price;
-        $updateData['total_price'] = $newServicePrice + $newShipmentPrice;
+$updateData['total_price'] = $newServicePrice + ($order->sparepart_price ?? 0) + $newShipmentPrice;
 
         // simpan diskon persen (opsional) ke order jika kolomnya ada di database
         if (array_key_exists('service_discount_percent', $data)) {

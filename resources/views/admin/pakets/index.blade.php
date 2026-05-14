@@ -15,12 +15,14 @@
     <div class="overflow-x-auto">
         <table class="admin-table w-full">
             <thead><tr>
-                <th>Judul Paket</th><th>Diskon/Info</th><th>Masa Berlaku</th><th>Status</th><th>Urutan</th><th>Aksi</th>
+                <th>Judul Paket</th><th>Diskon/Info</th><th>Harga</th><th>Status</th><th>Urutan</th><th>Aksi</th>
             </tr></thead>
+
             <tbody>
                 @foreach($pakets as $paket)
                 <tr>
                     <td>
+
                         <div class="flex items-center gap-3">
                             @if($paket->image)
                             <img src="{{ asset('storage/' . $paket->image) }}" class="w-10 h-10 rounded-lg object-cover">
@@ -35,8 +37,9 @@
                     </td>
                     <td class="text-red-600 font-bold text-sm">{{ $paket->discount_info ?? '-' }}</td>
                     <td class="text-gray-600 text-xs">
-                        {{ $paket->start_date->format('d/m/Y') }} - {{ $paket->end_date->format('d/m/Y') }}
+                        Rp {{ number_format((int)($paket->price ?? 0), 0, ',', '.') }}
                     </td>
+
                     <td>
                         <span class="badge badge-{{ $paket->isValid ? 'green' : 'gray' }}">
                             {{ $paket->isValid ? 'Berjalan' : ($paket->is_active ? 'Terjadwal/Berakhir' : 'Nonaktif') }}

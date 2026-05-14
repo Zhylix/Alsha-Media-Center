@@ -23,14 +23,13 @@
                                 </div>
                             </div>
                         @endif
-                        @if($paket->end_date && $paket->end_date->isFuture())
-                            <div class="absolute top-5 right-5">
-                                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 text-gray-800 text-[10px] font-black uppercase tracking-wider shadow-sm">
-                                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                    Aktif
-                                </div>
+                        <div class="absolute top-5 right-5">
+                            <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 text-gray-800 text-[10px] font-black uppercase tracking-wider shadow-sm">
+                                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                Aktif
                             </div>
-                        @endif
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -54,29 +53,17 @@
                         <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-2xl">
                             <div class="flex items-center gap-3">
                                 <div class="w-9 h-9 bg-white border border-gray-200 rounded-xl flex items-center justify-center">
-                                    <i class="fas fa-calendar-alt text-[#C8000A] text-sm"></i>
+                                    <i class="fas fa-tag text-[#C8000A] text-sm"></i>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.12em]">Berlaku Hingga</p>
-                                    <p class="text-sm font-black text-gray-900">{{ $paket->end_date?->format('d M Y') }}</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.12em]">Harga Paket</p>
+                                    <p class="text-sm font-black text-gray-900">Rp {{ number_format((int)($paket->price ?? 0), 0, ',', '.') }}</p>
                                 </div>
                             </div>
-
-                            @php
-                                $daysLeft = $paket->end_date?->isFuture()
-                                    ? floor(now()->diffInDays($paket->end_date, false))
-                                    : null;
-                            @endphp
-                            @if(!is_null($daysLeft))
-                            <div class="text-right">
-                                <p class="text-xs font-black text-[#C8000A]">
-                                    {{ $daysLeft }} hari
-                                </p>
-                                <p class="text-[10px] text-gray-400">tersisa</p>
-                            </div>
-                            @endif
                         </div>
                     </div>
+
+
 
                     <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($paket->title) }}"
                        target="_blank"

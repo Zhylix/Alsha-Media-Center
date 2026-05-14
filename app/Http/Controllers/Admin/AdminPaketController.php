@@ -27,8 +27,7 @@ class AdminPaketController extends Controller
             'title'         => 'required|string|max:255',
             'description'   => 'required|string',
             'discount_info' => 'nullable|string|max:100',
-            'start_date'    => 'required|date',
-            'end_date'      => 'required|date|after:start_date',
+            'price'         => 'required|numeric|min:0',
             'sort_order'    => 'nullable|integer|min:0',
             'image'         => 'nullable|image|max:2048',
         ]);
@@ -36,6 +35,7 @@ class AdminPaketController extends Controller
         $data['slug'] = Str::slug($data['title']) . '-' . rand(100, 999);
         $data['is_active'] = $request->has('is_active');
         $data['sort_order'] = $data['sort_order'] ?? 0;
+
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('pakets', 'public');
@@ -56,11 +56,11 @@ class AdminPaketController extends Controller
             'title'         => 'required|string|max:255',
             'description'   => 'required|string',
             'discount_info' => 'nullable|string|max:100',
-            'start_date'    => 'required|date',
-            'end_date'      => 'required|date|after:start_date',
+            'price'         => 'required|numeric|min:0',
             'sort_order'    => 'nullable|integer|min:0',
             'image'         => 'nullable|image|max:2048',
         ]);
+
 
         $data['is_active'] = $request->has('is_active');
         $data['sort_order'] = $data['sort_order'] ?? 0;

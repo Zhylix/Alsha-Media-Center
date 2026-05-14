@@ -11,24 +11,30 @@ class Paket extends Model
 
     protected $fillable = [
         'title', 'slug', 'description', 'image', 'discount_info',
-        'start_date', 'end_date', 'is_active', 'sort_order'
+        'price',
+        'is_active',
+        'sort_order',
+        // legacy fields (masih ada di DB)
+        'start_date',
+        'end_date',
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'is_active' => 'boolean',
+        'price' => 'decimal:0',
     ];
 
+    // Paket bersifat permanen selama is_active = true
     public function scopeActive($query)
     {
-        return $query->where('is_active', true)
-                     ->where('start_date', '<=', now())
-                     ->where('end_date', '>=', now());
+        return $query->where('is_active', true);
     }
 
     public function getIsValidAttribute()
     {
-        return $this->is_active && $this->start_date <= now() && $this->end_date >= now();
+        return (bool) $this->is_active;
     }
 }
+
