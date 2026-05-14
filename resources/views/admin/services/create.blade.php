@@ -35,7 +35,7 @@
 
                     <input type="text"
                         id="priceStartInput"
-                        value="{{ old('price_start') ? 'Rp ' . number_format((float) old('price_start'), 2, ',', '.') : '' }}"
+                        value="{{ old('price_start') ? 'Rp ' . number_format((float) old('price_start'), 0, ',', '.') : '' }}"
                         class="form-input w-full px-4 py-3 rounded-xl text-sm"
                         placeholder="Rp 75.000">
 
@@ -44,22 +44,7 @@
                         id="priceStartValue"
                         value="{{ old('price_start') }}">
                 </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Jasa (Rp) *</label>
-
-                    <input type="text"
-                        id="servicePriceInput"
-                        value="{{ old('service_price') ? 'Rp ' . number_format((float) old('service_price'), 2, ',', '.') : '' }}"
-                        class="form-input w-full px-4 py-3 rounded-xl text-sm"
-                        placeholder="Rp 50.000">
-
-                    <input type="hidden"
-                        name="service_price"
-                        id="servicePriceValue"
-                        value="{{ old('service_price') }}">
-                </div>
-
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Maksimal (Rp)</label>
                     <input type="text"
@@ -72,6 +57,21 @@
                         name="price_end"
                         id="priceEndValue"
                         value="{{ old('price_end') }}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Jasa (Rp) *</label>
+
+                    <input type="text"
+                        id="servicePriceInput"
+                        value="{{ old('price_jasa') ? 'Rp ' . number_format((float) old('price_jasa'), 0, ',', '.') : '' }}"
+                        class="form-input w-full px-4 py-3 rounded-xl text-sm"
+                        placeholder="Rp 50.000">
+
+                    <input type="hidden"
+                        name="price_jasa"
+                        id="servicePriceValue"
+                        value="{{ old('price_jasa') }}">
                 </div>
 
                 <div class="sm:col-span-2">

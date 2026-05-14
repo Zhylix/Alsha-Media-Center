@@ -12,7 +12,7 @@ class Service extends Model
 
     protected $fillable = [
         'name', 'slug', 'category', 'description', 'short_description',
-        'price_start', 'price_end', 'estimated_days', 'image',
+        'price_start', 'price_end', 'price_jasa', 'estimated_days', 'image',
         'is_active', 'is_featured', 'sort_order'
     ];
 
@@ -21,6 +21,7 @@ class Service extends Model
         'is_featured' => 'boolean',
         'price_start' => 'decimal:0',
         'price_end' => 'decimal:0',
+        'price_jasa' => 'decimal:0',
     ];
 
     public function orders()

@@ -27,32 +27,47 @@
                     <input type="number" name="estimated_days" value="{{ old('estimated_days', $service->estimated_days) }}" required min="1" class="form-input w-full px-4 py-3 rounded-xl text-sm">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Jasa (Rp) *</label>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Mulai (Rp)</label>
                     <input type="text"
-                    id="servicePriceInput"
-                    value="{{ old('service_price', $service->price_start) ? 'Rp ' . number_format((float) old('service_price', $service->price_start), 2, ',', '.') : '' }}"
-                    class="form-input w-full px-4 py-3 rounded-xl text-sm"
-                    placeholder="Rp 75.000">
+                        id="priceStartInput"
+                        value="{{ old('price_start', $service->price_start) ? 'Rp ' . number_format(old('price_start', $service->price_start), 0, ',', '.') : '' }}"
+                        class="form-input w-full px-4 py-3 rounded-xl text-sm"
+                        placeholder="Rp 70.000">
 
-                <input type="hidden"
-                    name="service_price"
-                    id="servicePriceValue"
-                    value="{{ old('service_price', $service->price_start) }}">
+                    <input type="hidden"
+                        name="price_start"
+                        id="priceStartValue"
+                        value="{{ old('price_start', $service->price_start) }}">
                 </div>
-
-
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">Harga Maksimal (Rp)</label>
                     <input type="text"
-                    id="priceEndInput"
-                    value="{{ old('price_end', $service->price_end) ? 'Rp ' . number_format(old('price_end', $service->price_end), 0, ',', '.') : '' }}"
-                    class="form-input w-full px-4 py-3 rounded-xl text-sm"
-                    placeholder="Kosongkan jika harga tetap">
+                        id="priceEndInput"
+                        value="{{ old('price_end', $service->price_end) ? 'Rp ' . number_format(old('price_end', $service->price_end), 0, ',', '.') : '' }}"
+                        class="form-input w-full px-4 py-3 rounded-xl text-sm"
+                        placeholder="Kosongkan jika harga tetap">
 
-                <input type="hidden"
-                    name="price_end"
-                    id="priceEndValue"
-                    value="{{ old('price_end', $service->price_end) }}">
+                    <input type="hidden"
+                        name="price_end"
+                        id="priceEndValue"
+                        value="{{ old('price_end', $service->price_end) }}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Jasa (Rp) *</label>
+
+                    <input type="text"
+                        id="servicePriceInput"
+                        value="{{ old('price_jasa', $service->price_jasa) ? 'Rp ' . number_format(old('price_jasa', $service->price_jasa), 0, ',', '.') : '' }}"
+                        class="form-input w-full px-4 py-3 rounded-xl text-sm"
+                        placeholder="Rp 50.000">
+
+                    <input type="hidden"
+                        name="price_jasa"
+                        id="servicePriceValue"
+                        value="{{ old('price_jasa', $service->price_jasa) }}">
+                </div>
                 </div>
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Deskripsi Singkat</label>
@@ -119,6 +134,7 @@
 
     setupRupiah('servicePriceInput', 'servicePriceValue');
     setupRupiah('priceEndInput', 'priceEndValue');
+    setupRupiah('priceStartInput', 'priceStartValue');
 
 })();
 </script>

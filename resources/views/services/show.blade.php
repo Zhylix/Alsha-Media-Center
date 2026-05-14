@@ -27,27 +27,6 @@
                                 Pilih sparepart (opsional) untuk estimasi total harga.
                             </p>
                         </div>
-                        <div class="w-full lg:w-80">
-                            <div class="bg-gray-50 rounded-xl p-4 border border-red-600/10">
-                                <div class="flex items-center justify-between text-gray-600 text-sm">
-                                    <span>Harga Jasa</span>
-                                    <span class="font-semibold text-gray-900" data-service-price="{{ (float) $service->price_start }}">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
-                                    <span class="hidden" data-service-price-fallback="{{ (float) $service->price_start }}"></span>
-
-
-                                </div>
-                                <div class="flex items-center justify-between text-gray-600 text-sm mt-2">
-                                    <span>Harga Sparepart</span>
-                                    <span id="selectedSparepartPrice" class="font-semibold text-gray-900">Rp 0</span>
-                                </div>
-                                <div class="h-px bg-red-600/10 my-3"></div>
-                                <div class="flex items-center justify-between text-gray-900">
-                                    <span class="text-sm font-black">Total</span>
-                                    <span id="selectedTotalPrice" class="text-red-600 font-black text-lg">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
-                                </div>
-                                <p class="text-[11px] text-gray-500 mt-2">Total dihitung realtime (jasa + sparepart).</p>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="mt-6 space-y-6" id="sparepartContainer" data-service-category="{{ $service->category }}">
@@ -129,7 +108,7 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <span class="text-gray-600 text-sm">Harga Jasa</span>
-                        <span class="font-semibold text-gray-900">Rp {{ number_format($service->price_start, 0, ',', '.') }}</span>
+<span class="font-semibold text-gray-900">Rp {{ number_format(old('service_price', $service->price_start), 0, ',', '.') }}</span>
                     </div>
                     <div class="flex items-center justify-between py-3 border-b border-red-600/10">
                         <span class="text-gray-600 text-sm">Harga Sparepart</span>

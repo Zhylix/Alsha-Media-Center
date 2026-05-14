@@ -23,17 +23,18 @@ class AdminServiceController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'              => 'required|string|max:255',
-            'category'          => 'required|in:laptop,printer,pc,software',
-            'description'       => 'required|string',
-            'short_description' => 'nullable|string|max:300',
-            'price_start'       => 'required|numeric|min:0',
-            'price_end'         => 'nullable|numeric|min:0',
-            'estimated_days'    => 'required|integer|min:1',
-            'is_active'         => 'boolean',
-            'is_featured'       => 'boolean',
-            'sort_order'        => 'integer|min:0',
-            'image'             => 'nullable|image|max:2048',
+            'name'               => 'required|string|max:255',
+            'category'           => 'required|in:laptop,printer,pc,software',
+            'description'        => 'required|string',
+            'short_description'  => 'nullable|string|max:300',
+            'price_start'        => 'required|numeric|min:0',
+            'price_end'          => 'nullable|numeric|min:0',
+            'price_jasa'         => 'required|numeric|min:0',
+            'estimated_days'     => 'required|integer|min:1',
+            'is_active'          => 'boolean',
+            'is_featured'        => 'boolean',
+            'sort_order'         => 'integer|min:0',
+            'image'              => 'nullable|image|max:2048',
         ]);
 
         $data['slug']        = Str::slug($data['name']);
@@ -45,6 +46,7 @@ class AdminServiceController extends Controller
         }
 
         Service::create($data);
+
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil ditambahkan!');
     }
 
@@ -56,15 +58,16 @@ class AdminServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $data = $request->validate([
-            'name'              => 'required|string|max:255',
-            'category'          => 'required|in:laptop,printer,pc,software',
-            'description'       => 'required|string',
-            'short_description' => 'nullable|string|max:300',
-            'price_start'       => 'required|numeric|min:0',
-            'price_end'         => 'nullable|numeric|min:0',
-            'estimated_days'    => 'required|integer|min:1',
-            'sort_order'        => 'integer|min:0',
-            'image'             => 'nullable|image|max:2048',
+            'name'               => 'required|string|max:255',
+            'category'           => 'required|in:laptop,printer,pc,software',
+            'description'        => 'required|string',
+            'short_description'  => 'nullable|string|max:300',
+            'price_start'        => 'required|numeric|min:0',
+            'price_end'          => 'nullable|numeric|min:0',
+            'price_jasa'         => 'required|numeric|min:0',
+            'estimated_days'     => 'required|integer|min:1',
+            'sort_order'         => 'integer|min:0',
+            'image'              => 'nullable|image|max:2048',
         ]);
 
         $data['slug']        = Str::slug($data['name']);
@@ -76,12 +79,14 @@ class AdminServiceController extends Controller
         }
 
         $service->update($data);
+
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil diperbarui!');
     }
 
     public function destroy(Service $service)
     {
         $service->delete();
+
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil dihapus!');
     }
 

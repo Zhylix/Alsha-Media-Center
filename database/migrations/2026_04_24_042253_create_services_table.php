@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->text('short_description')->nullable();
             $table->decimal('price_start', 12, 0);
             $table->decimal('price_end', 12, 0)->nullable();
+            $table->decimal('price_jasa', 12, 0)->nullable();
             $table->integer('estimated_days')->default(3);
             $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
