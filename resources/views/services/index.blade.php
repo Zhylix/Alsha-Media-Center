@@ -87,14 +87,16 @@
                             @endif
                         </div>
                         
-                        <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
-                            {{ $service->short_description ?? Str::limit($service->description, 100) }}
-                        </p>
                     </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                        {{ $service->short_description ?? Str::limit($service->description, 100) }}
+                    </p>
                 </div>
                 
                 <!-- Divider -->
-                <div class="h-px bg-gray-200 mb-4"></div>
+                <div class="h-px bg-gray-200 mb-4 mt-2"></div>
                 
                 <!-- BOTTOM SECTION: Price + Time -->
                 <div class="flex items-center gap-3 mb-3">
@@ -190,11 +192,13 @@
                             </span>
                             @endif
                         </div>
-                        
-                        <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
-                            {{ $service->short_description ?? Str::limit($service->description, 100) }}
-                        </p>
                     </div>
+                </div>
+
+                <div>
+                    <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                        {{ $service->short_description ?? Str::limit($service->description, 100) }}
+                    </p>
                 </div>
                 
                 <!-- Divider -->
@@ -293,12 +297,13 @@
                                 Populer
                             </span>
                             @endif
-                        </div>
-                        
-                        <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
-                            {{ $service->short_description ?? Str::limit($service->description, 100) }}
-                        </p>
+                        </div>  
                     </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                        {{ $service->short_description ?? Str::limit($service->description, 100) }}
+                    </p>
                 </div>
                 
                 <!-- Divider -->
@@ -365,7 +370,7 @@
                     <h2 class="text-3xl font-black text-gray-900 tracking-tight">Installasi <span class="text-[#C8000A]">Software</span></h2>
                 </div>
             </div>
-<a href="{{ route('services.software') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
+            <a href="{{ route('services.software') }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-wider hover:text-[#C8000A] transition-colors">
                 Semua <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
         </div>
@@ -398,13 +403,15 @@
                             </span>
                             @endif
                         </div>
-                        
-                        <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
-                            {{ $service->short_description ?? Str::limit($service->description, 100) }}
-                        </p>
                     </div>
                 </div>
                 
+                <div>
+                    <p class="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                        {{ $service->short_description ?? Str::limit($service->description, 100) }}
+                    </p>
+                </div>
+
                 <!-- Divider -->
                 <div class="h-px bg-gray-200 mb-4"></div>
                 

@@ -14,97 +14,85 @@
                 <span class="badge badge-{{ $service->category === 'laptop' ? 'blue' : ($service->category === 'printer' ? 'purple' : 'green') }} mb-4 inline-block">{{ $service->category_label }}</span>
                 <h1 class="text-4xl font-black text-gray-900 mb-4">{{ $service->name }}</h1>
                 <p class="text-gray-600 text-lg mb-6">{{ $service->short_description }}</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, saya ingin tanya tentang {{ $service->name }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fab fa-whatsapp"></i> Tanya via WhatsApp</a>
+                
+                {{-- Sparepart Section (dynamic) - placed under WhatsApp button as requested --}}
+            
+                <div class="flex items-start justify-between gap-6 flex-col lg:flex-row">
+                    <div>
+                        <h2 class="text-2xl font-black text-gray-900 mb-2">pilih sparepart untuk {{ $service->category_label }}</h2>
+                        <p class="text-gray-600 leading-relaxed text-sm">
+                            Pilih sparepart untuk estimasi total harga.
+                        </p>
+                    </div>
                 </div>
 
-                {{-- Sparepart Section (dynamic) - placed under WhatsApp button as requested --}}
-                <section class="service-card p-6 sm:p-8 rounded-2xl mt-6" data-animate>
-                    <div class="flex items-start justify-between gap-6 flex-col lg:flex-row">
-                        <div>
-                            <h2 class="text-2xl font-black text-gray-900 mb-2">Sparepart untuk {{ $service->category_label }}</h2>
-                            <p class="text-gray-600 leading-relaxed text-sm">
-                                Pilih sparepart (opsional) untuk estimasi total harga.
-                            </p>
+                <div class="mt-2 space-y-6" id="sparepartContainer" data-service-category="{{ $service->category }}" data-service-price-jasa="{{ (float) ($service->price_jasa ?? $service->price_start) }}">
+                    <input type="hidden" id="servicePriceJasaValue" value="{{ (float) ($service->price_jasa ?? $service->price_start) }}">
+                    @php
+                        $spareparts = $spareparts ?? collect();
+                        $grouped = $spareparts->groupBy(function($sp) {
+                            return $sp->sparepartCategory->part_type ?? 'Lainnya';
+                        });
+                    @endphp
+
+                    @if($grouped->count() === 0)
+                        <div class="text-gray-500 text-sm">
+                            Belum ada data sparepart untuk kategori ini. Sparepart dipilih secara single untuk estimasi total.
                         </div>
-                    </div>
+                    @else
+                        @foreach($grouped as $partType => $items)
+                            <div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 mt-4">
+                                    @foreach($items->sortBy('sort_order') as $spare)
+                                        @php
+                                            $isDisabled = false;
+                                            $price = (float) ($spare->price ?? 0);
+                                        @endphp
 
-                    <div class="mt-6 space-y-6" id="sparepartContainer" data-service-category="{{ $service->category }}" data-service-price-jasa="{{ (float) ($service->price_jasa ?? $service->price_start) }}">
-                        <input type="hidden" id="servicePriceJasaValue" value="{{ (float) ($service->price_jasa ?? $service->price_start) }}">
-                        @php
-                            $spareparts = $spareparts ?? collect();
-                            $grouped = $spareparts->groupBy(function($sp) {
-                                return $sp->sparepartCategory->part_type ?? 'Lainnya';
-                            });
-                        @endphp
-
-                        @if($grouped->count() === 0)
-                            <div class="text-gray-500 text-sm">
-                                Belum ada data sparepart untuk kategori ini.
-                            </div>
-                        @else
-                            @foreach($grouped as $partType => $items)
-                                <div>
-                                    <h3 class="text-base font-black text-gray-900 mb-3">{{ $partType }}</h3>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                        @foreach($items->sortBy('sort_order') as $spare)
-                                            @php
-                                                $isDisabled = false;
-                                                $price = (float) ($spare->price ?? 0);
-                                            @endphp
-
-                                            <button
-                                                type="button"
-                                                class="sparepart-option group text-left rounded-2xl border p-4 transition-all duration-200
-                                                       {{ $isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-red-400 hover:shadow-sm hover:translate-y-[-1px]' }}"
-                                                data-sparepart-id="{{ $spare->id }}"
-                                                data-sparepart-name="{{ $spare->name }}"
-                                                data-sparepart-price="{{ $price }}"
-                                                data-sparepart-service-price="{{ (float) ($spare->service_price ?? $service->price_start) }}"
-                                                data-service-price="{{ (float) $service->price_start }}"
-                                                data-sparepart-stock="{{ $spare->stock ?? 0 }}"
-                                                data-part-type="{{ $partType }}"
-                                                {{ $isDisabled ? 'disabled' : '' }}
-                                            >
-                                                <div class="flex items-start gap-3">
-                                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#C8000A] to-[#E0000A] flex items-center justify-center flex-shrink-0">
-                                                        @if($spare->image)
-                                                            <img src="{{ asset('storage/'.$spare->image) }}" alt="{{ $spare->name }}" class="w-full h-full object-cover rounded-xl" onerror="this.style.display='none'">
-                                                        @else
-                                                            <i class="fas fa-box-open text-white"></i>
-                                                        @endif
-                                                    </div>
-                                                    <div class="flex-1 min-w-0">
-                                                        <p class="text-sm font-black text-gray-900 truncate">{{ $spare->name }}</p>
-                                                        <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ Str::limit($spare->description ?? '', 80) }}</p>
-                                                <p class="text-red-600 font-bold text-sm mt-2">Rp {{ number_format($spare->price, 0, ',', '.') }}</p>
-                                                    <p class="text-gray-600 text-xs mt-1">Harga Jasa: Rp {{ number_format($spare->service_price ?? $service->price_start, 0, ',', '.') }}</p>
-                                                    </div>
+                                        <button
+                                            type="button"
+                                            class="sparepart-option group text-left rounded-2xl border border-gray-300 p-4 transition-all duration-200 
+                                                    {{ $isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-red-400 hover:shadow-sm hover:translate-y-[-1px]' }}"
+                                            data-sparepart-id="{{ $spare->id }}"
+                                            data-sparepart-name="{{ $spare->name }}"
+                                            data-sparepart-price="{{ $price }}"
+                                            data-sparepart-service-price="{{ (float) ($spare->service_price ?? $service->price_start) }}"
+                                            data-service-price="{{ (float) $service->price_start }}"
+                                            data-sparepart-stock="{{ $spare->stock ?? 0 }}"
+                                            data-part-type="{{ $partType }}"
+                                            {{ $isDisabled ? 'disabled' : '' }}
+                                        >
+                                            <div class="flex items-start gap-3">
+                                                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                                                    @if($spare->image)
+                                                        <img src="{{ asset('storage/'.$spare->image) }}" alt="{{ $spare->name }}" class="w-full h-full object-cover rounded-xl" onerror="this.style.display='none'">
+                                                    @else
+                                                        <i class="fas fa-box-open text-white"></i>
+                                                    @endif
                                                 </div>
-
-
-                                                <div class="mt-3 flex items-center justify-between">
-                                                    <span class="text-[11px] font-semibold text-gray-500">Stok: {{ $spare->stock ?? 0 }}</span>
-                                                    <span class="hidden sparepart-check text-xs font-black text-[#C8000A]">
-                                                        <i class="fas fa-check-circle"></i> Selected
-                                                    </span>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-black text-gray-900 truncate">{{ $spare->name }}</p>
+                                                    <p class="text-red-600 font-bold text-sm mt-1">Rp {{ number_format($spare->price, 0, ',', '.') }}</p>
                                                 </div>
-
-                                                <input type="hidden" name="selected_sparepart_id" value="">
-                                            </button>
-                                        @endforeach
-                                    </div>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($spare->description ?? '', 80) }}</p>
+                                            </div>
+                                            <input type="hidden" name="selected_sparepart_id" value="">
+                                        </button>
+                                    @endforeach
                                 </div>
-                            @endforeach
-
-                            <div class="mt-4 text-gray-500 text-xs">
-                                Sparepart dipilih secara single untuk estimasi total. (Struktur ini mudah dikembangkan ke multiple selection.)
                             </div>
-                        @endif
-                    </div>
-                </section>
+                        @endforeach
+
+                    @endif
+                </div>
+            
+                <div class="flex flex-wrap gap-4 mt-4">
+                    <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, saya ingin tanya tentang {{ $service->name }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fab fa-whatsapp"></i> Tanya via WhatsApp</a>
+                </div>
             </div>
-                <div class="service-card p-8 rounded-2xl">
+            <div class="service-card p-8 rounded-2xl">
                 <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}</div>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between" data-service-price>

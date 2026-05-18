@@ -68,7 +68,6 @@
                         id="servicePriceValue"
                         value="{{ old('price_jasa', $service->price_jasa) }}">
                 </div>
-                </div>
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Deskripsi Singkat</label>
                     <input type="text" name="short_description" value="{{ old('short_description', $service->short_description) }}" class="form-input w-full px-4 py-3 rounded-xl text-sm">
@@ -96,7 +95,7 @@
         <div class="flex gap-4">
             <a href="{{ route('admin.services.index') }}" class="btn-outline flex-1 text-center py-3 rounded-xl text-red-600 font-semibold text-sm"><i class="fas fa-arrow-left"></i> Batal</a>
             <button type="submit" class="btn-primary flex-1 py-3 rounded-xl text-white font-semibold text-sm">Perbarui Layanan</button>
-        </div>
+        </div>        
     </form>
 </div>
 @push('scripts')
