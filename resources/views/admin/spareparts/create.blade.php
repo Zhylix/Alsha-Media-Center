@@ -65,8 +65,7 @@
             </div>
         </div>
 
-        @php
-            $serviceTypes = $categories->pluck('service_category')->unique()->values();
+@php
             $partTypesByService = $categories->groupBy('service_category');
         @endphp
 

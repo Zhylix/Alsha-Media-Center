@@ -76,10 +76,24 @@ class AdminSparepartController extends Controller
         ]);
     }
 
-    public function create()
+public function create()
     {
-        $categories = SparepartCategory::where('is_active', true)->orderBy('service_category')->orderBy('part_type')->get();
-        return view('admin.spareparts.create', compact('categories'));
+        $categories = SparepartCategory::where('is_active', true)
+            ->orderBy('service_category')
+            ->orderBy('part_type')
+            ->get();
+
+        // Ambil daftar service category dari tabel services (biar PC/Printer/Software selalu muncul)
+        $serviceTypes = 
+            \App\Models\Service::query()
+                ->whereIn('category', ['laptop', 'pc', 'printer', 'software'])
+                ->select('category')
+                ->distinct()
+                ->orderBy('category')
+                ->pluck('category')
+                ->values();
+
+        return view('admin.spareparts.create', compact('categories', 'serviceTypes'));
     }
 
     public function store(Request $request)

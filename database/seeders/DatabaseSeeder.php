@@ -36,5 +36,8 @@ class DatabaseSeeder extends Seeder
 
         // Call Stat Seeder
         $this->call(StatSeeder::class);
+
+        // Ensure missing service categories exist (pc, software)
+        $this->call(AddMissingServiceCategoriesSeeder::class);
     }
 }
