@@ -2,6 +2,7 @@
 @section('title', 'Service Printer')
 
 @section('content')
+<div data-turbo="false">
 <section class="relative py-32 bg-hero overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
         <div class="absolute top-1/3 left-1/4 w-72 h-72 bg-red-600/10 rounded-full blur-3xl"></div>
@@ -106,3 +107,6 @@
         </div>
     </div>
 </section>
+</div>
+@endsection
+

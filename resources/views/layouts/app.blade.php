@@ -353,6 +353,10 @@
     }
 
     document.addEventListener('turbo:load', () => {
+        // Guard agar init tidak terpanggil berulang saat Turbo melakukan partial render/refresh
+        if (window.__appTurboInitDone) return;
+        window.__appTurboInitDone = true;
+
         initMobileMenu();
         initMobileServicesDropdown();
         initAnimations();
@@ -362,3 +366,4 @@
 </script>
 </body>
 </html>
+
