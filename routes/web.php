@@ -112,4 +112,7 @@ Route::prefix('test-wa-bot')->name('test-wa-bot.')->group(function () {
     Route::get('/', [\App\Http\Controllers\WaBotTestController::class, 'form'])->name('form');
     Route::get('/health', [\App\Http\Controllers\WaBotTestController::class, 'healthCheck'])->name('health');
     Route::post('/send', [\App\Http\Controllers\WaBotTestController::class, 'sendTest'])->name('send');
+
+    // Debug GET tanpa CSRF untuk memastikan integrasi WA bot bekerja
+    Route::get('/send-debug', [\App\Http\Controllers\WaBotTestController::class, 'sendDebug'])->name('send_debug');
 });

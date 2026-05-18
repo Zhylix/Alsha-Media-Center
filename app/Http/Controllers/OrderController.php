@@ -8,6 +8,7 @@ use App\Models\StoreProfile;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\SendOrderNotificationsJob;
 use App\Traits\WhatsAppBot;
 
@@ -57,8 +58,12 @@ class OrderController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        // Send notification async (queue) supaya request user tidak berat/lama
+        // WhatsApp admin notification (langsung/sinkron agar pasti terkirim saat pesanan baru masuk)
+        $this->notifyAdmins($order->load('service'), $service);
+
+        // Email notification tetap async (queue) supaya request user tidak berat
         SendOrderNotificationsJob::dispatch($order->id, $service->id);
+
 
         return redirect()->route('order.success', ['orderNumber' => $order->order_number])
             ->with('success', 'Pesanan Anda telah berhasil dibuat!');
@@ -120,9 +125,23 @@ class OrderController extends Controller
         $message .= "📅 *Tanggal:* " . $order->created_at->format('d/m/Y H:i') . "\n\n";
         $message .= "_Silakan login ke admin untuk mengonfirmasi pesanan._";
 
-        // Notify primary admin via WhatsApp
-        if ($primaryAdmin && $primaryAdmin->whatsapp) {
-            $this->sendWhatsAppMessage($primaryAdmin->whatsapp, $message);
+        // Notify all active admins via WhatsApp (lebih aman daripada hanya primary)
+        $admins = Admin::active()->get(['id', 'name', 'whatsapp', 'email']);
+        Log::info('notifyAdmins WhatsApp payload', [
+            'order_number' => $order->order_number,
+            'admins_count' => $admins->count(),
+            'admins' => $admins->map(fn($a) => [
+                'id' => $a->id,
+                'name' => $a->name,
+                'whatsapp' => $a->whatsapp,
+                'email' => $a->email,
+            ])->values(),
+        ]);
+
+        foreach ($admins as $admin) {
+            if ($admin->whatsapp) {
+                $this->sendWhatsAppMessage($admin->whatsapp, $message);
+            }
         }
 
         // Also send to store WhatsApp if available
@@ -130,10 +149,11 @@ class OrderController extends Controller
             $this->sendWhatsAppMessage($store->whatsapp, $message);
         }
 
-        // Notify primary admin via Email
+        // Email cukup ke primary admin
         if ($primaryAdmin && $primaryAdmin->email) {
             $this->sendEmailNotification($primaryAdmin->email, $order, $service);
         }
+
     }
 
     /**

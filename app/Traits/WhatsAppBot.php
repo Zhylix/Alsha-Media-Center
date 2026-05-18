@@ -111,14 +111,59 @@ trait WhatsAppBot
             ]);
 
             if ($response->failed()) {
+                $body = (string) $response->body();
                 Log::error('WhatsApp notification via WA bot failed', [
                     'http_status' => $response->status(),
-                    'response_body' => $response->body(),
+                    'response_body' => $body,
                     'phone_display' => $displayPhone,
                     'phone_normalized' => $normalizedPhone,
                 ]);
+
+                // Fallback: bot kadang butuh format lokal (0xxx) alih-alih 62xxx
+                // jika error mengindikasikan nomor tidak ada di WhatsApp.
+                if (str_contains($body, 'Number is not on WhatsApp')) {
+                    $localPhone = $this->formatPhoneLocal($phone);
+
+                    Log::warning('WA bot fallback retry with local phone', [
+                        'phone_input' => $phone,
+                        'phone_local' => $localPhone,
+                        'phone_normalized' => $normalizedPhone,
+                    ]);
+
+                    try {
+                        $retryPayload = [
+                            'to' => $this->normalizePhone($localPhone),
+                            'message' => $message,
+                        ];
+
+                        $retryResponse = $this->waBotHttpClient()->post($baseUrl . '/send', $retryPayload);
+
+                        Log::info('WA bot retry response received', [
+                            'status' => $retryResponse->status(),
+                            'success' => $retryResponse->successful(),
+                            'phone_display' => $localPhone,
+                        ]);
+
+                        if ($retryResponse->failed()) {
+                            Log::error('WhatsApp notification via WA bot retry failed', [
+                                'http_status' => $retryResponse->status(),
+                                'response_body' => (string) $retryResponse->body(),
+                                'phone_display' => $localPhone,
+                            ]);
+                        }
+                    } catch (\Throwable $e) {
+                        Log::error('WA bot fallback retry exception', [
+                            'phone_input' => $phone,
+                            'error' => $e->getMessage(),
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                        ]);
+                    }
+                }
+
                 return;
             }
+
 
             Log::info('WhatsApp message sent successfully', [
                 'phone_display' => $displayPhone,

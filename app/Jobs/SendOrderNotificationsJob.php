@@ -24,38 +24,55 @@ class SendOrderNotificationsJob implements ShouldQueue
         public readonly int $serviceId
     ) {}
 
+    public function retryUntil(): \DateTime
+    {
+        return now()->addMinutes(10);
+    }
+
     public function handle(): void
     {
-        $order = Order::with('service')->findOrFail($this->orderId);
-        $service = Service::findOrFail($this->serviceId);
+        try {
+            $order = Order::with('service')->find($this->orderId);
+            if (!$order) {
+                Log::warning('SendOrderNotificationsJob: order not found', [
+                    'order_id' => $this->orderId,
+                    'service_id' => $this->serviceId,
+                ]);
+                return;
+            }
 
-        $primaryAdmin = Admin::getPrimaryAdmin();
-        $store = StoreProfile::first();
+            $service = $order->service ?? Service::find($this->serviceId);
+            if (!$service) {
+                Log::warning('SendOrderNotificationsJob: service not found', [
+                    'order_id' => $this->orderId,
+                    'service_id' => $this->serviceId,
+                ]);
+                return;
+            }
 
-        $message = "🔔 *Pesanan BaruAMC!*\n\n";
-        $message .= "━━━━━━━━━━━━━━━━━━\n";
-        $message .= "📋 *Nomor Pesanan:* {$order->order_number}\n";
-        $message .= "👤 *Pelanggan:* {$order->customer_name}\n";
-        $message .= "📞 *Telepon:* {$order->customer_phone}\n";
-        $message .= "📧 *Email:* {$order->customer_email}\n";
-        $message .= "🛠️ *Layanan:* {$service->name}\n";
-        $message .= "💻 *Device:* {$order->device_description}\n";
-        $message .= "⚠️ *Masalah:* {$order->problem_description}\n";
-        $message .= "💰 *Estimasi Harga:* Rp " . number_format($order->total_price, 0, ',', '.') . "\n";
-        $message .= "━━━━━━━━━━━━━━━━━━\n";
-        $message .= "📅 *Tanggal:* " . $order->created_at->format('d/m/Y H:i') . "\n\n";
-        $message .= "_Silakan login ke admin untuk mengonfirmasi pesanan._";
+            // Job ini difokuskan untuk EMAIL agar tidak dobel WhatsApp.
+            $admins = Admin::active()->get();
+            $store = StoreProfile::first();
 
-        if ($primaryAdmin?->whatsapp) {
-            $this->sendWhatsAppMessage($primaryAdmin->whatsapp, $message);
-        }
+            foreach ($admins as $admin) {
+                if ($admin->email) {
+                    $this->sendEmailNotification($admin->email, $order, $service);
+                }
+            }
 
-        if ($store?->whatsapp) {
-            $this->sendWhatsAppMessage($store->whatsapp, $message);
-        }
+            // Optional: jika butuh email store juga, bisa ditambahkan.
+            // Saat ini hanya admin.
+            // if ($store?->email) { ... }
+        } catch (\Throwable $e) {
+            Log::error('SendOrderNotificationsJob failed', [
+                'order_id' => $this->orderId,
+                'service_id' => $this->serviceId,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
 
-        if ($primaryAdmin?->email) {
-            $this->sendEmailNotification($primaryAdmin->email, $order, $service);
+            throw $e;
         }
     }
 
@@ -79,7 +96,11 @@ class SendOrderNotificationsJob implements ShouldQueue
                 }
             );
         } catch (\Throwable $e) {
-            Log::error('Email notification failed: ' . $e->getMessage());
+            Log::error('Email notification failed', [
+                'email' => $email,
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }

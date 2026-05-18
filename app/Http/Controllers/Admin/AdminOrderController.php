@@ -8,6 +8,7 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Traits\WhatsAppBot;
+use App\Jobs\SendOrderNotificationsJob;
 
 class AdminOrderController extends Controller
 {
@@ -262,6 +263,9 @@ $updateData['total_price'] = $newServicePrice + ($order->sparepart_price ?? 0) +
         $data['total_price'] = $serviceAfter + $shipmentAfter;
 
         $order = Order::create($data);
+
+        // Notify admin via WhatsApp when order is created from admin panel
+        SendOrderNotificationsJob::dispatch($order->id, (int) $data['service_id']);
 
         return redirect()->route('admin.orders.show', $order)->with('success', 'Pesanan baru berhasil dibuat!');
     }

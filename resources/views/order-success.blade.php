@@ -16,6 +16,19 @@
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between"><span class="text-gray-600">Layanan</span><span class="text-gray-900 font-semibold">{{ $order->service->name }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Perangkat</span><span class="text-gray-900">{{ $order->device_description }}</span></div>
+
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Sparepart</span>
+                    <span class="text-gray-900">
+                        @if(($order->sparepart_price ?? 0) > 0)
+                            @php $sparepartPrice = (float) ($order->sparepart_price ?? 0); @endphp
+                            Ya (Rp {{ number_format($sparepartPrice, 0, ',', '.') }})
+                        @else
+                            Tidak
+                        @endif
+                    </span>
+                </div>
+
                 <div class="border-t border-red-600/10 pt-3 flex justify-between text-base font-black"><span class="text-gray-900">Total</span><span class="text-gradient">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span></div>
             </div>
         </div>
@@ -36,8 +49,11 @@
             </div>
         </div>
 
+
         <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://wa.me/{{ preg_replace('/\D/','',optional($store)->whatsapp ?? '6281234567890') }}?text=Halo, nomor pesanan saya: {{ $order->order_number }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fas fa-comments text-red-600"></i> Konfirmasi via WA</a>
+            @if($store && $store->whatsapp)
+                <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp) }}?text=Halo, nomor pesanan saya: {{ $order->order_number }}" target="_blank" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold"><i class="fas fa-comments text-red-600"></i> Konfirmasi via WA</a>
+            @endif
             <a href="{{ route('home') }}" class="btn-outline inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-red-600 font-bold"><i class="fas fa-home text-red-600"></i> Beranda</a>
         </div>
     </div>
