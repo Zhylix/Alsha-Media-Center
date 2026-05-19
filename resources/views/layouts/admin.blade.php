@@ -162,35 +162,65 @@
     </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const hamburger = document.getElementById('hamburger');
-    
-    hamburger.addEventListener('click', function() {
-        sidebar.classList.toggle('translate-x-0');
-        sidebar.classList.toggle('-translate-x-full');
-        overlay.classList.toggle('sidebar-overlay-open');
-        hamburger.classList.toggle('hamburger-open');
-    });
-    
-    overlay.addEventListener('click', function() {
-        sidebar.classList.add('-translate-x-full');
-        sidebar.classList.remove('translate-x-0');
-        overlay.classList.remove('sidebar-overlay-open');
-        hamburger.classList.remove('hamburger-open');
-    });
-    
-    // Close on escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
+(function () {
+
+    function init() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const hamburger = document.getElementById('hamburger');
+
+        if (!sidebar || !overlay || !hamburger) return;
+
+        // Hindari duplicate event listener
+        if (hamburger.dataset.initialized === 'true') return;
+        hamburger.dataset.initialized = 'true';
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+
+            overlay.classList.remove('hidden');
+            overlay.classList.add('sidebar-overlay-open');
+
+            hamburger.classList.add('hamburger-open');
+        }
+
+        function closeSidebar() {
             sidebar.classList.add('-translate-x-full');
             sidebar.classList.remove('translate-x-0');
+
             overlay.classList.remove('sidebar-overlay-open');
+            overlay.classList.add('hidden');
+
             hamburger.classList.remove('hamburger-open');
         }
-    });
-});
+
+        hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const isOpen = sidebar.classList.contains('translate-x-0');
+
+            if (isOpen) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('turbo:load', init);
+
+})();
 </script>
 
 @stack('scripts')
