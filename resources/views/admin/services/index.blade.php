@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Kelola Layanan')
 @section('page-title', 'Kelola Layanan')
-@section('page-subtitle', 'CRUD - Manajemen jasa service')
+@section('page-subtitle', 'Manajemen jasa service')
 
 @section('content')
 <div class="flex items-center justify-between mb-6">

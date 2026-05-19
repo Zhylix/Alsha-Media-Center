@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Kelola Testimonial')
 @section('page-title', 'Kelola Testimonial')
-@section('page-subtitle', 'CRUD - Manajemen testimoni pelanggan')
+@section('page-subtitle', 'Manajemen testimoni pelanggan')
 
 @section('content')
 <div class="flex items-center justify-between mb-6">

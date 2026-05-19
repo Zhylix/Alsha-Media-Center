@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Kelola Stats')
 @section('page-title', 'Kelola Stats')
-@section('page-subtitle', 'CRUD - Manajemen statistik hero section')
+@section('page-subtitle', 'Manajemen statistik hero section')
 
 @section('content')
 <div class="flex items-center justify-between mb-6">
