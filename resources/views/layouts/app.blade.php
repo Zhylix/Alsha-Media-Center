@@ -175,10 +175,10 @@
                 <div>
                     <h4 class="text-gray-900 font-bold mb-5 text-sm uppercase tracking-wider">Layanan</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><a href="{{ route('services.pc') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-desktop text-gray-500"></i></span> Service PC</a></li>
-                        <li><a href="{{ route('services.laptop') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-laptop text-gray-500"></i></span> Service Laptop</a></li>
-                        <li><a href="{{ route('services.printer') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-print text-gray-500"></i></span> Service Printer</a></li>
-                        <li><a href="{{ route('services.software') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"><span><i class="fas fa-compact-disc text-gray-500"></i></span> Jasa Installasi</a></li>
+                        <li><a href="{{ route('services.pc') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2 {{ request()->routeIs('services.pc') ? 'active text-red-600' : '' }}"><span><i class="fas fa-desktop {{ request()->routeIs('services.pc') ? 'active text-red-600' : '' }}"></i></span> Service PC</a></li>
+                        <li><a href="{{ route('services.laptop') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2 {{ request()->routeIs('services.laptop') ? 'active text-red-600' : '' }}"><span><i class="fas fa-laptop {{ request()->routeIs('services.laptop') ? 'active text-red-600' : '' }}"></i></span> Service Laptop</a></li>
+                        <li><a href="{{ route('services.printer') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2 {{ request()->routeIs('services.printer') ? 'active text-red-600' : '' }}"><span><i class="fas fa-print {{ request()->routeIs('services.printer') ? 'active text-red-600' : '' }}"></i></span> Service Printer</a></li>
+                        <li><a href="{{ route('services.software') }}" class="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2 {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"><span><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"></i></span> Jasa Installasi</a></li>
                     </ul>
                 </div>
 

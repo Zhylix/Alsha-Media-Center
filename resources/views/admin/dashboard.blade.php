@@ -131,33 +131,5 @@
             </table>
         </div>
     </div>
-
-    <!-- Recent Messages -->   
-    <div class="service-card rounded-2xl overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-red-600/10">
-            <h3 class="font-bold text-gray-900">Pesan Terbaru</h3>
-            <a href="{{ route('admin.contacts.index') }}" class="text-red-600 text-sm hover:text-gray-900 transition-colors">Lihat Semua <i class="fas fa-arrow-right"></i></a>
-        </div>
-        <div class="divide-y divide-gray-100/50 [&>a]:py-4 [&>a]:px-6 [&>a:hover]:rounded-xl [&>a:hover]:bg-gray-50/50">
-            @foreach($recentMessages as $msg)
-            <a href="{{ route('admin.contacts.show', $msg) }}" class="block px-6 py-3 hover:bg-gray-50 transition-colors">
-                <div class="flex items-center justify-between gap-2 mb-1">
-                    <p class="text-gray-900 text-sm font-semibold truncate flex-1">{{ Str::limit($msg->name, 18) }}</p>
-                    @if(!$msg->is_read)
-                        <span class="w-2 h-2 bg-red-600 rounded-full flex-shrink-0"></span>
-                    @endif
-                </div>
-                <p class="text-gray-600 text-xs truncate mb-1">{{ Str::limit($msg->subject, 32) }}</p>
-                <div class="flex items-center justify-between gap-2">
-                    <p class="text-gray-500 text-xs">{{ $msg->created_at->diffForHumans() }}</p>
-                    @if(!$msg->is_read)<span class="badge badge-red text-xs px-2 py-0.5">Baru</span>@endif
-                </div>
-            </a>
-            @endforeach
-            @if($recentMessages->isEmpty())
-            <div class="px-6 py-6 text-center text-gray-500 text-sm">Belum ada pesan</div>
-            @endif
-        </div>
-    </div>
 </div>
 @endsection

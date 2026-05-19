@@ -77,14 +77,7 @@
             </a>
 
             <p class="text-xs text-gray-500 uppercase font-bold tracking-widest px-3 mt-4 mb-2">Lainnya</p>
-
-            <a href="{{ route('admin.contacts.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
-                <span class="text-lg"><i class="fas fa-envelope-open-text"></i></span> Pesan Masuk
-                @php $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
-                @if($unreadCount > 0)
-                <span class="ml-auto badge badge-red">{{ $unreadCount }}</span>
-                @endif
-            </a>
+            
             <a href="{{ route('admin.store.index') }}" class="admin-nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 {{ request()->routeIs('admin.store.*') ? 'active' : '' }}">
                 <span class="text-lg"><i class="fas fa-store"></i></span> Profil Toko
             </a>

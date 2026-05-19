@@ -16,25 +16,25 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('admin.store.update') }}" enctype="multipart/form-data" id="store-form" class="space-y-6" data-turbo="false">
+    <form method="POST" action="{{ route('admin.store.update') }}" enctype="multipart/form-data" id="store-form" class="space-y-6">
         @csrf @method('PUT')
-        
+
         {{-- Tabs Navigation --}}
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="flex border-b border-gray-200" id="tabs-nav">
                 @php
-                    $store = $store ?? (object) [];
+                    $store ??= (object) [];
                     $tabs = [
-                        ['id' => 'basic', 'icon' => 'fa-store', 'title' => 'Info Dasar', 'complete' => !empty($store->store_name ?? '')],
-                        ['id' => 'branding', 'icon' => 'fa-image', 'title' => 'Branding', 'complete' => !empty($store->logo ?? '')],
-                        ['id' => 'contact', 'icon' => 'fa-map-marker-alt text-red-500', 'title' => 'Kontak', 'complete' => !empty($store->address ?? '')],
-                        ['id' => 'location', 'icon' => 'fa-map text-red-600', 'title' => 'Lokasi', 'complete' => !empty($store->google_maps_link ?? '')],
-                        ['id' => 'hours', 'icon' => 'fa-clock', 'title' => 'Jam', 'complete' => !empty($store->open_days ?? '')]
+                        ['id' => 'basic', 'icon' => 'fa-store', 'title' => 'Info Dasar', 'complete' => !empty(data_get($store, 'store_name'))],
+                        ['id' => 'branding', 'icon' => 'fa-image', 'title' => 'Branding', 'complete' => !empty(data_get($store, 'logo'))],
+                        ['id' => 'contact', 'icon' => 'fa-map-marker-alt text-red-500', 'title' => 'Kontak', 'complete' => !empty(data_get($store, 'address'))],
+                        ['id' => 'location', 'icon' => 'fa-map text-red-600', 'title' => 'Lokasi', 'complete' => !empty(data_get($store, 'google_maps_link'))],
+                        ['id' => 'hours', 'icon' => 'fa-clock', 'title' => 'Jam', 'complete' => !empty(data_get($store, 'open_days'))]
                     ];
                 @endphp
                 @foreach($tabs as $tab)
-                <button type="button" data-tab="{{ $tab['id'] }}" 
-                        class="flex-1 py-4 px-6 text-sm font-semibold border-b-2 transition-all duration-200 hover:bg-red-50 text-gray-600 border-transparent hover:border-red-200 hover:text-red-700 items-center gap-2">
+                <button type="button" data-tab="{{ $tab['id'] }}"
+                        class="flex-1 py-4 px-6 text-sm font-semibold border-b-2 transition-all duration-200 hover:bg-red-50 @if($loop->first) bg-white border-red-500 text-red-700 shadow-sm @else text-gray-600 border-transparent hover:border-red-200 hover:text-red-700 @endif items-center gap-2">
                     <i class="fas {{ $tab['icon'] }} text-xs"></i>
                     {{ $tab['title'] }}
                 </button>
@@ -50,20 +50,20 @@
                         <div class="grid grid-cols-1 gap-6">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Nama Toko *</label>
-                                <input type="text" name="store_name" value="{{ old('store_name', $store->store_name ?? '') }}" required 
+                                <input type="text" name="store_name" value="{{ old('store_name', data_get($store, 'store_name', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl text-lg font-semibold border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all">
                                 @error('store_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Tagline / Slogan</label>
-                                <input type="text" name="tagline" value="{{ old('tagline', $store->tagline ?? '') }}" 
+                                <input type="text" name="tagline" value="{{ old('tagline', data_get($store, 'tagline', '')) }}"
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all"
                                        placeholder="Contoh: 'Service Laptop & PC Terpercaya'">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Deskripsi Toko *</label>
-                                <textarea name="description" required rows="5" 
-                                          class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all resize-vertical">{{ old('description', $store->description ?? '') }}</textarea>
+                                <textarea name="description" required rows="5"
+                                          class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all resize-vertical">{{ old('description', data_get($store, 'description', '')) }}</textarea>
                                 @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                 <div id="branding" class="tab-content hidden">
                     <div class="service-card p-8 rounded-2xl space-y-8">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3"><i class="fas fa-image text-red-500"></i>Logo & Gambar Hero</h3>
-                        
+
                         {{-- Logo Upload --}}
                         <div class="grid md:grid-cols-2 gap-8">
                             <div class="space-y-4">
@@ -88,20 +88,16 @@
                                 </div>
                                 @error('logo') <p class="text-sm text-red-600 mt-2">{{ $message }}</p> @enderror
                             </div>
-                            
+
                             {{-- Current Logo --}}
-                            @if(isset($store) && isset($store->logo) && $store->logo)
+                            @if(!empty(data_get($store, 'logo')))
                             <div class="space-y-4">
                                 <h4 class="text-lg font-bold text-gray-900">Logo Saat Ini</h4>
                                 <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
-                                    <div id="logo-preview-container">
-                                        @if(!empty($store->logo))
-                                            <img src="{{ asset('storage/' . $store->logo) }}"
-                                                class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
-                                        @endif
-                                    </div>
+                                    <img src="{{ asset('storage/' . data_get($store, 'logo')) }}" alt="Logo Saat Ini"
+                                         class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
                                     <div class="text-center mt-4">
-                                        <button type="button" onclick="confirmDelete('logo')" 
+                                        <button type="button" onclick="confirmDelete('logo')"
                                                 class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-md">
                                             <i class="fas fa-trash mr-2"></i>Hapus Logo
                                         </button>
@@ -124,18 +120,15 @@
                                         <input type="file" id="hero-upload" name="hero_image" accept="image/*" class="hidden" onchange="previewHero(this)">
                                     </div>
                                 </div>
-                                @if(!empty($store->hero_image))
+
+                                @if(!empty(data_get($store, 'hero_image')))
                                 <div class="space-y-4">
                                     <h4 class="text-lg font-bold text-gray-900">Hero Saat Ini</h4>
                                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
-                                        <div id="hero-preview-container">
-                                            @if(!empty($store->hero_image))
-                                                <img src="{{ asset('storage/' . $store->hero_image) }}"
-                                                    class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
-                                            @endif
-                                        </div>
+                                        <img src="{{ asset('storage/' . data_get($store, 'hero_image')) }}" alt="Hero"
+                                             class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
                                         <div class="text-center mt-4">
-                                            <button type="button" onclick="confirmDelete('hero')" 
+                                            <button type="button" onclick="confirmDelete('hero')"
                                                     class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-md">
                                                 <i class="fas fa-trash mr-2"></i>Hapus Hero
                                             </button>
@@ -152,44 +145,44 @@
                 <div id="contact" class="tab-content hidden">
                     <div class="service-card p-8 rounded-2xl space-y-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3"><i class="fas fa-map-marker-alt text-red-500"></i>Informasi Kontak</h3>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Alamat Lengkap *</label>
-                                <input type="text" name="address" value="{{ old('address', $store->address ?? '') }}" required 
+                                <input type="text" name="address" value="{{ old('address', data_get($store, 'address', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100">
                                 @error('address') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Kota *</label>
-                                <input type="text" name="city" value="{{ old('city', $store->city ?? '') }}" required 
+                                <input type="text" name="city" value="{{ old('city', data_get($store, 'city', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100">
                                 @error('city') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Telepon *</label>
-                                <input type="tel" name="phone" value="{{ old('phone', $store->phone ?? '') }}" required 
+                                <input type="tel" name="phone" value="{{ old('phone', data_get($store, 'phone', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">WhatsApp</label>
-                                <input type="tel" name="whatsapp" value="{{ old('whatsapp', $store->whatsapp ?? '') }}" 
+                                <input type="tel" name="whatsapp" value="{{ old('whatsapp', data_get($store, 'whatsapp', '')) }}"
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Email *</label>
-                                <input type="email" name="email" value="{{ old('email', $store->email ?? '') }}" required 
+                                <input type="email" name="email" value="{{ old('email', data_get($store, 'email', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100">
                             </div>
                             <div class="md:col-span-2 grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Instagram</label>
-                                    <input type="text" name="instagram" value="{{ old('instagram', $store->instagram ?? '') }}" 
+                                    <input type="text" name="instagram" value="{{ old('instagram', data_get($store, 'instagram', '')) }}"
                                            class="form-input w-full px-5 py-3 rounded-xl border focus:border-red-400" placeholder="@username">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Facebook</label>
-                                    <input type="text" name="facebook" value="{{ old('facebook', $store->facebook ?? '') }}" 
+                                    <input type="text" name="facebook" value="{{ old('facebook', data_get($store, 'facebook', '')) }}"
                                            class="form-input w-full px-5 py-3 rounded-xl border focus:border-red-400" placeholder="facebook.com/username">
                                 </div>
                             </div>
@@ -199,21 +192,21 @@
                         <div class="p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
                             <h4 class="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900">Preview Sosial Media</h4>
                             <div class="flex gap-4 justify-center">
-@if($store && isset($store->instagram) && !empty($store->instagram))
-                                <a href="https://instagram.com/{{ ltrim($store->instagram, '@') }}" target="_blank" 
+                                @if(!empty(data_get($store, 'instagram')))
+                                <a href="https://instagram.com/{{ ltrim(data_get($store, 'instagram', ''), '@') }}" target="_blank"
                                    class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
                                     <i class="fab fa-instagram text-sm"></i>
                                 </a>
                                 @endif
-                                @if(isset($store->facebook) && !empty($store->facebook))
-                                <a href="{{ str_contains($store->facebook, 'facebook.com') ? 'https://' . ltrim($store->facebook, 'https://') : 'https://facebook.com/' . $store->facebook }}" target="_blank" 
-                                class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
+                                @if(!empty(data_get($store, 'facebook')))
+                                <a href="https://facebook.com/{{ data_get($store, 'facebook', '') }}" target="_blank"
+                                   class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
                                     <i class="fab fa-facebook-f text-sm"></i>
                                 </a>
                                 @endif
-                                @if(isset($store->whatsapp) && !empty($store->whatsapp))
-                                <a href="https://wa.me/{{ preg_replace('/\D/', '', $store->whatsapp) }}" target="_blank" 
-                                class="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
+                                @if(!empty(data_get($store, 'whatsapp')))
+                                <a href="https://wa.me/{{ preg_replace('/\D/', '', data_get($store, 'whatsapp', '')) }}" target="_blank"
+                                   class="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all">
                                     <i class="fab fa-whatsapp text-sm"></i>
                                 </a>
                                 @endif
@@ -226,30 +219,29 @@
                 <div id="location" class="tab-content hidden">
                     <div class="service-card p-8 rounded-2xl space-y-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3"><i class="fas fa-map text-red-600"></i>Google Maps</h3>
-                        
+
                         <div class="space-y-6">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Link Embed Maps (Peta di Website) *</label>
-                                <input type="url" name="google_maps_link" value="{{ old('google_maps_link', $store->google_maps_link ?? '') }}"
-
+                                <input type="url" name="google_maps_link" value="{{ old('google_maps_link', data_get($store, 'google_maps_link', '')) }}"
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100"
-
                                        placeholder="https://www.google.com/maps/embed?pb=...">
                                 <p class="mt-2 text-xs text-gray-500">Salin dari tab "Embed peta" di Google Maps → Share</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Link Langsung (Tombol Buka Maps)</label>
-                                <input type="url" name="google_maps_direct_link" value="{{ old('google_maps_direct_link', $store->google_maps_direct_link ?? '') }}" 
+                                <input type="url" name="google_maps_direct_link" value="{{ old('google_maps_direct_link', data_get($store, 'google_maps_direct_link', '')) }}"
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100"
                                        placeholder="https://maps.app.goo.gl/...">
                                 <p class="mt-2 text-xs text-gray-500">Salin link pendek dari tab "Kirim tautan" di Google Maps</p>
                             </div>
                         </div>
-                        @if(isset($store->google_maps_link) && !empty($store->google_maps_link))
+
+                        @if(!empty(data_get($store, 'google_maps_link')))
                         <div class="border-t pt-6">
                             <h4 class="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900">Preview Peta</h4>
                             <div class="rounded-2xl border-4 border-red-500/20 overflow-hidden shadow-2xl max-h-96">
-                                <iframe src="{{ $store->google_maps_link ?? '' }}" width="100%" height="400" style="border:0; border-radius: 1rem;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <iframe src="{{ data_get($store, 'google_maps_link', '') }}" width="100%" height="400" style="border:0; border-radius: 1rem;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
                         </div>
                         @endif
@@ -263,27 +255,27 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Hari Buka *</label>
-                                <input type="text" name="open_days" value="{{ old('open_days', $store->open_days ?? '') }}" required 
+                                <input type="text" name="open_days" value="{{ old('open_days', data_get($store, 'open_days', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100"
                                        placeholder="Senin - Sabtu">
                                 @error('open_days') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-3">Jam Buka *</label>
-                                <input type="text" name="open_hours" value="{{ old('open_hours', $store->open_hours ?? '') }}" required 
+                                <input type="text" name="open_hours" value="{{ old('open_hours', data_get($store, 'open_hours', '')) }}" required
                                        class="form-input w-full px-5 py-4 rounded-2xl border-2 focus:border-red-500 focus:ring-4 focus:ring-red-100"
                                        placeholder="08:00 - 20:00">
                                 @error('open_hours') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
-                        
+
                         {{-- Preview --}}
                         <div class="p-6 bg-emerald-50 border-2 border-emerald-200 rounded-2xl">
                             <h4 class="text-lg font-bold mb-4 text-emerald-800 flex items-center gap-2">Preview di Website</h4>
                             <div class="text-center">
                                 <i class="fas fa-clock text-4xl text-emerald-500 mb-4"></i>
-                                <p class="text-2xl font-bold text-gray-900">{{ old('open_days', $store->open_days ?? 'Senin - Sabtu') }}</p>
-                                <p class="text-xl text-gray-700">{{ old('open_hours', $store->open_hours ?? '08:00 - 20:00') }}</p>
+                                <p class="text-2xl font-bold text-gray-900">{{ old('open_days', data_get($store, 'open_days', 'Senin - Sabtu')) }}</p>
+                                <p class="text-xl text-gray-700">{{ old('open_hours', data_get($store, 'open_hours', '08:00 - 20:00')) }}</p>
                             </div>
                         </div>
                     </div>
@@ -294,7 +286,7 @@
         {{-- Sticky Save Button --}}
         <div class="pt-6 border-t bg-white sticky bottom-0 left-0 right-0 p-6 shadow-2xl rounded-2xl border border-gray-200 z-10">
             <div class="flex gap-4 justify-end max-w-2xl mx-auto">
-                <button type="button" onclick="resetForm()" 
+                <button type="button" onclick="resetForm()"
                         class="px-8 py-4 border-2 border-gray-300 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
                     <i class="fas fa-undo mr-2"></i>Batal
                 </button>
@@ -311,37 +303,11 @@
 <form id="delete-logo-form" action="{{ route('admin.store.logo.delete') }}" method="POST" class="hidden">@csrf @method('DELETE')</form>
 <form id="delete-hero-form" action="{{ route('admin.store.hero.delete') }}" method="POST" class="hidden">@csrf @method('DELETE')</form>
 
-@if ($errors->any())
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const firstError = document.querySelector('.text-red-600');
-
-    if (firstError) {
-        const tab = firstError.closest('.tab-content');
-
-        if (tab) {
-            setTabActive(tab.id);
-        }
-    }
-});
-</script>
-@endif
 @push('scripts')
 <script>
-(() => {
-    'use strict';
+document.addEventListener('DOMContentLoaded', function () {
 
-
-    /**
-     * Guard untuk mencegah init ganda (Turbo + DOMContentLoaded).
-     */
-    if (window.__storeProfileInitDone === true) return;
-    window.__storeProfileInitDone = true;
-
-    const STORE_TAB_STORAGE_KEY = 'activeStoreTab';
-
-    // Field yang menghitung progress bar
-    const progressFields = [
+    let progressFields = [
         'store_name',
         'description',
         'address',
@@ -349,301 +315,141 @@ document.addEventListener('DOMContentLoaded', () => {
         'phone',
         'email',
         'open_days',
-        'open_hours',
+        'open_hours'
     ];
 
-    /**
-     * Ambil elemen secara aman.
-     */
-    const $ = (sel, root = document) => root.querySelector(sel);
-    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    // Tab switching
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const tabId = e.currentTarget.dataset.tab;
 
-    /**
-     * Aktifkan tab berdasarkan id.
-     */
-    function setTabActive(tabId) {
-        if (!tabId) return;
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
 
-        const contents = $$('.tab-content');
-        contents.forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('#tabs-nav button').forEach(b => {
+                b.classList.remove(
+                    'bg-white',
+                    'border-red-500',
+                    'text-red-700',
+                    'shadow-sm'
+                );
+                b.classList.add('hover:bg-red-50');
+            });
 
-        const buttons = $$('#tabs-nav button[data-tab]');
-        buttons.forEach(btn => {
-            btn.classList.remove('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
-            // restore style default (sesuaikan dengan HTML blade)
-            btn.classList.add(
-                'text-gray-600',
-                'border-transparent',
-                'hover:bg-red-50',
-                'hover:border-red-200',
-                'hover:text-red-700'
+            // Show selected
+            const selectedTab = document.getElementById(tabId);
+
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+            }
+
+            e.currentTarget.classList.add(
+                'bg-white',
+                'border-red-500',
+                'text-red-700',
+                'shadow-sm'
             );
+
+            e.currentTarget.classList.remove('hover:bg-red-50');
+
+            updateProgress();
         });
+    });
 
-        const activeTabEl = document.getElementById(tabId);
-        if (activeTabEl) activeTabEl.classList.remove('hidden');
-
-        const activeBtn = $(`#tabs-nav button[data-tab="${tabId}"]`);
-        if (activeBtn) {
-            activeBtn.classList.remove(
-                'text-gray-600',
-                'border-transparent',
-                'hover:bg-red-50',
-                'hover:border-red-200',
-                'hover:text-red-700'
-            );
-            activeBtn.classList.add('bg-white', 'border-red-500', 'text-red-700', 'shadow-sm');
-        }
-    }
-
-    /**
-     * Update progress bar realtime.
-     */
+    // Progress calculation
     function updateProgress() {
-        const progressPercentEl = $('#progress-percent');
-        const progressBarEl = $('#progress-bar');
-        if (!progressPercentEl || !progressBarEl) return;
+        let complete = 0;
 
-        const complete = progressFields.reduce((acc, name) => {
-            const input = $(`[name="${name}"]`);
-            if (input && String(input.value || '').trim()) return acc + 1;
-            return acc;
-        }, 0);
+        progressFields.forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+
+            if (input && input.value.trim()) {
+                complete++;
+            }
+        });
 
         const percent = Math.round((complete / progressFields.length) * 100);
-        progressPercentEl.textContent = `${percent}%`;
-        progressBarEl.style.width = `${percent}%`;
+
+        const progressText = document.getElementById('progress-percent');
+        const progressBar = document.getElementById('progress-bar');
+
+        if (progressText) {
+            progressText.textContent = `${percent}%`;
+        }
+
+        if (progressBar) {
+            progressBar.style.width = `${percent}%`;
+        }
     }
 
-    /**
-     * Preview upload logo.
-     * Dipanggil lewat inline onchange="previewLogo(this)".
-     */
-    window.previewLogo = function previewLogo(input) {
-        try {
-            if (!input?.files?.[0]) return;
+    updateProgress();
 
-            const previewContainer = $('#logo-preview-container');
-            if (!previewContainer) return;
+    // FORM SUBMIT
+    const form = document.getElementById('store-form');
 
-            const reader = new FileReader();
-            reader.onload = e => {
-                const dataUrl = e?.target?.result;
-                if (!dataUrl) return;
-                previewContainer.innerHTML = `
-                    <img src="${dataUrl}" class="w-32 h-32 mx-auto object-contain rounded-xl shadow-lg bg-white p-4">
-                `;
-            };
-            reader.readAsDataURL(input.files[0]);
-        } catch (err) {
-            // Silent fail agar tidak memutus halaman
-            console.error('previewLogo error:', err);
-        }
-    };
+    if (form) {
+        form.addEventListener('submit', function(e) {
 
-    /**
-     * Preview upload hero.
-     * Dipanggil lewat inline onchange="previewHero(this)".
-     */
-    window.previewHero = function previewHero(input) {
-        try {
-            if (!input?.files?.[0]) return;
-
-            const previewContainer = $('#hero-preview-container');
-            if (!previewContainer) return;
-
-            const reader = new FileReader();
-            reader.onload = e => {
-                const dataUrl = e?.target?.result;
-                if (!dataUrl) return;
-                previewContainer.innerHTML = `
-                    <img src="${dataUrl}" class="w-64 h-40 mx-auto object-cover rounded-xl shadow-lg">
-                `;
-            };
-            reader.readAsDataURL(input.files[0]);
-        } catch (err) {
-            console.error('previewHero error:', err);
-        }
-    };
-
-    /**
-     * Delete confirmation.
-     * Dipanggil lewat inline onclick="confirmDelete('logo')".
-     */
-    window.confirmDelete = function confirmDelete(type) {
-        const form = document.getElementById(`delete-${type}-form`);
-        if (!form) return;
-
-        const label = type === 'logo' ? 'logo' : 'gambar hero';
-        if (!confirm(`Yakin ingin menghapus ${label}?`)) return;
-
-        form.submit();
-    };
-
-    /**
-     * Reset form.
-     */
-    window.resetForm = function resetForm() {
-        location.reload();
-    };
-
-    /**
-     * Ambil id tab yang harus aktif.
-     * - Prefer error tab (jika ada)
-     * - Lalu hash
-     * - Lalu localStorage
-     * - Default: basic
-     */
-    function resolveInitialTab() {
-        // 1) Tab dari error server-side (jika ada)
-        const firstErrorEl = document.querySelector('.text-red-600');
-        if (firstErrorEl) {
-            const tab = firstErrorEl.closest('.tab-content');
-            if (tab?.id) return tab.id;
-        }
-
-        // 2) Hash
-        const hashTab = window.location.hash?.replace('#', '');
-        if (hashTab && document.getElementById(hashTab)) return hashTab;
-
-        // 3) localStorage
-        const stored = localStorage.getItem(STORE_TAB_STORAGE_KEY);
-        if (stored && document.getElementById(stored)) return stored;
-
-        return 'basic';
-    }
-
-    /**
-     * Init event handler.
-     */
-    function init() {
-        const storeForm = $('#store-form');
-        const tabsNav = $('#tabs-nav');
-        if (!storeForm || !tabsNav) return;
-
-        // Aktifkan tab awal
-        const initialTab = resolveInitialTab();
-        setTabActive(initialTab);
-
-        // Simpan ke storage saat berubah
-        tabsNav.addEventListener('click', (e) => {
-            const btn = e.target.closest('button[data-tab]');
-            if (!btn) return;
-
-            const tabId = btn.dataset.tab;
-            if (!tabId) return;
-
-            e.preventDefault();
-
-            setTabActive(tabId);
-            localStorage.setItem(STORE_TAB_STORAGE_KEY, tabId);
-            window.location.hash = tabId;
-
-            // progress update
-            updateProgress();
-        }, { passive: false });
-
-        // Progress realtime
-        // Gunakan event delegation pada form biar tidak perlu binding per input
-        storeForm.addEventListener('input', (e) => {
-            const t = e.target;
-            if (!t) return;
-            if (t.matches('input, textarea')) updateProgress();
-        });
-        storeForm.addEventListener('change', (e) => {
-            const t = e.target;
-            if (!t) return;
-            if (t.matches('input, textarea')) updateProgress();
-        });
-
-        // Validasi + buka tab error + loading state
-        storeForm.addEventListener('submit', (e) => {
-            // reset style error
-            $$('.required-error-guard').forEach(el => el.classList.remove('required-error-guard'));
-
-            const requiredFields = $$('[required]', storeForm);
+            const required = document.querySelectorAll('[required]');
             let valid = true;
-            let firstInvalid = null;
 
-            requiredFields.forEach(field => {
-                const val = String(field.value || '').trim();
-                if (!val) {
-                    valid = false;
+            required.forEach(field => {
+
+                if (!field.value.trim()) {
                     field.classList.add('border-red-500');
-                    if (!firstInvalid) firstInvalid = field;
+                    valid = false;
                 } else {
                     field.classList.remove('border-red-500');
                 }
+
             });
 
             if (!valid) {
                 e.preventDefault();
 
-                if (firstInvalid) {
-                    const tab = firstInvalid.closest('.tab-content');
-                    if (tab?.id) setTabActive(tab.id);
+                alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
 
-                    // scroll + fokus biar user langsung ke field
-                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstInvalid.focus({ preventScroll: true });
+                const firstError = document.querySelector('.border-red-500');
+
+                if (firstError) {
+                    firstError.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                 }
 
-                alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
                 return;
             }
 
-            // Loading state submit
-            const saveBtn = $('#save-btn');
+            // loading button
+            const saveBtn = document.getElementById('save-btn');
+
             if (saveBtn) {
                 saveBtn.disabled = true;
+
                 saveBtn.innerHTML = `
                     <i class="fas fa-spinner fa-spin"></i>
                     Menyimpan...
                 `;
             }
         });
-
-        // set initial progress
-        updateProgress();
-
-        // kalau ada hash tab, simpan
-        const hashTab = window.location.hash?.replace('#', '');
-        if (hashTab) localStorage.setItem(STORE_TAB_STORAGE_KEY, hashTab);
-
-        // sync style active tab saat load pertama
-        setTabActive(initialTab);
     }
 
-    let turboBusy = false;
-    function initOncePerVisit() {
-        if (turboBusy) return;
-        turboBusy = true;
-        try {
-            init();
-        } finally {
-            turboBusy = false;
-        }
-    }
+});
 
-    document.addEventListener('turbo:load', initOncePerVisit);
-    document.addEventListener('DOMContentLoaded', initOncePerVisit);
-})();
+// FUNCTIONS GLOBAL
+function resetForm() {
+    location.reload();
+}
+
+function confirmDelete(type) {
+    if (confirm(`Yakin ingin menghapus ${type === 'logo' ? 'logo' : 'gambar hero'}?`)) {
+        document.getElementById(`delete-${type}-form`).submit();
+    }
+}
 </script>
 @endpush
-
-@if ($errors->any())
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const firstError = document.querySelector('.text-red-600');
-
-    if (firstError) {
-        const tab = firstError.closest('.tab-content');
-
-        if (tab) {
-            setTabActive(tab.id);
-        }
-    }
-});
-</script>
-@endif
 @endsection
+

@@ -88,11 +88,6 @@ Route::prefix('alsha')->name('admin.')->group(function () {
         // Testimonials CRUD
         Route::resource('testimonials', AdminTestimonialController::class)->except(['show']);
 
-        // Contact messages
-        Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');
-        Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
-        Route::delete('/contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
-
 // Store profile
         Route::get('/store', [AdminStoreController::class, 'index'])->name('store.index');
         Route::put('/store', [AdminStoreController::class, 'update'])->name('store.update');
