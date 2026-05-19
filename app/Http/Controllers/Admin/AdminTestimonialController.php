@@ -23,7 +23,7 @@ class AdminTestimonialController extends Controller
     {
         $data = $request->validate([
             'customer_name' => 'required|string|max:255',
-            'service_type'  => 'required|in:laptop,printer,pc',
+            'service_type'  => 'required|in:laptop,printer,pc,software',
             'rating'        => 'required|integer|between:1,5',
             'comment'       => 'required|string|max:1000',
         ]);
@@ -41,7 +41,7 @@ class AdminTestimonialController extends Controller
     {
         $data = $request->validate([
             'customer_name' => 'required|string|max:255',
-            'service_type'  => 'required|in:laptop,printer,pc',
+            'service_type'  => 'required|in:laptop,printer,pc,software',
             'rating'        => 'required|integer|between:1,5',
             'comment'       => 'required|string|max:1000',
         ]);

@@ -37,7 +37,15 @@
                     </td>
                     <td>
                         <span class="badge badge-gray">
-                            {!! $t->service_type === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i> Laptop' : ($t->service_type === 'printer' ? '<i class="fas fa-print text-red-600"></i> Printer' : '<i class="fas fa-mobile-alt text-red-600"></i> HP') !!}
+                            {!! $t->service_type === 'laptop'
+                                ? '<i class="fas fa-laptop text-red-600 py-1"></i>'
+                                : ($t->service_type === 'printer'
+                                    ? '<i class="fas fa-print text-red-600 py-1"></i>'
+                                    : ($t->service_type === 'software'
+                                        ? '<i class="fas fa-compact-disc text-red-600 py-1"></i>'
+                                        : '<i class="fas fa-desktop text-red-600 py-1"></i>'
+                                    )
+                                ) !!}
                         </span>
                     </td>
                     <td>

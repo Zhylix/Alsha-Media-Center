@@ -27,7 +27,6 @@ class OrderController extends Controller
         // Group services by category
         $servicesByCategory = $services->groupBy('category');
 
-        return view('order', compact('services', 'servicesByCategory', 'store'));
         // Spareparts untuk dropdown di halaman order (dipisah per service category agar bisa difilter)
         $sparepartsByCategory = \App\Models\Sparepart::query()
             ->where('is_active', true)

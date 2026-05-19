@@ -93,7 +93,17 @@
                 </div>
             </div>
             <div class="service-card p-8 rounded-2xl">
-                <div class="text-6xl text-center mb-4">{!! $service->category === 'laptop' ? '<i class="fas fa-laptop text-red-600"></i>' : ($service->category === 'printer' ? '<i class="fas fa-print text-red-600"></i>' : '<i class="fas fa-desktop text-red-600"></i>') !!}</div>
+                <div class="text-6xl text-center mb-4">
+                    {!! $service->category === 'laptop'
+                        ? '<i class="fas fa-laptop text-red-600"></i>'
+                        : ($service->category === 'printer'
+                            ? '<i class="fas fa-print text-red-600"></i>'
+                            : ($service->category === 'software'
+                                ? '<i class="fas fa-compact-disc text-red-600"></i>'
+                                : '<i class="fas fa-desktop text-red-600"></i>'
+                            )
+                        ) !!}
+                </div>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between" data-service-price>
                         <span class="text-gray-600 text-sm">Harga Jasa</span>

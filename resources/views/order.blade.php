@@ -98,7 +98,6 @@
                                 const sparepartsByCategory = @json($sparepartsByCategory ?? []);
 
                                 const fillSpareparts = (serviceCategory) => {
-                                    // reset
                                     sparepartSelect.innerHTML = '<option value="">-- Opsional: Pilih Sparepart --</option>';
 
                                     const list = sparepartsByCategory[serviceCategory] || [];
@@ -106,13 +105,14 @@
                                         const price = Number(sp.price ?? 0);
                                         const option = document.createElement('option');
                                         option.value = sp.id;
-                                        const partType = sp.sparepart_category.part_type ?? sp.part_type ?? '';
+
+                                        const partType = sp.sparepart_category?.part_type ?? sp.part_type ?? '';
                                         const partLabel = partType ? (partType + ' - ') : '';
                                         option.textContent = `${partLabel}${sp.name} (Rp ${new Intl.NumberFormat('id-ID').format(Math.round(price))})`;
+
                                         sparepartSelect.appendChild(option);
                                     });
 
-                                    // reset selected value
                                     sparepartSelect.value = '';
                                 };
 
@@ -127,12 +127,10 @@
                                     fillSpareparts(resolveServiceCategory());
                                 });
 
-                                // initial
                                 fillSpareparts(resolveServiceCategory());
                             })();
                         </script>
                         @endpush
-
 
                         @error('selected_sparepart_id')
                             <p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>
