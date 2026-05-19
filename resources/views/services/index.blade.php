@@ -21,7 +21,7 @@
 
             <!-- Quick Nav -->
             <div class="flex flex-wrap gap-3">
-                <a href="#laptop" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors rounded-sm">
+                <a href="#laptop" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
                     <i class="fas fa-laptop text-xs"></i> Laptop
                 </a>
                 <a href="#printer" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
@@ -30,8 +30,8 @@
                 <a href="#pc" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
                     <i class="fas fa-desktop text-xs"></i> PC / Komputer
                 </a>
-<a href="#software" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
-                    <i class="fas fa-desktop text-xs"></i> Software
+                <a href="#software" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 text-xs font-black uppercase tracking-wider hover:border-[#C8000A] hover:text-[#C8000A] transition-all rounded-sm">
+                    <i class="fas fa-compact-disc text-xs"></i> Software
                 </a>
             </div>
         </div>

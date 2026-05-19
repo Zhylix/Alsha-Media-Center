@@ -57,10 +57,10 @@
         </div>
 
         {{-- Quick Info --}}
-        <div class="mt-8 grid grid-cols-3 gap-4">
+        <div class="mt-8 grid grid-cols-4 gap-4">
             <div class="text-center p-4 rounded-xl bg-white border border-gray-200">
                 <div class="text-2xl mb-2"><i class="fas fa-tools text-red-500"></i></div>
-                <p class="text-xs text-gray-600 font-medium">PC / Komputer</p>
+                <p class="text-xs text-gray-600 font-medium">PC</p>
             </div>
             <div class="text-center p-4 rounded-xl bg-white border border-gray-200">
                 <div class="text-2xl mb-2"><i class="fas fa-laptop text-red-500"></i></div>
@@ -69,6 +69,10 @@
             <div class="text-center p-4 rounded-xl bg-white border border-gray-200">
                 <div class="text-2xl mb-2"><i class="fas fa-print text-red-500"></i></div>
                 <p class="text-xs text-gray-600 font-medium">Printer</p>
+            </div>
+            <div class="text-center p-4 rounded-xl bg-white border border-gray-200">
+                <div class="text-2xl mb-2"><i class="fas fa-compact-disc text-red-500"></i></div>
+                <p class="text-xs text-gray-600 font-medium">Software</p>
             </div>
         </div>
     </div>

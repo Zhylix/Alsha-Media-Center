@@ -33,7 +33,7 @@
                     <span class="block w-6 h-px bg-[#C8000A]"></span>
                     <span class="text-xs font-black uppercase tracking-[0.2em] text-[#C8000A]">Formulir Pemesanan</span>
                 </div>
-                
+
                 @if(session('success'))
                 <div class="flex items-start gap-3 p-4 bg-green-50 border border-green-200 mb-8">
                     <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
@@ -46,29 +46,29 @@
 
                 <form method="POST" action="{{ route('order.store') }}" class="space-y-5">
                     @csrf
-                    
-                    <!-- Service Selection Dropdown -->
+
+                    <!-- Service Selection Dropdown (satu saja) -->
                     <div>
                         <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                             Pilih Layanan <span class="text-[#C8000A]">*</span>
                         </label>
-                        <select name="service_id" id="serviceSelect" required 
+                        <select name="service_id" id="serviceSelect" required
                                 class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium focus:outline-none focus:border-[#C8000A] transition-colors">
                             <option value="">-- Pilih Layanan Service --</option>
                             @if(isset($servicesByCategory))
                                 @foreach($servicesByCategory as $category => $categoryServices)
                                 <optgroup label="{{ ucfirst($category) }}">
                                     @foreach($categoryServices as $service)
-                                    <option value="{{ $service->id }}" data-price="{{ $service->price_start }}">
-                                        {{ $service->name }} - Rp {{ number_format($service->price_start, 0, ',', '.') }}
+                                    <option value="{{ $service->id }}" data-service-category="{{ $service->category }}">
+                                        {{ $service->name }}
                                     </option>
                                     @endforeach
                                 </optgroup>
                                 @endforeach
                             @else
                                 @foreach($services as $service)
-                                <option value="{{ $service->id }}" data-price="{{ $service->price_start }}">
-                                    {{ $service->name }} - Rp {{ number_format($service->price_start, 0, ',', '.') }}
+                                <option value="{{ $service->id }}">
+                                    {{ $service->name }}
                                 </option>
                                 @endforeach
                             @endif
@@ -78,12 +78,77 @@
                         @enderror
                     </div>
 
+                    <!-- Sparepart (dropdown) -->
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                            Pilih Sparepart
+                        </label>
+
+                        <select name="selected_sparepart_id" id="sparepartSelect"
+                                class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium focus:outline-none focus:border-[#C8000A] transition-colors">
+                            <option value="">-- Opsional: Pilih Sparepart --</option>
+                        </select>
+
+                        @push('scripts')
+                        <script>
+                            (() => {
+                                const serviceSelect = document.getElementById('serviceSelect');
+                                const sparepartSelect = document.getElementById('sparepartSelect');
+
+                                const sparepartsByCategory = @json($sparepartsByCategory ?? []);
+
+                                const fillSpareparts = (serviceCategory) => {
+                                    // reset
+                                    sparepartSelect.innerHTML = '<option value="">-- Opsional: Pilih Sparepart --</option>';
+
+                                    const list = sparepartsByCategory[serviceCategory] || [];
+                                    list.forEach(sp => {
+                                        const price = Number(sp.price ?? 0);
+                                        const option = document.createElement('option');
+                                        option.value = sp.id;
+                                        const partType = sp.sparepart_category.part_type ?? sp.part_type ?? '';
+                                        const partLabel = partType ? (partType + ' - ') : '';
+                                        option.textContent = `${partLabel}${sp.name} (Rp ${new Intl.NumberFormat('id-ID').format(Math.round(price))})`;
+                                        sparepartSelect.appendChild(option);
+                                    });
+
+                                    // reset selected value
+                                    sparepartSelect.value = '';
+                                };
+
+                                if (!serviceSelect || !sparepartSelect) return;
+
+                                const resolveServiceCategory = () => {
+                                    const selectedOpt = serviceSelect.options[serviceSelect.selectedIndex];
+                                    return selectedOpt?.dataset?.serviceCategory || '';
+                                };
+
+                                serviceSelect.addEventListener('change', () => {
+                                    fillSpareparts(resolveServiceCategory());
+                                });
+
+                                // initial
+                                fillSpareparts(resolveServiceCategory());
+                            })();
+                        </script>
+                        @endpush
+
+
+                        @error('selected_sparepart_id')
+                            <p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>
+                        @enderror
+
+                        <p class="text-sm text-gray-500 mt-2">
+                            Jika sparepart tidak dipilih, pesanan hanya berdasarkan harga jasa.
+                        </p>
+                    </div>
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                                 Nama Lengkap <span class="text-[#C8000A]">*</span>
                             </label>
-                            <input type="text" name="customer_name" value="{{ old('customer_name') }}" required 
+                            <input type="text" name="customer_name" value="{{ old('customer_name') }}" required
                                    class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
                                    placeholder="Nama lengkap Anda">
                             @error('customer_name')
@@ -94,7 +159,7 @@
                             <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                                 No. Telepon <span class="text-[#C8000A]">*</span>
                             </label>
-                            <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" required 
+                            <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" required
                                    class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
                                    placeholder="08xx-xxxx-xxxx">
                             @error('customer_phone')
@@ -107,7 +172,7 @@
                         <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                             Email <span class="text-[#C8000A]">*</span>
                         </label>
-                        <input type="email" name="customer_email" value="{{ old('customer_email') }}" required 
+                        <input type="email" name="customer_email" value="{{ old('customer_email') }}" required
                                class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
                                placeholder="email@contoh.com">
                         @error('customer_email')
@@ -119,7 +184,7 @@
                         <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                             Alamat (Opsional)
                         </label>
-                        <textarea name="customer_address" rows="2" 
+                        <textarea name="customer_address" rows="2"
                                   class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors resize-none"
                                   placeholder="Alamat lengkap Anda (untuk pengiriman)">{{ old('customer_address') }}</textarea>
                     </div>
@@ -128,7 +193,7 @@
                         <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                             Deskripsi Device/ALat <span class="text-[#C8000A]">*</span>
                         </label>
-                        <input type="text" name="device_description" value="{{ old('device_description') }}" required 
+                        <input type="text" name="device_description" value="{{ old('device_description') }}" required
                                class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors"
                                placeholder="Contoh: Laptop Asus VivoBook 15, PC Gaming, Printer Canon Pixma, dll">
                         @error('device_description')
@@ -140,7 +205,7 @@
                         <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
                             Deskripsi Masalah/Kerusakan <span class="text-[#C8000A]">*</span>
                         </label>
-                        <textarea name="problem_description" required rows="4" 
+                        <textarea name="problem_description" required rows="4"
                                   class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium placeholder-gray-300 focus:outline-none focus:border-[#C8000A] transition-colors resize-none"
                                   placeholder="Jelaskan masalah atau kerusakan yang Anda alami...">{{ old('problem_description') }}</textarea>
                         @error('problem_description')
@@ -148,7 +213,7 @@
                         @enderror
                     </div>
 
-                    <button type="submit" 
+                    <button type="submit"
                             class="group w-full flex items-center justify-center gap-3 px-8 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors">
                         <i class="fas fa-paper-plane text-sm"></i>
                         Kirim Pesanan
@@ -210,7 +275,7 @@
 
                 <!-- WhatsApp CTA -->
                 @if($store && $store->whatsapp)
-                <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp) }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20memesan%20servis!" 
+                <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp) }}?text=Halo%20Alsha%20Media%20Center,%20saya%20ingin%20memesan%20servis!"
                    target="_blank"
                    class="group flex items-center gap-4 p-5 bg-[#C8000A] text-white hover:bg-[#A00008] transition-colors">
                     <i class="fab fa-whatsapp text-3xl flex-shrink-0"></i>
@@ -223,10 +288,10 @@
                 @endif
 
                 <!-- Service Categories -->
-                <div class="grid grid-cols-3 gap-3 pt-4">
+                <div class="grid grid-cols-4 gap-3 pt-4">
                     <a href="{{ route('services.pc') }}" class="group text-center p-4 border border-gray-200 hover:border-[#C8000A]/30 hover:bg-red-50 transition-all">
                         <i class="fas fa-desktop text-2xl text-gray-400 group-hover:text-[#C8000A] mb-2"></i>
-                        <p class="text-xs font-semibold text-gray-600 group-hover:text-[#C8000A]">PC / Komputer</p>
+                        <p class="text-xs font-semibold text-gray-600 group-hover:text-[#C8000A]">PC</p>
                     </a>
                     <a href="{{ route('services.laptop') }}" class="group text-center p-4 border border-gray-200 hover:border-[#C8000A]/30 hover:bg-red-50 transition-all">
                         <i class="fas fa-laptop text-2xl text-gray-400 group-hover:text-[#C8000A] mb-2"></i>
@@ -235,6 +300,10 @@
                     <a href="{{ route('services.printer') }}" class="group text-center p-4 border border-gray-200 hover:border-[#C8000A]/30 hover:bg-red-50 transition-all">
                         <i class="fas fa-print text-2xl text-gray-400 group-hover:text-[#C8000A] mb-2"></i>
                         <p class="text-xs font-semibold text-gray-600 group-hover:text-[#C8000A]"> Printer</p>
+                    </a>
+                    <a href="{{ route('services.software') }}" class="group text-center p-4 border border-gray-200 hover:border-[#C8000A]/30 hover:bg-red-50 transition-all">
+                        <i class="fas fa-compact-disc text-2xl text-gray-400 group-hover:text-[#C8000A] mb-2"></i>
+                        <p class="text-xs font-semibold text-gray-600 group-hover:text-[#C8000A]"> Software</p>
                     </a>
                 </div>
 
@@ -258,9 +327,9 @@
 <script>
     const map = L.map('map').setView([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap'}).addTo(map);
-    const icon = L.divIcon({ 
-        html: `<div style="background:#C8000A;width:40px;height:40px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,0,10,0.4);"><i class="fas fa-wrench" style="color:white;font-size:16px;"></i></div>`, 
-        className:'', iconSize:[40,40], iconAnchor:[20,40] 
+    const icon = L.divIcon({
+        html: `<div style="background:#C8000A;width:40px;height:40px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,0,10,0.4);"><i class="fas fa-wrench" style="color:white;font-size:16px;"></i></div>`,
+        className:'', iconSize:[40,40], iconAnchor:[20,40]
     });
     L.marker([{{ $store->latitude ?? -6.9147 }}, {{ $store->longitude ?? 107.6098 }}], {icon}).addTo(map)
      .bindPopup('<strong style="color:#C8000A;">Alsha Media Center</strong>')
