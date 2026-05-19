@@ -11,7 +11,6 @@
     @stack('styles')
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex">
-
     <!-- Sidebar -->
     <aside id="sidebar" class="admin-sidebar fixed top-0 left-0 h-full w-64 z-50 lg:translate-x-0 -translate-x-full transition-transform duration-150 overflow-y-auto">
         <!-- Logo -->
