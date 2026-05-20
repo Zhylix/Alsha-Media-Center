@@ -13,7 +13,7 @@
                 <div class="flex justify-between"><span class="text-gray-600">No. Pesanan</span><span class="text-red-600 font-mono font-bold">{{ $order->order_number }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Layanan</span><span class="text-gray-900">{{ $order->service->name ?? '-' }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-600">Perangkat</span><span class="text-gray-900">{{ $order->device_description }}</span></div>
-                <div class="border-t border-red-600/10 pt-3 flex justify-between font-black text-base"><span class="text-gray-900">Total</span><span class="text-gradient">Rp {{ number_format($order->total_price,0,',','.') }}</span></div>
+                <div class="border-t border-red-600/10 pt-3 flex justify-between font-black text-base"><span class="text-gray-900">Total</span><span class="text-gradient" id="detail-total-price">Rp {{ number_format($order->total_price,0,',','.') }}</span></div>
             </div>
         </div>
 
@@ -63,63 +63,45 @@
             @if(in_array($order->status, ['pending']))
             <div class="flex flex-col gap-3 mb-4">
                 <form method="POST" action="{{ route('admin.orders.accept', $order) }}">
+                    {{-- Catatan: diskon ini hanya untuk preview real-time di halaman detail. Penyimpanan harga/diskon belum di-handle di backend. --}}
+
                     @csrf
                     <div class="space-y-3">
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Layanan</label>
-                            <select name="service_id" class="form-input w-full px-3 py-2.5 rounded-xl text-sm">
-                                <option value="">-- Pilih Layanan --</option>
-                                @foreach($services ?? [] as $service)
-                                <option value="{{ $service->id }}" {{ $order->service_id == $service->id ? 'selected' : '' }}>
-                                    {{ $service->name }}
-                                </option>
-                                @endforeach
-                            </select>
+                            <input type="text" value="{{ $order->service->name ?? '-' }}" disabled class="form-input w-full px-3 py-2.5 rounded-xl text-sm" />
                         </div>
+
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Harga Service</label>
-                            <input type="number" name="service_price" value="{{ $order->service_price }}" 
-                                   class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="service-price-input">
+                            <input type="number" value="{{ $order->service_price }}" disabled class="form-input w-full px-3 py-2.5 rounded-xl text-sm" id="detail-service-price" />
                         </div>
 
                         <div class="mt-3">
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Diskon Service % (opsional)</label>
-                            <input type="number" name="service_discount_percent" value="{{ old('service_discount_percent', $order->service_discount_percent ?? 0) }}"
-                                   min="0" max="100" step="1" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="service-discount-percent-input">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Diskon Service % (real-time)</label>
+                            <input type="number" value="{{ $order->service_discount_percent ?? 0 }}" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" id="detail-service-discount-percent" min="0" max="100" step="1" inputmode="numeric" />
+                            <p class="text-[11px] text-gray-500 mt-1">Masukkan angka persen diskon (contoh: 10).</p>
                         </div>
 
-                        <div class="mt-2 text-sm">
-                            <p class="text-gray-600">Harga Asli: <span class="font-semibold text-gray-900 line-through" id="service-original-price">Rp {{ number_format((float)($order->service_price ?? 0),0,',','.') }}</span></p>
-                            <p class="text-gray-600">Harga Setelah Diskon: <span class="font-black text-[#C8000A]" id="service-discounted-price">Rp {{ number_format((float)($order->service_price ?? 0),0,',','.') }}</span></p>
-                            <p class="text-xs text-gray-500 mt-1">Diskon: <span class="font-semibold" id="service-discount-percent-label">{{ (float)($order->service_discount_percent ?? 0) }}%</span></p>
-                        </div>
 
                         <div class="mt-3">
                             <label class="block text-xs font-medium text-gray-600 mb-1">Harga Pengiriman</label>
-                            <input type="number" name="shipment_price" value="{{ $order->shipment_price ?? 0 }}"
-                                   min="0" step="1000" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="shipment-price-input">
+                            <input type="number" value="{{ $order->shipment_price ?? 0 }}" disabled class="form-input w-full px-3 py-2.5 rounded-xl text-sm" id="detail-shipment-price" />
                         </div>
 
                         <div class="mt-3">
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Diskon Pengiriman % (opsional)</label>
-                            <input type="number" name="shipment_discount_percent" value="{{ old('shipment_discount_percent', $order->shipment_discount_percent ?? 0) }}"
-                                   min="0" max="100" step="1" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" placeholder="0" id="shipment-discount-percent-input">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Diskon Pengiriman % (real-time)</label>
+                            <input type="number" value="{{ $order->shipment_discount_percent ?? 0 }}" class="form-input w-full px-3 py-2.5 rounded-xl text-sm" id="detail-shipment-discount-percent" min="0" max="100" step="1" inputmode="numeric" />
+                            <p class="text-[11px] text-gray-500 mt-1">Kosongkan/0 jika tidak ada diskon.</p>
                         </div>
 
-                        <div class="mt-2 text-sm">
-                            <p class="text-gray-600">Harga Asli: <span class="font-semibold text-gray-900 line-through" id="shipment-original-price">Rp {{ number_format((float)($order->shipment_price ?? 0),0,',','.') }}</span></p>
-                            <p class="text-gray-600">Harga Setelah Diskon: <span class="font-black text-[#C8000A]" id="shipment-discounted-price">Rp {{ number_format((float)($order->shipment_price ?? 0),0,',','.') }}</span></p>
-                            <p class="text-xs text-gray-500 mt-1">Diskon: <span class="font-semibold" id="shipment-discount-percent-label">{{ (float)($order->shipment_discount_percent ?? 0) }}%</span></p>
-                        </div>
 
                         <button type="submit" class="btn-primary w-full py-3 rounded-xl text-white text-sm font-semibold">
-
-
                             <i class="fas fa-check"></i> Terima Pesanan
                         </button>
                     </div>
                 </form>
-                
+
                 <form method="POST" action="{{ route('admin.orders.reject', $order) }}">
                     @csrf
                     <div class="space-y-3">
@@ -136,6 +118,7 @@
             </div>
             @endif
         </div>
+
 
         <!-- Update Status Manual -->
         <div class="service-card p-6 rounded-2xl">
@@ -156,6 +139,43 @@
                 <button type="submit" class="btn-primary w-full py-3 rounded-xl text-white text-sm font-semibold">Update Status</button>
             </form>
         </div>
+
+        
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const servicePriceEl = document.getElementById('detail-service-price');
+            const shipmentPriceEl = document.getElementById('detail-shipment-price');
+            const serviceDiscountEl = document.getElementById('detail-service-discount-percent');
+            const shipmentDiscountEl = document.getElementById('detail-shipment-discount-percent');
+            const totalEl = document.getElementById('detail-total-price');
+
+            if (!servicePriceEl || !shipmentPriceEl || !serviceDiscountEl || !shipmentDiscountEl || !totalEl) return;
+
+            function toNumber(input) {
+                const n = parseFloat(input.value);
+                return Number.isFinite(n) ? n : 0;
+            }
+
+            function calcAfter(price, percent) {
+                const p = Math.min(100, Math.max(0, percent));
+                return price - (price * p / 100);
+            }
+
+            function updateTotal() {
+                const serviceAfter = calcAfter(toNumber(servicePriceEl), toNumber(serviceDiscountEl));
+                const shipmentAfter = calcAfter(toNumber(shipmentPriceEl), toNumber(shipmentDiscountEl));
+                const total = serviceAfter + shipmentAfter;
+                totalEl.textContent = `Rp ${Math.round(total).toLocaleString('id-ID')}`;
+            }
+
+            [serviceDiscountEl, shipmentDiscountEl].forEach(el => {
+                el.addEventListener('input', updateTotal);
+            });
+
+            updateTotal();
+        });
+        </script>
 
         <!-- Navigation -->
         <div class="flex flex-col gap-3">
