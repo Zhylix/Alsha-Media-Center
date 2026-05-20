@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\Order;
 use App\Models\StoreProfile;
 use App\Models\Admin;
+use App\Models\Paket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\SendOrderWhatsAppJob;
@@ -19,9 +20,11 @@ class OrderController extends Controller
     {
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
         $store = StoreProfile::first();
+        $pakets = Paket::active()->latest()->get();
 
         // Group services by category
         $servicesByCategory = $services->groupBy('category');
+
 
         // Spareparts untuk dropdown di halaman order (berdasarkan relasi service-sparepart)
         $sparepartsByServiceId = $services->mapWithKeys(function ($service) {
@@ -45,7 +48,9 @@ class OrderController extends Controller
             return [$service->id => $spareparts];
         });
 
-        return view('order', compact('services', 'servicesByCategory', 'store', 'sparepartsByServiceId'));
+        return view('order', compact('services', 'servicesByCategory', 'store', 'sparepartsByServiceId', 'pakets'));
+
+
     }
 
     public function store(Request $request)
@@ -58,9 +63,13 @@ class OrderController extends Controller
                 'customer_address' => 'nullable|string|max:500',
                 'service_id' => 'required|exists:services,id',
                 'selected_sparepart_id' => 'nullable|integer|exists:spareparts,id',
+                'paket_id' => 'nullable|integer|exists:pakets,id',
+                'paket_price' => 'nullable|numeric|min:0',
                 'device_description' => 'required|string|max:1000',
                 'problem_description' => 'required|string|max:2000',
             ]);
+
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Jika submit menggunakan AJAX/fetch, kirim error dalam format JSON 422.
             if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
@@ -80,9 +89,24 @@ class OrderController extends Controller
         // Hitung harga dasar (hanya harga jasa)
         $servicePrice = (float) ($service->price_jasa ?? $service->price_start ?? 0);
         $sparepartPrice = 0.0;
+        $paketPrice = 0.0;
+
+
+        // Paket opsional
+        $selectedPaketId = $validated['paket_id'] ?? null;
+        if ($selectedPaketId) {
+            $paket = Paket::where('is_active', true)
+                ->where('id', $selectedPaketId)
+                ->first();
+
+            if ($paket) {
+                $paketPrice = (float) ($paket->price ?? 0);
+            }
+        }
 
         // Sparepart opsional (harus termasuk sparepart yang sudah diset untuk service ini)
         $selectedSparepartId = $validated['selected_sparepart_id'] ?? null;
+
         if ($selectedSparepartId) {
             $sparepart = $service->spareparts()
                 ->where('spareparts.is_active', true)
@@ -107,8 +131,10 @@ class OrderController extends Controller
             'problem_description' => $validated['problem_description'],
             'service_price' => $servicePrice,
             'sparepart_price' => $sparepartPrice,
+            'paket_price' => $paketPrice,
             'shipment_price' => 0,
-            'total_price' => $servicePrice + $sparepartPrice,
+            'total_price' => $servicePrice + $sparepartPrice + $paketPrice,
+
             'status' => 'pending',
             'payment_status' => 'unpaid',
         ]);

@@ -162,7 +162,9 @@
 
                         <input type="hidden" name="service_price" id="servicePriceInput" value="0" />
                         <input type="hidden" name="sparepart_price" id="sparepartPriceInput" value="0" />
+                        <input type="hidden" name="paket_price" id="paketPriceInput" value="0" />
                         <input type="hidden" name="total_price" id="totalPriceInput" value="0" />
+
 
 @push('scripts')
 <script>
@@ -218,6 +220,44 @@
         sparepartSelect.innerHTML =
             '<option value="">-- Opsional: Pilih Sparepart --</option>';
 
+        // Paket dropdown
+        const paketSelect = document.getElementById('paketSelect');
+        const paketPriceInput = document.getElementById('paketPriceInput');
+        const selectedPaketPriceEl = document.getElementById('selectedPaketPrice');
+
+        // if paket UI not present, skip paket calculations
+        if (!paketSelect || !paketPriceInput || !selectedPaketPriceEl) {
+            // keep existing behavior (service+sparepart)
+        }
+
+
+        const updatePaket = () => {
+            if (!paketSelect || !paketPriceInput || !selectedPaketPriceEl) return;
+
+            const selectedPaket = paketSelect.selectedOptions[0];
+            const paketPrice = Number(selectedPaket?.dataset?.paketPrice || 0);
+
+            selectedPaketPriceEl.textContent = formatRp(paketPrice);
+            paketPriceInput.value = paketPrice;
+
+            // total = service + sparepart + paket
+            const servicePrice = Number(serviceSelect.selectedOptions[0]?.dataset?.servicePrice || 0);
+            const sparepartPrice = Number(sparepartSelect.selectedOptions[0]?.dataset?.price || 0);
+            const total = servicePrice + sparepartPrice + paketPrice;
+
+            document.getElementById('selectedTotalPrice').textContent = formatRp(total);
+            document.getElementById('totalPriceInput').value = total;
+            document.getElementById('selectedServicePrice').textContent = formatRp(servicePrice);
+            document.getElementById('selectedSparepartPrice').textContent = formatRp(sparepartPrice);
+        };
+
+        if (paketSelect) {
+            paketSelect.addEventListener('change', updatePaket);
+        }
+
+        updatePaket();
+
+
         const selectedService =
             serviceSelect.selectedOptions[0];
 
@@ -248,9 +288,16 @@
     };
 
     serviceSelect.addEventListener('change', fillSpareparts);
-    sparepartSelect.addEventListener('change', updateTotal);
+        sparepartSelect.addEventListener('change', updateTotal);
 
-    fillSpareparts();
+        fillSpareparts();
+
+        // initial paket price & total
+        const paketSelectInit = document.getElementById('paketSelect');
+        if (paketSelectInit) {
+            paketSelectInit.dispatchEvent(new Event('change'));
+        }
+
 })();
 </script>
 @endpush
@@ -258,10 +305,35 @@
                             <p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>
                         @enderror
 
+                        <!-- Paket (dropdown) -->
+                        <div class="mt-8">
+                            <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
+                                Pilih Paket (Opsional)
+                            </label>
+
+                            <select name="paket_id" id="paketSelect"
+                                    class="w-full px-4 py-3.5 border border-gray-200 bg-white text-gray-900 text-sm font-medium focus:outline-none focus:border-[#C8000A] transition-colors rounded-sm">
+                                <option value="">-- Opsional: Pilih Paket --</option>
+                                @if(isset($pakets) && $pakets->count() > 0)
+                                    @foreach($pakets as $paket)
+                                        <option value="{{ $paket->id }}" data-paket-price="{{ (float)($paket->price ?? 0) }}">
+                                            {{ $paket->title }} (Rp {{ number_format((int)($paket->price ?? 0), 0, ',', '.') }})
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+
+                            <div class="mt-4 flex justify-between text-sm">
+                                <span class="text-gray-600">Harga Paket</span>
+                                <span class="text-gray-900 font-semibold" id="selectedPaketPrice">Rp 0</span>
+                            </div>
+                        </div>
+
                         <p class="text-sm text-gray-500 mt-2">
-                            Jika sparepart tidak dipilih, pesanan hanya berdasarkan harga jasa.
+                            Jika sparepart/paket tidak dipilih, pesanan hanya berdasarkan harga jasa.
                         </p>
                     </div>
+
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
