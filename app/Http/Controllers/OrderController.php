@@ -7,13 +7,9 @@ use App\Models\Order;
 use App\Models\StoreProfile;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\SendOrderNotificationsJob;
 use App\Jobs\SendOrderWhatsAppJob;
 use App\Traits\WhatsAppBot;
-
-
 
 class OrderController extends Controller
 {
@@ -52,7 +48,6 @@ class OrderController extends Controller
         return view('order', compact('services', 'servicesByCategory', 'store', 'sparepartsByServiceId'));
     }
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -71,7 +66,6 @@ class OrderController extends Controller
         // Hitung harga dasar (hanya harga jasa)
         $servicePrice = (float) ($service->price_jasa ?? $service->price_start ?? 0);
         $sparepartPrice = 0.0;
-
 
         // Sparepart opsional (harus termasuk sparepart yang sudah diset untuk service ini)
         $selectedSparepartId = $validated['selected_sparepart_id'] ?? null;
@@ -105,15 +99,8 @@ class OrderController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        // Email tetap async via queue.
-        SendOrderNotificationsJob::dispatch($order->id, $service->id);
-
         // Kirim WhatsApp admin via queue supaya tidak menghambat request user.
         SendOrderWhatsAppJob::dispatch($order->id, (int) $service->id);
-
-
-
-
 
         return redirect()->route('order.success', ['orderNumber' => $order->order_number])
             ->with('success', 'Pesanan Anda telah berhasil dibuat!');
@@ -151,8 +138,8 @@ class OrderController extends Controller
     }
 
     /**
-     * Notify admin about new order via WhatsApp and Email
-     * Notifies the designated primary admin (first active superadmin or first active admin)
+     * Notify admin about new order via WhatsApp.
+     * (Email notifications intentionally disabled)
      */
     public function notifyAdmins(Order $order, Service $service): void
     {
@@ -184,36 +171,51 @@ class OrderController extends Controller
             $this->sendWhatsAppMessage($store->whatsapp, $message);
         }
 
+        // Email disabled intentionally.
         if ($primaryAdmin && $primaryAdmin->email) {
-            $this->sendEmailNotification($primaryAdmin->email, $order, $service);
+            Log::info('notifyAdmins: email disabled', ['admin_email' => $primaryAdmin->email]);
         }
     }
 
     /**
-     * Send email notification to admin
+     * Notify customer about order status changes.
+     * Email notifications disabled.
      */
-    private function sendEmailNotification(string $email, Order $order, Service $service): void
+    private function notifyCustomer(Order $order, ?string $forcedStatus = null, bool $hasPricingInput = false): void
     {
-        try {
-            Mail::raw(
-                "Pesanan BaruAMC!\n\n" .
-                "Nomor Pesanan: {$order->order_number}\n" .
-                "Pelanggan: {$order->customer_name}\n" .
-                "Telepon: {$order->customer_phone}\n" .
-                "Email: {$order->customer_email}\n" .
-                "Layanan: {$service->name}\n" .
-                "Device: {$order->device_description}\n" .
-                "Masalah: {$order->problem_description}\n" .
-                "Estimasi Harga: Rp " . number_format($order->total_price, 0, ',', '.') . "\n" .
-                "Tanggal: {$order->created_at}\n",
-                function ($message) use ($email, $order) {
-                    $message->to($email)
-                        ->subject("Pesanan BaruAMC: {$order->order_number}");
-                }
-            );
-        } catch (\Exception $e) {
-            Log::error('Email notification failed: ' . $e->getMessage());
+        $status = $forcedStatus ?? $order->status;
+
+        $statusMessages = [
+            'pending' => 'Pesanan Anda sedang menunggu konfirmasi.',
+            'diterima' => 'Selamat! Pesanan Anda telah kami terima dan akan segera diproses.',
+            'ditolak' => 'Mohon maaf, pesanan Anda tidak dapat kami proses.',
+            'confirmed' => 'Pesanan Anda telah dikonfirmasi dan sedang dalam proses perbaikan.',
+            'in_progress' => 'Perbaikan perangkat Anda sedang berlangsung.',
+            'completed' => 'Perbaikan selesai! Anda dapat mengambil perangkat.',
+            'cancelled' => 'Pesanan Anda telah dibatalkan.',
+        ];
+
+        $statusLabel = $order->status_badge['label'] ?? ucfirst($status);
+        $message = $statusMessages[$status] ?? 'Status pesanan Anda telah diperbarui.';
+
+        $whatsappMessage = "🔧 *Status Pesanan AMC - {$order->order_number}*\n\n";
+        $whatsappMessage .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+        $whatsappMessage .= "Halo *{$order->customer_name}*!\n\n";
+        $whatsappMessage .= "📋 *Status:* {$statusLabel}\n";
+        $whatsappMessage .= "📝 *Info:* {$message}\n";
+        if ($order->notes) {
+            $whatsappMessage .= "\n📌 *Catatan:* {$order->notes}\n";
         }
+        $whatsappMessage .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+        $whatsappMessage .= "Terima kasih telah mempercayakan layanan kami!\n\n";
+        $whatsappMessage .= "_Cek status pesanan di: https://alshamedia.my.id/pesanan/tracking_";
+
+        // Send WhatsApp notification
+        if ($order->customer_phone) {
+            $this->sendWhatsAppMessage($order->customer_phone, $whatsappMessage);
+        }
+
+        // Email disabled intentionally.
     }
 }
 

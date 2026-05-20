@@ -16,11 +16,36 @@
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Info Diskon / Badge (Opsional)</label>
                     <input type="text" name="discount_info" value="{{ old('discount_info', $paket->discount_info) }}" class="form-input w-full px-4 py-3 rounded-xl text-sm">
-                </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Paket *</label>
-                    <input type="number" name="price" step="1" min="0" value="{{ old('price', $paket->price ?? 0) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: 150000">
-                    <p class="text-gray-500 text-[10px] mt-1 italic">* Format angka Rupiah (tanpa desimal)</p>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">
+                        Harga Paket *
+                    </label>
+
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">
+                            Rp
+                        </span>
+
+                        <input 
+                            type="text"
+                            id="price_display"
+                            value="{{ old('price', $paket->price) }}"
+                            class="form-input w-full pl-14 pr-4 py-3 rounded-xl text-sm"
+                            placeholder="0"
+                            autocomplete="off"
+                        >
+
+                        <input 
+                            type="hidden"
+                            name="price"
+                            id="price"
+                            value="{{ old('price', $paket->price) }}"
+                        >
+                    </div>
+
+                    <p class="text-gray-500 text-[10px] mt-1 italic">
+                        * Format otomatis Rupiah
+                    </p>
                 </div>
 
                 <div>
@@ -56,4 +81,37 @@
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+document.addEventListener('turbo:load', function () {
+
+    const display = document.getElementById('price_display');
+    const hidden = document.getElementById('price');
+
+    if (!display || !hidden) return;
+
+    function formatRupiah(value) {
+        return new Intl.NumberFormat('id-ID').format(value);
+    }
+
+    function updatePrice() {
+
+        let angka = display.value.replace(/\D/g, '');
+
+        hidden.value = angka;
+
+        display.value = angka
+            ? formatRupiah(angka)
+            : '';
+    }
+
+    // format awal saat edit
+    updatePrice();
+
+    // realtime format
+    display.addEventListener('input', updatePrice);
+
+});
+</script>
+@endpush
 @endsection

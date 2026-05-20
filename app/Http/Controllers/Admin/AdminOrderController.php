@@ -104,12 +104,30 @@ class AdminOrderController extends Controller
         $data['shipment_price'] = $shipmentAfter;
         $data['total_price'] = $serviceAfter + $shipmentAfter;
 
-        $order->update(array_filter($data));
+        $updated = array_filter($data);
+        $order->update($updated);
+
+        // Refresh model so notifyCustomer uses the real saved values
+        $order->refresh();
 
         // Send notification to customer only when status actually changes
-        if (array_key_exists('status', $data) && ($data['status'] ?? null) !== null && ($data['status'] ?? null) !== $previousStatus) {
-            $this->notifyCustomer($order, $data['status'] ?? null, $hasPricingInput ? true : false);
+        if (array_key_exists('status', $updated) && ($updated['status'] ?? null) !== null && ($updated['status'] ?? null) !== $previousStatus) {
+            \Log::info('Notify customer: status updated', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'previous_status' => $previousStatus,
+                'new_status' => $order->status,
+                'has_customer_phone' => !empty($order->customer_phone),
+                'has_customer_email' => !empty($order->customer_email),
+            ]);
+
+            SendCustomerNotificationJob::dispatch(
+    $order,
+    $order->status,
+    $hasPricingInput
+);
         }
+
 
 
 
@@ -265,7 +283,9 @@ $updateData['total_price'] = $newServicePrice + ($order->sparepart_price ?? 0) +
         $order = Order::create($data);
 
         // Notify admin via WhatsApp when order is created from admin panel
-        SendOrderNotificationsJob::dispatch($order->id, (int) $data['service_id']);
+        // SendOrderNotificationsJob (email) disabled.
+        // SendOrderNotificationsJob::dispatch($order->id, (int) $data['service_id']);
+
 
         return redirect()->route('admin.orders.show', $order)->with('success', 'Pesanan baru berhasil dibuat!');
     }
@@ -314,10 +334,7 @@ $updateData['total_price'] = $newServicePrice + ($order->sparepart_price ?? 0) +
             $this->sendWhatsAppMessage($order->customer_phone, $whatsappMessage);
         }
 
-        // Send Email notification
-        if ($order->customer_email) {
-            $this->sendEmailNotification($order);
-        }
+
     }
 
     private function sendEmailNotification(Order $order): void

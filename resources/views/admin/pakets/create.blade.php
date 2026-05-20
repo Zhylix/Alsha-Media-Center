@@ -18,9 +18,32 @@
                     <input type="text" name="discount_info" value="{{ old('discount_info') }}" class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: Diskon 20% atau Gratis Ongkir">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">Harga Paket *</label>
-                    <input type="number" name="price" step="1" min="0" value="{{ old('price', 0) }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: 150000">
-                    <p class="text-gray-500 text-[10px] mt-1 italic">* Format angka Rupiah (tanpa desimal)</p>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">
+                        Harga Paket *
+                    </label>
+
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">
+                            Rp
+                        </span>
+
+                        <input 
+                            type="text"
+                            id="price_display"
+                            data-target="price"
+                            value="{{ old('price') ? number_format(old('price'), 0, ',', '.') : '' }}"
+                            class="form-input w-full pl-14 pr-4 py-3 rounded-xl text-sm"
+                            placeholder="0"
+                            autocomplete="off"
+                        >
+
+                        <input 
+                            type="hidden"
+                            name="price"
+                            id="price"
+                            value="{{ old('price') }}"
+                        >
+                    </div>
                 </div>
 
                 <div>
@@ -51,4 +74,32 @@
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+const display = document.getElementById('price_display');
+const hidden = document.getElementById('price');
+
+function formatRupiah(value) {
+    return new Intl.NumberFormat('id-ID').format(value);
+}
+
+function updatePrice() {
+
+    let angka = display.value.replace(/\D/g, '');
+
+    hidden.value = angka;
+
+    display.value = angka
+        ? formatRupiah(angka)
+        : '';
+}
+
+// format awal
+if (display) {
+    updatePrice();
+
+    display.addEventListener('input', updatePrice);
+}
+</script>
+@endpush
 @endsection
