@@ -56,7 +56,7 @@
                             @if(isset($servicesByCategory))
                                 @foreach($servicesByCategory as $category => $categoryServices)
                                 <optgroup label="{{ ucfirst($category) }}">
-@foreach($categoryServices as $service)
+                                @foreach($categoryServices as $service)
                                     @php
                                         $jasaPrice = (float) ($service->price_jasa ?? 0);
                                         $priceStart = (float) ($service->price_start ?? 0);
@@ -83,7 +83,7 @@
                                 </optgroup>
                                 @endforeach
                             @else
-@foreach($services as $service)
+                                @foreach($services as $service)
                                 @php
                                     $jasaPrice = (float) ($service->price_jasa ?? 0);
                                     $priceStart = (float) ($service->price_start ?? 0);
@@ -142,7 +142,6 @@
                         <input type="hidden" name="sparepart_price" id="sparepartPriceInput" value="0" />
                         <input type="hidden" name="total_price" id="totalPriceInput" value="0" />
 
-                            @push('scripts')
 @push('scripts')
 <script>
 (() => {

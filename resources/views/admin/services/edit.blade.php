@@ -18,7 +18,7 @@
                     <select name="category" required class="form-input w-full px-4 py-3 rounded-xl text-sm">
                         <option value="laptop" {{ $service->category === 'laptop' ? 'selected' : '' }}><i class="fas fa-laptop text-red-600"></i> Laptop</option>
                         <option value="printer" {{ $service->category === 'printer' ? 'selected' : '' }}><i class="fas fa-print text-red-600"></i> Printer</option>
-                        <option value="pc" {{ $service->category === 'pc' ? 'selected' : '' }}><i class="fas fa-desktop text-red-600"></i> PC</option>
+                        <option value="pc" {{ $service->category === 'pc' ? 'selected' : '' }}><i class="fas fa-desktop text-red-600"></i> PC / Komputer</option>
                         <option value="software" {{ $service->category === 'software' ? 'selected' : '' }}><i class="fas fa-compact-disc text-red-600"></i> Installasi Software</option>
                     </select>
                 </div>

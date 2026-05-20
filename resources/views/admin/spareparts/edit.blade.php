@@ -45,7 +45,7 @@
         <input 
             type="text"
             id="price_display"
-            value="{{ number_format(old('price', $sparepart->price), 2, ',', '.') }}"
+            value="{{ number_format(old('price', $sparepart->price), 0, ',', '.') }}"
             class="form-input pl-14 pr-4 py-3.5 rounded-xl text-sm w-full"
             placeholder="0,00"
             autocomplete="off"
