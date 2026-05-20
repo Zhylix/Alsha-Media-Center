@@ -27,8 +27,8 @@
                     $tabs = [
                         ['id' => 'basic', 'icon' => 'fa-store', 'title' => 'Info Dasar', 'complete' => !empty(data_get($store, 'store_name'))],
                         ['id' => 'branding', 'icon' => 'fa-image', 'title' => 'Branding', 'complete' => !empty(data_get($store, 'logo'))],
-                        ['id' => 'contact', 'icon' => 'fa-map-marker-alt text-red-500', 'title' => 'Kontak', 'complete' => !empty(data_get($store, 'address'))],
-                        ['id' => 'location', 'icon' => 'fa-map text-red-600', 'title' => 'Lokasi', 'complete' => !empty(data_get($store, 'google_maps_link'))],
+                        ['id' => 'contact', 'icon' => 'fa-map-marker-alt', 'title' => 'Kontak', 'complete' => !empty(data_get($store, 'address'))],
+                        ['id' => 'location', 'icon' => 'fa-map', 'title' => 'Lokasi', 'complete' => !empty(data_get($store, 'google_maps_link'))],
                         ['id' => 'hours', 'icon' => 'fa-clock', 'title' => 'Jam', 'complete' => !empty(data_get($store, 'open_days'))]
                     ];
                 @endphp
@@ -305,7 +305,8 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+
+function initStoreTabs() {
 
     let progressFields = [
         'store_name',
@@ -318,33 +319,53 @@ document.addEventListener('DOMContentLoaded', function () {
         'open_hours'
     ];
 
-    // Tab switching
+    // =========================
+    // TAB SWITCHING
+    // =========================
     document.querySelectorAll('[data-tab]').forEach(btn => {
+
+        // Hindari event double
+        if (btn.dataset.initialized === 'true') return;
+
+        btn.dataset.initialized = 'true';
+
         btn.addEventListener('click', (e) => {
+
             const tabId = e.currentTarget.dataset.tab;
 
-            // Hide all tabs
+            // Hide semua tab
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.add('hidden');
+                tab.classList.remove('block');
             });
 
+            // Reset semua tombol
             document.querySelectorAll('#tabs-nav button').forEach(b => {
+
                 b.classList.remove(
                     'bg-white',
                     'border-red-500',
                     'text-red-700',
                     'shadow-sm'
                 );
-                b.classList.add('hover:bg-red-50');
+
+                b.classList.add(
+                    'text-gray-600',
+                    'border-transparent',
+                    'hover:bg-red-50'
+                );
+
             });
 
-            // Show selected
+            // Tampilkan tab aktif
             const selectedTab = document.getElementById(tabId);
 
             if (selectedTab) {
                 selectedTab.classList.remove('hidden');
+                selectedTab.classList.add('block');
             }
 
+            // Aktifkan tombol
             e.currentTarget.classList.add(
                 'bg-white',
                 'border-red-500',
@@ -352,22 +373,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 'shadow-sm'
             );
 
-            e.currentTarget.classList.remove('hover:bg-red-50');
+            e.currentTarget.classList.remove(
+                'text-gray-600',
+                'border-transparent'
+            );
 
             updateProgress();
+
         });
+
     });
 
-    // Progress calculation
+    // =========================
+    // PROGRESS BAR
+    // =========================
     function updateProgress() {
+
         let complete = 0;
 
         progressFields.forEach(field => {
+
             const input = document.querySelector(`[name="${field}"]`);
 
             if (input && input.value.trim()) {
                 complete++;
             }
+
         });
 
         const percent = Math.round((complete / progressFields.length) * 100);
@@ -382,14 +413,37 @@ document.addEventListener('DOMContentLoaded', function () {
         if (progressBar) {
             progressBar.style.width = `${percent}%`;
         }
+
     }
 
     updateProgress();
 
+    // =========================
+    // UPDATE PROGRESS SAAT INPUT
+    // =========================
+    progressFields.forEach(field => {
+
+        const input = document.querySelector(`[name="${field}"]`);
+
+        if (input && !input.dataset.progressBound) {
+
+            input.dataset.progressBound = 'true';
+
+            input.addEventListener('input', updateProgress);
+
+        }
+
+    });
+
+    // =========================
     // FORM SUBMIT
+    // =========================
     const form = document.getElementById('store-form');
 
-    if (form) {
+    if (form && !form.dataset.initialized) {
+
+        form.dataset.initialized = 'true';
+
         form.addEventListener('submit', function(e) {
 
             const required = document.querySelectorAll('[required]');
@@ -398,15 +452,27 @@ document.addEventListener('DOMContentLoaded', function () {
             required.forEach(field => {
 
                 if (!field.value.trim()) {
-                    field.classList.add('border-red-500');
+
+                    field.classList.add(
+                        'border-red-500',
+                        'focus:border-red-500'
+                    );
+
                     valid = false;
+
                 } else {
-                    field.classList.remove('border-red-500');
+
+                    field.classList.remove(
+                        'border-red-500',
+                        'focus:border-red-500'
+                    );
+
                 }
 
             });
 
             if (!valid) {
+
                 e.preventDefault();
 
                 alert('Mohon lengkapi semua field wajib (*) terlebih dahulu!');
@@ -414,41 +480,136 @@ document.addEventListener('DOMContentLoaded', function () {
                 const firstError = document.querySelector('.border-red-500');
 
                 if (firstError) {
+
                     firstError.scrollIntoView({
                         behavior: 'smooth',
                         block: 'center'
                     });
+
                 }
 
                 return;
+
             }
 
-            // loading button
+            // Loading button
             const saveBtn = document.getElementById('save-btn');
 
             if (saveBtn) {
+
                 saveBtn.disabled = true;
 
                 saveBtn.innerHTML = `
                     <i class="fas fa-spinner fa-spin"></i>
                     Menyimpan...
                 `;
+
             }
+
         });
+
     }
 
-});
+}
 
-// FUNCTIONS GLOBAL
+// =========================
+// LOAD NORMAL
+// =========================
+document.addEventListener('DOMContentLoaded', initStoreTabs);
+
+// =========================
+// LOAD TURBO
+// =========================
+document.addEventListener('turbo:load', initStoreTabs);
+
+// =========================
+// LIVEWIRE NAVIGATE
+// =========================
+document.addEventListener('livewire:navigated', initStoreTabs);
+
+// =========================
+// GLOBAL FUNCTIONS
+// =========================
 function resetForm() {
+
     location.reload();
+
 }
 
 function confirmDelete(type) {
+
     if (confirm(`Yakin ingin menghapus ${type === 'logo' ? 'logo' : 'gambar hero'}?`)) {
+
         document.getElementById(`delete-${type}-form`).submit();
+
     }
+
 }
+
+function previewLogo(input) {
+
+    if (input.files && input.files[0]) {
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            let preview = document.getElementById('logo-preview-temp');
+
+            if (!preview) {
+
+                preview = document.createElement('img');
+
+                preview.id = 'logo-preview-temp';
+
+                preview.className = 'w-32 h-32 object-contain rounded-xl shadow-lg bg-white p-4 mx-auto mt-4';
+
+                input.closest('.space-y-4').appendChild(preview);
+
+            }
+
+            preview.src = e.target.result;
+
+        };
+
+        reader.readAsDataURL(input.files[0]);
+
+    }
+
+}
+
+function previewHero(input) {
+
+    if (input.files && input.files[0]) {
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            let preview = document.getElementById('hero-preview-temp');
+
+            if (!preview) {
+
+                preview = document.createElement('img');
+
+                preview.id = 'hero-preview-temp';
+
+                preview.className = 'w-full max-w-md h-48 object-cover rounded-xl shadow-lg mx-auto mt-4';
+
+                input.closest('.space-y-4').appendChild(preview);
+
+            }
+
+            preview.src = e.target.result;
+
+        };
+
+        reader.readAsDataURL(input.files[0]);
+
+    }
+
+}
+
 </script>
 @endpush
 @endsection
