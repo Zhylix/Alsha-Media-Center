@@ -1,6 +1,0 @@
-- [x] Kumpulkan pemastian kebutuhan: dropdown sparepart user harus berisi sparepart yang sudah dipilih admin untuk layanan (pivot `service_sparepart`)
-- [x] Verifikasi query `OrderController@index()` dan mapping `sparepartsByServiceId` sudah sesuai (aktif + stock)
-- [x] Perbaiki missing request handling: `OrderController@store()` belum memproses `selected_sparepart_id` (validasi + hitung sparepart_price + total_price)
-- [ ] Pastikan field yang dikirim di `order.blade.php` selaras dengan request validation di controller
-- [ ] Jalankan testing sederhana (cek halaman order, pilih service -> dropdown sparepart terisi; submit membawa harga total yang benar)
-- [ ] Dokumentasi singkat perubahan

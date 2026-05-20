@@ -44,7 +44,29 @@
                 </div>
                 @endif
 
-                <form method="POST" action="{{ route('order.store') }}" class="space-y-5">
+                <div class="relative">
+
+                    <div id="orderLoadingOverlay" class="fixed inset-0 z-[60] hidden">
+                        <div class="absolute inset-0 bg-black/40"></div>
+                        <div class="absolute inset-0 flex items-center justify-center p-6">
+                            <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-200 p-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-xl bg-[#C8000A]/10 flex items-center justify-center">
+                                        <i class="fas fa-spinner fa-spin text-[#C8000A] text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-black text-gray-900">Sedang memproses pesanan...</p>
+                                        <p class="text-sm text-gray-500 mt-1">Mohon tunggu sebentar.</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="h-full w-1/2 bg-[#C8000A] animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ route('order.store') }}" class="space-y-5" id="orderForm" autocomplete="off" data-order-ajax="true">
                     @csrf
                     <div>
                         <label class="block text-xs font-black uppercase tracking-[0.12em] text-gray-400 mb-2">
@@ -312,12 +334,125 @@
                     </div>
 
                     <button type="submit"
+                            id="orderSubmitButton"
                             class="group w-full flex items-center justify-center gap-3 px-8 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors rounded-sm">
                         <i class="fas fa-paper-plane text-sm"></i>
                         Kirim Pesanan
                         <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
                     </button>
                 </form>
+
+                <script>
+                    (() => {
+                        const form = document.getElementById('orderForm');
+                        const overlay = document.getElementById('orderLoadingOverlay');
+                        const submitBtn = document.getElementById('orderSubmitButton');
+
+                        if (!form || !overlay || !submitBtn) return;
+
+                        const isAjaxEnabled = form.dataset.orderAjax === 'true';
+
+                        const setFormDisabled = (disabled) => {
+                            submitBtn.disabled = disabled;
+                            form.querySelectorAll('button').forEach((el) => {
+                                el.disabled = disabled;
+                            });
+                        };
+
+                        form.addEventListener('submit', async (e) => {
+                            // prevent double submit
+                            if (submitBtn.disabled) return;
+
+                            if (!isAjaxEnabled) {
+                                // non-AJAX: keep old behavior (overlay only)
+                                setFormDisabled(true);
+                                overlay.classList.remove('hidden');
+                                return;
+                            }
+
+                            e.preventDefault();
+
+                            setFormDisabled(true);
+                            overlay.classList.remove('hidden');
+
+                            const formData = new FormData(form);
+
+                            try {
+                                const res = await fetch(form.action, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: formData
+                                });
+
+                                if (res.status === 422) {
+                                    const data = await res.json();
+
+                                    // tampilkan error validasi dan pastikan form tidak terhapus
+                                    // Buat ulang area error sederhana berbasis nama field jika tidak ada.
+                                    const errors = data?.errors || {};
+
+                                    // remove existing custom errors (jika ada)
+                                    form.querySelectorAll('[data-error-for]').forEach(el => el.remove());
+
+                                    Object.keys(errors).forEach((field) => {
+                                        const msg = Array.isArray(errors[field]) ? errors[field][0] : String(errors[field]);
+
+                                        // target: error area yang paling dekat dengan field
+                                        const input = form.querySelector(`[name="${CSS.escape(field)}"]`);
+
+                                        // jika input ada, tampilkan error tepat setelah input
+                                        if (input) {
+                                            let err = form.querySelector(`[data-error-for="${CSS.escape(field)}"]`);
+                                            if (!err) {
+                                                err = document.createElement('p');
+                                                err.setAttribute('data-error-for', field);
+                                                err.className = 'text-[#C8000A] text-xs mt-1.5';
+                                                input.insertAdjacentElement('afterend', err);
+                                            }
+                                            err.textContent = msg;
+                                            return;
+                                        }
+
+                                        // fallback: jika tidak ketemu input, tampilkan di atas tombol submit (tidak menabrak layout)
+                                        let globalErr = form.querySelector('[data-error-global]');
+                                        if (!globalErr) {
+                                            globalErr = document.createElement('div');
+                                            globalErr.setAttribute('data-error-global', '1');
+                                            globalErr.className = 'mb-4 p-3 border border-red-200 bg-red-50 rounded-xl';
+                                            submitBtn.insertAdjacentElement('beforebegin', globalErr);
+                                        }
+                                        globalErr.textContent = msg;
+                                    });
+
+                                    // re-enable form
+                                    setFormDisabled(false);
+                                    overlay.classList.add('hidden');
+                                    return;
+                                }
+
+                                // sukses: arahkan ke halaman success
+                                const json = await res.json().catch(() => null);
+                                if (json?.redirect_url) {
+                                    window.location.href = json.redirect_url;
+                                    return;
+                                }
+
+                                // Jika backend masih mengirim redirect HTML (tidak json), fallback: reload.
+                                window.location.reload();
+                            } catch (err) {
+                                console.error(err);
+                                setFormDisabled(false);
+                                overlay.classList.add('hidden');
+                            }
+                        });
+                    })();
+                </script>
+                
+                
+                </div>
             </div>
 
             <!-- Info + Services List -->

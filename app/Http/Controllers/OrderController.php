@@ -50,16 +50,30 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_phone' => 'required|string|max:20',
-            'customer_address' => 'nullable|string|max:500',
-            'service_id' => 'required|exists:services,id',
-            'selected_sparepart_id' => 'nullable|integer|exists:spareparts,id',
-            'device_description' => 'required|string|max:1000',
-            'problem_description' => 'required|string|max:2000',
-        ]);
+        try {
+            $validated = $request->validate([
+                'customer_name' => 'required|string|max:255',
+                'customer_email' => 'required|email|max:255',
+                'customer_phone' => 'required|string|max:20',
+                'customer_address' => 'nullable|string|max:500',
+                'service_id' => 'required|exists:services,id',
+                'selected_sparepart_id' => 'nullable|integer|exists:spareparts,id',
+                'device_description' => 'required|string|max:1000',
+                'problem_description' => 'required|string|max:2000',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Jika submit menggunakan AJAX/fetch, kirim error dalam format JSON 422.
+            if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'message' => 'Validation failed.',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+
+            // Fallback: behavior default Laravel (redirect back + old input + error bag)
+            throw $e;
+        }
+
 
         $service = Service::findOrFail($validated['service_id']);
 
@@ -102,9 +116,13 @@ class OrderController extends Controller
         // Kirim WhatsApp admin via queue supaya tidak menghambat request user.
         SendOrderWhatsAppJob::dispatch($order->id, (int) $service->id);
 
-        return redirect()->route('order.success', ['orderNumber' => $order->order_number])
-            ->with('success', 'Pesanan Anda telah berhasil dibuat!');
-    }
+return response()->json([
+    'success' => true,
+    'redirect_url' => route('order.success', [
+        'orderNumber' => $order->order_number
+    ])
+]);
+}
 
     public function success($orderNumber)
     {
