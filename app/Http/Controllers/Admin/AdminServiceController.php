@@ -45,7 +45,15 @@ class AdminServiceController extends Controller
             $data['image'] = $request->file('image')->store('services', 'public');
         }
 
-        Service::create($data);
+        $service = Service::create($data);
+
+        // simpan relasi sparepart yang dipilih
+        $selectedSparepartIds = $request->input('sparepart_ids', []);
+        if (!is_array($selectedSparepartIds)) {
+            $selectedSparepartIds = [];
+        }
+
+        $service->spareparts()->sync($selectedSparepartIds);
 
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil ditambahkan!');
     }
@@ -79,6 +87,14 @@ class AdminServiceController extends Controller
         }
 
         $service->update($data);
+
+        // simpan relasi sparepart yang dipilih
+        $selectedSparepartIds = $request->input('sparepart_ids', []);
+        if (!is_array($selectedSparepartIds)) {
+            $selectedSparepartIds = [];
+        }
+
+        $service->spareparts()->sync($selectedSparepartIds);
 
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil diperbarui!');
     }

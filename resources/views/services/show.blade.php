@@ -15,7 +15,6 @@
                 <h1 class="text-4xl font-black text-gray-900 mb-4">{{ $service->name }}</h1>
                 <p class="text-gray-600 text-lg mb-6">{{ $service->short_description }}</p>
                 
-                {{-- Sparepart Section (dynamic) - placed under WhatsApp button as requested --}}
             
                 <div class="flex items-start justify-between gap-6 flex-col lg:flex-row">
                     <div>
@@ -73,12 +72,13 @@
                                                 <div class="flex-1 min-w-0">
                                                     <p class="text-sm font-black text-gray-900 truncate">{{ $spare->name }}</p>
                                                     <p class="text-red-600 font-bold text-sm mt-1">Rp {{ number_format($spare->price, 0, ',', '.') }}</p>
+                                                    <p class="text-gray-500 text-[11px] mt-1">(Sparepart untuk {{ $service->category_label }})</p>
                                                 </div>
                                             </div>
                                             <div>
                                                 <p class="text-xs text-gray-500 mt-2 line-clamp-2">{{ Str::limit($spare->description ?? '', 80) }}</p>
                                             </div>
-                                            <input type="hidden" name="selected_sparepart_id" value="">
+                                                    <input type="hidden" name="selected_sparepart_id" value="{{ $spare->id }}">
                                         </button>
                                     @endforeach
                                 </div>

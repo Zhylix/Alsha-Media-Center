@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use App\Models\concerns\HasSpareparts;
 
 class Service extends Model
 {
     use HasFactory;
+    use HasSpareparts;
 
     protected $fillable = [
         'name', 'slug', 'category', 'description', 'short_description',
@@ -58,3 +60,4 @@ class Service extends Model
         });
     }
 }
+

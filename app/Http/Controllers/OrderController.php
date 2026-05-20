@@ -27,19 +27,31 @@ class OrderController extends Controller
         // Group services by category
         $servicesByCategory = $services->groupBy('category');
 
-        // Spareparts untuk dropdown di halaman order (dipisah per service category agar bisa difilter)
-        $sparepartsByCategory = \App\Models\Sparepart::query()
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->with('sparepartCategory')
-            ->whereHas('sparepartCategory')
-            ->get()
-            ->groupBy(function ($sp) {
-                return $sp->sparepartCategory->service_category ?? 'lainnya';
-            });
+        // Spareparts untuk dropdown di halaman order (berdasarkan relasi service-sparepart)
+        $sparepartsByServiceId = $services->mapWithKeys(function ($service) {
+            $spareparts = $service->spareparts()
+                ->where('is_active', true)
+                ->where('stock', '>', 0)
+                ->with('sparepartCategory')
+                ->orderBy('sort_order')
+                ->get()
+                ->map(function ($sp) {
+                    return [
+                        'id' => $sp->id,
+                        'name' => $sp->name,
+                        'price' => $sp->price,
+                        'sparepart_category' => $sp->sparepartCategory,
+                        'part_type' => $sp->sparepartCategory->part_type ?? null,
+                    ];
+                })
+                ->values();
 
-        return view('order', compact('services', 'servicesByCategory', 'store', 'sparepartsByCategory'));
+            return [$service->id => $spareparts];
+        });
+
+        return view('order', compact('services', 'servicesByCategory', 'store', 'sparepartsByServiceId'));
     }
+
 
     public function store(Request $request)
     {
@@ -49,10 +61,31 @@ class OrderController extends Controller
             'customer_phone' => 'required|string|max:20',
             'customer_address' => 'nullable|string|max:500',
             'service_id' => 'required|exists:services,id',
+            'selected_sparepart_id' => 'nullable|integer|exists:spareparts,id',
             'device_description' => 'required|string|max:1000',
             'problem_description' => 'required|string|max:2000',
         ]);
+
         $service = Service::findOrFail($validated['service_id']);
+
+        // Hitung harga dasar (hanya harga jasa)
+        $servicePrice = (float) ($service->price_jasa ?? $service->price_start ?? 0);
+        $sparepartPrice = 0.0;
+
+
+        // Sparepart opsional (harus termasuk sparepart yang sudah diset untuk service ini)
+        $selectedSparepartId = $validated['selected_sparepart_id'] ?? null;
+        if ($selectedSparepartId) {
+            $sparepart = $service->spareparts()
+                ->where('spareparts.is_active', true)
+                ->where('spareparts.stock', '>', 0)
+                ->where('spareparts.id', $selectedSparepartId)
+                ->first();
+
+            if ($sparepart) {
+                $sparepartPrice = (float) ($sparepart->price ?? 0);
+            }
+        }
 
         // Create order with generated order number
         $order = Order::create([
@@ -64,10 +97,10 @@ class OrderController extends Controller
             'service_id' => $validated['service_id'],
             'device_description' => $validated['device_description'],
             'problem_description' => $validated['problem_description'],
-            'service_price' => $service->price_start,
-            'sparepart_price' => 0,
+            'service_price' => $servicePrice,
+            'sparepart_price' => $sparepartPrice,
             'shipment_price' => 0,
-            'total_price' => $service->price_start,
+            'total_price' => $servicePrice + $sparepartPrice,
             'status' => 'pending',
             'payment_status' => 'unpaid',
         ]);

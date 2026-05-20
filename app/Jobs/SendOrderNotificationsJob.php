@@ -30,7 +30,9 @@ class SendOrderNotificationsJob implements ShouldQueue
     }
 
     public function handle(): void
-    {
+    {$admins = Admin::active()->get();
+
+Log::info('Admin data:', $admins->toArray());
         try {
             $order = Order::with('service')->find($this->orderId);
             if (!$order) {

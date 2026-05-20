@@ -9,6 +9,7 @@
         @csrf
         <div class="service-card p-8 rounded-2xl space-y-5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Nama Layanan *</label>
                     <input type="text" name="name" value="{{ old('name') }}" required class="form-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Contoh: Servis LCD Laptop">
@@ -100,6 +101,40 @@
                         <span class="text-gray-700 text-sm"><i class="fas fa-star text-red-600"></i> Featured</span>
                     </label>
                 </div>
+            </div>
+        </div>
+
+        <div class="service-card p-6 rounded-2xl bg-gray-50 border border-gray-200">
+            <h3 class="text-sm font-black text-gray-900 mb-3">Sparepart untuk Layanan</h3>
+            <p class="text-xs text-gray-500 mb-4">Pilih sparepart yang akan ditampilkan di halaman user untuk layanan ini.</p>
+
+            <div class="space-y-3 max-h-64 overflow-auto pr-2">
+                @php
+                    $spareparts = \App\Models\Sparepart::query()
+                        ->where('is_active', true)
+                        ->where('stock', '>', 0)
+                        ->with('sparepartCategory')
+                        ->orderBy('sparepart_category_id')
+                        ->orderBy('sort_order')
+                        ->get();
+                    $selected = old('sparepart_ids', []);
+                    if (!is_array($selected)) { $selected = []; }
+                    $grouped = $spareparts->groupBy(fn($sp) => $sp->sparepartCategory->service_category ?? 'lainnya');
+                @endphp
+
+                @foreach($grouped as $svcCat => $items)
+                    <div>
+                        <p class="text-[11px] font-black uppercase tracking-wider text-gray-500 mb-2">{{ $svcCat }}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            @foreach($items as $sp)
+                                <label class="flex items-center gap-2 p-3 rounded-xl border border-gray-200 bg-white hover:border-red-400 cursor-pointer">
+                                    <input type="checkbox" name="sparepart_ids[]" value="{{ $sp->id }}" {{ in_array($sp->id, $selected) ? 'checked' : '' }} class="w-4 h-4">
+                                    <span class="text-sm text-gray-800">{{ $sp->name }} (Rp {{ number_format($sp->price, 0, ',', '.') }})</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
 

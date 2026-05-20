@@ -56,17 +56,52 @@
                             @if(isset($servicesByCategory))
                                 @foreach($servicesByCategory as $category => $categoryServices)
                                 <optgroup label="{{ ucfirst($category) }}">
-                                    @foreach($categoryServices as $service)
-                                    <option value="{{ $service->id }}" data-service-category="{{ $service->category }}">
+@foreach($categoryServices as $service)
+                                    @php
+                                        $jasaPrice = (float) ($service->price_jasa ?? 0);
+                                        $priceStart = (float) ($service->price_start ?? 0);
+                                        $priceEnd = (float) ($service->price_end ?? 0);
+                                        $servicePriceForTotal = $jasaPrice > 0 ? $jasaPrice : ($priceStart > 0 ? $priceStart : 0);
+                                    @endphp
+                                    <option
+                                        value="{{ $service->id }}"
+                                        data-service-category="{{ $service->category }}"
+                                        data-service-price="{{ $servicePriceForTotal }}"
+                                    >
                                         {{ $service->name }}
+                                        @if($jasaPrice > 0)
+                                            (Rp {{ number_format($jasaPrice, 0, ',', '.') }})
+                                        @elseif($priceStart > 0)
+                                            (Rp {{ number_format($priceStart, 0, ',', '.') }})
+                                        @else
+                                            (Harga tidak tersedia)
+                                        @endif
+
+
                                     </option>
                                     @endforeach
                                 </optgroup>
                                 @endforeach
                             @else
-                                @foreach($services as $service)
+@foreach($services as $service)
+                                @php
+                                    $jasaPrice = (float) ($service->price_jasa ?? 0);
+                                    $priceStart = (float) ($service->price_start ?? 0);
+                                    $priceEnd = (float) ($service->price_end ?? 0);
+                                @endphp
                                 <option value="{{ $service->id }}">
                                     {{ $service->name }}
+                                    @if($jasaPrice > 0)
+                                        (Rp {{ number_format($jasaPrice, 0, ',', '.') }})
+                                    @elseif($priceEnd > 0)
+                                        (Rp {{ number_format($priceStart, 0, ',', '.') }} - Rp {{ number_format($priceEnd, 0, ',', '.') }})
+                                    @else
+                                        @if($priceStart > 0)
+                                            (Rp {{ number_format($priceStart, 0, ',', '.') }})
+                                        @else
+                                            (Harga tidak tersedia)
+                                        @endif
+                                    @endif
                                 </option>
                                 @endforeach
                             @endif
@@ -87,49 +122,117 @@
                             <option value="">-- Opsional: Pilih Sparepart --</option>
                         </select>
 
-                        @push('scripts')
-                        <script>
-                            (() => {
-                                const serviceSelect = document.getElementById('serviceSelect');
-                                const sparepartSelect = document.getElementById('sparepartSelect');
+                        <!-- Total Harga (Jasa + Sparepart) -->
+                        <div class="mt-4 p-4 border border-gray-100 rounded-2xl bg-gray-50">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">Harga Jasa</span>
+                                <span class="text-gray-900 font-semibold" id="selectedServicePrice">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between text-sm mt-2">
+                                <span class="text-gray-600">Harga Sparepart</span>
+                                <span class="text-gray-900 font-semibold" id="selectedSparepartPrice">Rp 0</span>
+                            </div>
+                            <div class="border-t border-red-600/10 pt-3 mt-3 flex justify-between text-base font-black">
+                                <span class="text-gray-900">Total</span>
+                                <span class="text-gradient" id="selectedTotalPrice">Rp 0</span>
+                            </div>
+                        </div>
 
-                                const sparepartsByCategory = @json($sparepartsByCategory ?? []);
+                        <input type="hidden" name="service_price" id="servicePriceInput" value="0" />
+                        <input type="hidden" name="sparepart_price" id="sparepartPriceInput" value="0" />
+                        <input type="hidden" name="total_price" id="totalPriceInput" value="0" />
 
-                                const fillSpareparts = (serviceCategory) => {
-                                    sparepartSelect.innerHTML = '<option value="">-- Opsional: Pilih Sparepart --</option>';
+                            @push('scripts')
+@push('scripts')
+<script>
+(() => {
+    const serviceSelect = document.getElementById('serviceSelect');
+    const sparepartSelect = document.getElementById('sparepartSelect');
 
-                                    const list = sparepartsByCategory[serviceCategory] || [];
-                                    list.forEach(sp => {
-                                        const price = Number(sp.price ?? 0);
-                                        const option = document.createElement('option');
-                                        option.value = sp.id;
+    if (!serviceSelect || !sparepartSelect) return;
 
-                                        const partType = sp.sparepart_category?.part_type ?? sp.part_type ?? '';
-                                        const partLabel = partType ? (partType + ' - ') : '';
-                                        option.textContent = `${partLabel}${sp.name} (Rp ${new Intl.NumberFormat('id-ID').format(Math.round(price))})`;
+    const sparepartsByServiceId = @json($sparepartsByServiceId ?? []);
 
-                                        sparepartSelect.appendChild(option);
-                                    });
+    const formatRp = (value) => {
+        return `Rp ${new Intl.NumberFormat('id-ID').format(Number(value || 0))}`;
+    };
 
-                                    sparepartSelect.value = '';
-                                };
+    const updateTotal = () => {
+        const selectedService =
+            serviceSelect.selectedOptions[0];
 
-                                if (!serviceSelect || !sparepartSelect) return;
+        const selectedSparepart =
+            sparepartSelect.selectedOptions[0];
 
-                                const resolveServiceCategory = () => {
-                                    const selectedOpt = serviceSelect.options[serviceSelect.selectedIndex];
-                                    return selectedOpt?.dataset?.serviceCategory || '';
-                                };
+        const servicePrice = Number(
+            selectedService?.dataset?.servicePrice || 0
+        );
 
-                                serviceSelect.addEventListener('change', () => {
-                                    fillSpareparts(resolveServiceCategory());
-                                });
+        const sparepartPrice = Number(
+            selectedSparepart?.dataset?.price || 0
+        );
 
-                                fillSpareparts(resolveServiceCategory());
-                            })();
-                        </script>
-                        @endpush
+        const total = servicePrice + sparepartPrice;
 
+        document.getElementById('selectedServicePrice').textContent =
+            formatRp(servicePrice);
+
+        document.getElementById('selectedSparepartPrice').textContent =
+            formatRp(sparepartPrice);
+
+        document.getElementById('selectedTotalPrice').textContent =
+            formatRp(total);
+
+        document.getElementById('servicePriceInput').value =
+            servicePrice;
+
+        document.getElementById('sparepartPriceInput').value =
+            sparepartPrice;
+
+        document.getElementById('totalPriceInput').value =
+            total;
+    };
+
+    const fillSpareparts = () => {
+        sparepartSelect.innerHTML =
+            '<option value="">-- Opsional: Pilih Sparepart --</option>';
+
+        const selectedService =
+            serviceSelect.selectedOptions[0];
+
+        const serviceId =
+            selectedService?.value;
+
+        if (!serviceId) {
+            updateTotal();
+            return;
+        }
+
+        const spareparts =
+            sparepartsByServiceId[serviceId] || [];
+
+        spareparts.forEach((sp) => {
+            const option = document.createElement('option');
+
+            option.value = sp.id;
+            option.dataset.price = sp.price || 0;
+
+            option.textContent =
+                `${sp.name} (${formatRp(sp.price)})`;
+
+            sparepartSelect.appendChild(option);
+        });
+
+        updateTotal();
+    };
+
+    serviceSelect.addEventListener('change', fillSpareparts);
+    sparepartSelect.addEventListener('change', updateTotal);
+
+    fillSpareparts();
+})();
+</script>
+@endpush
                         @error('selected_sparepart_id')
                             <p class="text-[#C8000A] text-xs mt-1.5">{{ $message }}</p>
                         @enderror

@@ -51,13 +51,10 @@ public function index()
         $service = Service::where('slug', $slug)->where('is_active', true)->firstOrFail();
         $related = Service::where('category', $service->category)->where('id', '!=', $service->id)->where('is_active', true)->take(3)->get();
 
-        // Sparepart for this service category
-        $spareparts = \App\Models\Sparepart::query()
+        // Sparepart for this service (dipilih oleh admin)
+        $spareparts = $service->spareparts()
             ->where('is_active', true)
             ->where('stock', '>', 0)
-            ->whereHas('sparepartCategory', function ($q) use ($service) {
-                $q->where('service_category', $service->category);
-            })
             ->with('sparepartCategory')
             ->orderBy('sort_order')
             ->latest('id')
