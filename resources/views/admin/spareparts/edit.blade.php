@@ -45,7 +45,7 @@
         <input 
             type="text"
             id="price_display"
-            value="{{ number_format(old('price', $sparepart->price), 0, ',', '.') }}"
+            value="{{ old('price', $sparepart->price) }}"
             class="form-input pl-14 pr-4 py-3.5 rounded-xl text-sm w-full"
             placeholder="0,00"
             autocomplete="off"
@@ -106,28 +106,29 @@
 </div>
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const display = document.getElementById('price_display');
     const hidden = document.getElementById('price');
 
-    function formatRupiah(value) {
+    const formatRupiah = (value) => {
         return new Intl.NumberFormat('id-ID').format(value);
+    };
+
+    const updateFormat = () => {
+        let value = display.value.replace(/\D/g, '');
+
+        hidden.value = value;
+
+        display.value = value ? formatRupiah(value) : '';
+    };
+
+    // format value awal dari database
+    if (display.value) {
+        updateFormat();
     }
 
-    display.addEventListener('input', function () {
-        let angka = this.value.replace(/[^0-9]/g, '');
-
-        if (angka === '') {
-            hidden.value = '';
-            this.value = '';
-            return;
-        }
-
-        hidden.value = angka;
-        this.value = formatRupiah(angka);
-    });
+    display.addEventListener('input', updateFormat);
 });
 </script>
 @endpush
-
 @endsection

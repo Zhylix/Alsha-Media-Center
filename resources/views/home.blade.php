@@ -180,6 +180,12 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     <p class="text-gray-600 mb-6 leading-relaxed">{{ \Illuminate\Support\Str::limit($paket->description, 160) }}</p>
 
                     <div class="space-y-3 text-sm text-gray-500">
+                        <div class="flex items-center gap-3">
+                            <span class="text-[#C8000A]"><i class="fas fa-tag"></i></span>
+                            <span class="font-semibold">Harga:</span>
+                            <span class="text-gray-900 font-bold">Rp {{ number_format((int)($paket->price ?? 0), 0, ',', '.') }}</span>
+                        </div>
+
                         @if($paket->start_date && $paket->end_date)
                         <div class="flex items-center gap-3">
                             <span class="text-[#C8000A]"><i class="fas fa-calendar-alt"></i></span>
@@ -193,18 +199,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                             <span class="text-gray-400">— jadwal berlaku sesuai tanggal yang tertera</span>
                         </div>
 
-                        @php
-                            $daysLeft = $paket->end_date?->isFuture()
-                                ? floor(now()->diffInDays($paket->end_date, false))
-                                : null;
-                        @endphp
-                        @if(!is_null($daysLeft))
-                        <div class="flex items-center gap-3">
-                            <span class="text-[#C8000A]"><i class="fas fa-hourglass-half"></i></span>
-                            <span class="font-semibold">{{ $daysLeft }} hari</span>
-                            <span class="text-gray-400">tersisa</span>
-                        </div>
-                        @endif
+
+
                     </div>
 
                     <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-3">

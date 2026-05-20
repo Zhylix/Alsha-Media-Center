@@ -56,10 +56,14 @@
                             <a href="{{ route('services.software') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-600 text-sm transition-all {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"><i class="fas fa-compact-disc {{ request()->routeIs('services.software') ? 'active text-red-600' : '' }}"></i> Jasa Installasi</a>
                         </div>
                     </div>
+                    <a href="/paket" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->is('paket*') ? 'active text-red-600' : '' }}">Paket</a>
+
                     <a href="{{ route('tracking.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tracking.*') ? 'active text-red-600' : '' }}">
                         <i class="text-xs"></i> Tracking
                     </a>
+
                     <a href="{{ route('order.index') }}" class="nav-link-item px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('order.*') ? 'active text-red-600' : '' }}">Hubungi Kami</a>
+
                 </div>
 
                 <!-- CTA + Mobile Toggle -->
