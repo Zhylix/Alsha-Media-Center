@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -37,8 +38,8 @@ class AdminServiceController extends Controller
             'image'              => 'nullable|image|max:2048',
         ]);
 
-        $data['slug']        = Str::slug($data['name']);
-        $data['is_active']   = $request->has('is_active');
+        $data['slug'] = $this->generateUniqueSlug(Str::slug($data['name']));
+        $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('image')) {
@@ -52,7 +53,6 @@ class AdminServiceController extends Controller
         if (!is_array($selectedSparepartIds)) {
             $selectedSparepartIds = [];
         }
-
         $service->spareparts()->sync($selectedSparepartIds);
 
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil ditambahkan!');
@@ -78,8 +78,13 @@ class AdminServiceController extends Controller
             'image'              => 'nullable|image|max:2048',
         ]);
 
-        $data['slug']        = Str::slug($data['name']);
-        $data['is_active']   = $request->has('is_active');
+        // Pastikan slug unik untuk service lain (hindari bentrok dengan record sendiri)
+        $data['slug'] = $this->generateUniqueSlug(
+            Str::slug($data['name']),
+            $service->id
+        );
+
+        $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('image')) {
@@ -93,7 +98,6 @@ class AdminServiceController extends Controller
         if (!is_array($selectedSparepartIds)) {
             $selectedSparepartIds = [];
         }
-
         $service->spareparts()->sync($selectedSparepartIds);
 
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil diperbarui!');
@@ -110,4 +114,46 @@ class AdminServiceController extends Controller
     {
         return view('admin.services.show', compact('service'));
     }
+
+    /**
+     * Generate slug yang unique.
+     * Contoh: keyboard-langsung-pasang, keyboard-langsung-pasang-1, -2, dst.
+     */
+    private function generateUniqueSlug(string $baseSlug, ?int $ignoreServiceId = null): string
+    {
+        $baseSlug = trim($baseSlug);
+        if ($baseSlug === '') {
+            $baseSlug = 'service';
+        }
+
+        $query = Service::query();
+
+        if ($ignoreServiceId !== null) {
+            $query->where('id', '!=', $ignoreServiceId);
+        }
+
+        // jika slug belum dipakai, langsung pakai
+        $exists = $query->clone()->where('slug', $baseSlug)->exists();
+        if (!$exists) {
+            return $baseSlug;
+        }
+
+        // jika sudah ada, cari slug dengan suffix incremental yang belum dipakai.
+        for ($i = 1; $i < 10000; $i++) {
+            $candidate = $baseSlug . '-' . $i;
+
+            $candidateExists = $query
+                ->clone()
+                ->where('slug', $candidate)
+                ->exists();
+
+            if (!$candidateExists) {
+                return $candidate;
+            }
+        }
+
+        // fallback (secara praktis 10000 loop sudah sangat cukup)
+        return $baseSlug . '-' . Str::random(6);
+    }
 }
+

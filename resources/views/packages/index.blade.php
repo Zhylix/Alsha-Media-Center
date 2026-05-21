@@ -43,7 +43,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($pakets as $paket)
-            <div class="group bg-white border border-gray-100 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-gray-200/80 hover:border-gray-200 flex flex-col h-full relative">
+            <div class="group bg-white border border-gray-100 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-gray-200/80 hover:border-gray-200 flex flex-col h-full relative rounded-lg">
 
                 <div class="h-1 w-full bg-gray-100 group-hover:bg-[#C8000A] transition-colors duration-300"></div>
 
@@ -83,9 +83,9 @@
                     <p class="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">{{ $paket->description }}</p>
 
                     <div class="mt-auto space-y-4">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-sm">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-white flex items-center justify-center border border-gray-200">
+                                <div class="w-8 h-8 bg-white flex items-center justify-center border border-gray-200 rounded-xs">
                                     <i class="fas fa-tag text-[#C8000A] text-xs"></i>
                                 </div>
                                 <div>
@@ -98,7 +98,7 @@
                         <a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp ?? '6281234567890') }}?text=Halo%20AMC,%20saya%20ingin%20klaim%20paket%3A%20{{ urlencode($paket->title) }}"
 
                            target="_blank"
-                           class="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors">
+                           class="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C8000A] text-white font-black text-sm uppercase tracking-widest hover:bg-[#A00008] transition-colors rounded-sm">
                             <i class="fab fa-whatsapp text-base"></i>
                             Klaim Paket Sekarang
                             <i class="fas fa-arrow-right text-xs group-hover/btn:translate-x-1 transition-transform"></i>

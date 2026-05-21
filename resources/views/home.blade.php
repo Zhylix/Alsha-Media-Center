@@ -185,25 +185,9 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                             <span class="font-semibold">Harga:</span>
                             <span class="text-gray-900 font-bold">Rp {{ number_format((int)($paket->price ?? 0), 0, ',', '.') }}</span>
                         </div>
-
-                        @if($paket->start_date && $paket->end_date)
-                        <div class="flex items-center gap-3">
-                            <span class="text-[#C8000A]"><i class="fas fa-calendar-alt"></i></span>
-                            <span>{{ $paket->start_date->format('d M Y') }} - {{ $paket->end_date->format('d M Y') }}</span>
-                        </div>
-                        @endif
-
-                        <div class="flex items-center gap-3">
-                            <span class="text-[#C8000A]"><i class="fas fa-check-circle"></i></span>
-                            <span class="font-semibold">Paket aktif</span>
-                            <span class="text-gray-400">— jadwal berlaku sesuai tanggal yang tertera</span>
-                        </div>
-
-
-
                     </div>
 
-                    <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-3">
+                    <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-3">
                         <a href="/paket/{{ $paket->slug }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C8000A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#A00008] transition-colors rounded-xl w-full">
                             Lihat Detail Paket
                             <i class="fas fa-arrow-right text-[10px]"></i>

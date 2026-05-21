@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Traits\WhatsAppBot;
 use App\Jobs\SendOrderNotificationsJob;
+use App\Jobs\SendCustomerNotificationJob;
+
 
 class AdminOrderController extends Controller
 {
@@ -85,7 +87,7 @@ class AdminOrderController extends Controller
             ]);
 
             SendCustomerNotificationJob::dispatch(
-                $order,
+                $order->id,
                 $order->status,
                 false
             );

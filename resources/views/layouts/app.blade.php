@@ -201,12 +201,12 @@
                     <ul class="space-y-3 text-sm">
                         @if($store)
                         <li class="flex items-start gap-3 text-gray-600"><span class="mt-0.5"><i class="fas fa-map-marker-alt text-red-500"></i></span><span>{{ $store->address }}, {{ $store->city }}</span></li>
-                        <li class="flex items-center gap-3 text-gray-600"><span><i class="fas fa-phone-alt text-gray-500"></i></span><a href="tel:{{ $store->phone }}" class="hover:text-red-600 transition-colors">{{ $store->phone }}</a></li>
+                        <li class="flex items-center gap-3 text-gray-600"><span><i class="fas fa-phone-alt text-red-500"></i></span><a href="tel:{{ $store->phone }}" class="hover:text-red-600 transition-colors">{{ $store->phone }}</a></li>
                         @if($store->whatsapp)
                         <li class="flex items-center gap-3 text-gray-600"><span><i class="fas fa-comments text-red-500"></i></span><a href="https://wa.me/{{ preg_replace('/\D/','',$store->whatsapp) }}" class="hover:text-red-600 transition-colors">{{ $store->whatsapp }}</a></li>
                         @endif
                         <li class="flex items-center gap-3 text-gray-600"><span><i class="fas fa-envelope text-red-500"></i></span><a href="mailto:{{ $store->email }}" class="hover:text-red-600 transition-colors">{{ $store->email }}</a></li>
-                        <li class="flex items-center gap-3 text-gray-600"><span><i class="fas fa-clock"></i></span><span>{{ $store->open_days }}, {{ $store->open_hours }}</span></li>
+                        <li class="flex items-center gap-3 text-gray-600"><span><i class="fas fa-clock text-red-500"></i></span><span>{{ $store->open_days }}, {{ $store->open_hours }}</span></li>
                         @endif
                     </ul>
                 </div>
