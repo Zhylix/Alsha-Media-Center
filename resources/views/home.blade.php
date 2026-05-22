@@ -48,8 +48,8 @@ $heroImageUrl = $store && $store->hero_image ? asset('storage/' . $store->hero_i
                     Elektronik
                 </h1>
                 <p class="text-black text-lg leading-relaxed mb-8 animate-fade-up" style="animation-delay: 0.2s;">
-                    Spesialis perbaikan <strong class="text-black">laptop</strong>, <strong class="text-black">printer</strong>, dan <strong class="text-black">handphone</strong>.<br>
-                    Teknisi berpengalaman, spare part original, garansi 30 hari.
+                    Spesialis perbaikan <strong class="text-black">laptop</strong>, <strong class="text-black">PC / Komputer</strong>, <strong class="text-black">printer</strong>, dan<br><strong class="text-black">installasi software</strong>.
+                    Teknisi berpengalaman,<br>spare part original, garansi 30 hari.
                 </p>
 
                 <!-- CTA Buttons -->

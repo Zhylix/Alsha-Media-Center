@@ -27,7 +27,7 @@
                     $tabs = [
                         ['id' => 'basic', 'icon' => 'fa-store', 'title' => 'Info Dasar', 'complete' => !empty(data_get($store, 'store_name'))],
                         ['id' => 'branding', 'icon' => 'fa-image', 'title' => 'Branding', 'complete' => !empty(data_get($store, 'logo'))],
-                        ['id' => 'contact', 'icon' => 'fa-map-marker-alt', 'title' => 'Kontak', 'complete' => !empty(data_get($store, 'address'))],
+                        ['id' => 'contact', 'icon' => 'fa-phone-alt', 'title' => 'Kontak', 'complete' => !empty(data_get($store, 'address'))],
                         ['id' => 'location', 'icon' => 'fa-map', 'title' => 'Lokasi', 'complete' => !empty(data_get($store, 'google_maps_link'))],
                         ['id' => 'hours', 'icon' => 'fa-clock', 'title' => 'Jam', 'complete' => !empty(data_get($store, 'open_days'))]
                     ];
@@ -291,7 +291,7 @@
                     <i class="fas fa-undo mr-2"></i>Batal
                 </button>
                 <button type="submit" id="save-btn"
-                        class="btn-primary px-10 py-4 flex items-center gap-3 text-lg font-bold shadow-2xl hover:shadow-red-500/25 transform hover:-translate-y-1 transition-all">
+                        class="btn-primary px-10 py-4 flex items-center gap-3 text-lg font-bold shadow-2xl hover:shadow-red-500/25 transform hover:-translate-y-1 transition-all rounded-2xl text-gray-100">
                     <i class="fas fa-save"></i> Simpan Semua Perubahan
                 </button>
             </div>

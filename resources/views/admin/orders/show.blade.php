@@ -127,7 +127,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-2">Update Status Manual</label>
                     <select name="status" class="form-input w-full px-3 py-2.5 rounded-xl text-sm">
-                        @foreach(['pending'=>'Menunggu','diterima'=>'Diterima','ditolak'=>'Ditolak','confirmed'=>'Dikonfirmasi','in_progress'=>'Diproses','completed'=>'Selesai','cancelled'=>'Dibatalkan'] as $val=>$lbl)
+                        @foreach(['pending'=>'Menunggu','diterima'=>'Diterima','ditolak'=>'Ditolak','in_progress'=>'Diproses','completed'=>'Selesai','cancelled'=>'Dibatalkan'] as $val=>$lbl)
                         <option value="{{ $val }}" {{ $order->status===$val?'selected':'' }}>{{ $lbl }}</option>
                         @endforeach
                     </select>
